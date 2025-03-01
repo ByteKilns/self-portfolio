@@ -5,6 +5,9 @@ export const projects: Project[] = [
   {
     title: "Aastha Saving and Cooperative Limited",
     position: "left",
+    deployed: false,
+    isLinkAvailable: false,
+
     githublink: "https://github.com/user/aastha-cooperative",
     websitelink: "https://aastha.example.com",
     photoUrl: "./placeholder.png",
@@ -19,6 +22,9 @@ export const projects: Project[] = [
   {
     title: "Niva Craftworks",
     position: "right",
+    deployed: false,
+    isLinkAvailable: false,
+
     githublink: "https://github.com/user/niva-craftworks",
     websitelink: "https://niva.example.com",
     photoUrl: "./placeholder.png",
@@ -32,6 +38,8 @@ export const projects: Project[] = [
   {
     title: "Deshna IT",
     position: "left",
+    deployed: true,
+    isLinkAvailable: true,
     githublink: "https://github.com/user/deshna-it",
     websitelink: "https://deshna.example.com",
     photoUrl: "./placeholder.png",
@@ -46,6 +54,9 @@ export const projects: Project[] = [
   {
     title: "Everest Ledger",
     position: "right",
+    deployed: false,
+    isLinkAvailable: false,
+
     githublink: "https://github.com/user/everest-ledger",
     websitelink: "https://everestledger.example.com",
     photoUrl: "./placeholder.pngg",
@@ -59,6 +70,9 @@ export const projects: Project[] = [
   {
     title: "IBM Nepal",
     position: "left",
+    deployed: false,
+    isLinkAvailable: false,
+
     githublink: "https://github.com/user/ibm-nepal",
     websitelink: "https://ibmnepal.example.com",
     photoUrl: "./placeholder.png ",
@@ -72,6 +86,9 @@ export const projects: Project[] = [
   {
     title: "Husky App",
     position: "right",
+    deployed: false,
+    isLinkAvailable: false,
+
     githublink: "https://github.com/user/husky-app",
     websitelink: "https://husky.example.com",
     photoUrl: "./placeholder.png",
@@ -86,6 +103,8 @@ export const projects: Project[] = [
   {
     title: "Nepal Police Digital Diary",
     position: "left",
+    deployed: true,
+    isLinkAvailable: false,
     githublink: "https://github.com/user/nepal-police",
     websitelink: "https://police.example.com",
     photoUrl: "./placeholder.png",

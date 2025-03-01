@@ -5,10 +5,12 @@ export default {
   darkMode: "class",
   theme: {
     extend: {
-      fontFamily: {
-        fontFamily: {
-          sans: ["Space Grotesk", "sans-serif"],
-        },
+      colors: {
+        primary: "var(--primary)",
+        "text-primary": "var(--text-primary)",
+        "text-secondary": "var(--text-secondary)",
+        hover: "var(--hover)",
+        background: "var(--background)",
       },
     },
   },

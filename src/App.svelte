@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Music, Sun } from 'lucide-svelte';
+  import { Music, Sun,Moon } from 'lucide-svelte';
   import { writable } from 'svelte/store';
   import ProjectsModal from './components/ProjectsModal/ProjectsModal.svelte';
   import HeroContent from './components/HeroContent/HeroContent.svelte';
@@ -10,6 +10,7 @@
 
   const currentNav = writable('home');
   const isModalOpen = writable(false);
+  const isDarkMode = writable(false);
 
  
 const selectedProject = writable(projects[0]);
@@ -25,25 +26,34 @@ const selectedProject = writable(projects[0]);
   function handleProjectSelect(project: Project) {
     $selectedProject = project;
   }
+
+  function toggleTheme() {
+    $isDarkMode = !$isDarkMode;
+    document.documentElement.classList.toggle('dark');
+  }
 </script>
-<svelte:head>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
-</svelte:head>
+
 
 <div class="font-space-grotesk min-h-screen bg-[url('/Gradient.svg')] bg-cover bg-center">
   <div class="max-w-7xl mx-auto px-4 py-4">
     <!-- Navigation -->
     <nav class="flex justify-between items-center mb-16 mt-12">
-      <div class="flex gap-28">
+      <div class="flex gap-24">
         <a href="/" class="text-gray-600 hover:text-gray-900 text-lg">Home</a>
-        <a href="/intro" class="text-gray-600 hover:text-gray-900 text-lg">Intro</a>
+        <!-- <a href="/intro" class="text-gray-600 hover:text-gray-900 text-lg">Intro</a> -->
         <a href="/work" class="text-gray-600 hover:text-gray-900 text-lg">Currently Working On</a>
       </div>
       <div class="flex items-center gap-8">
-        <span class="text-yellow-400">
+        <button on:click={toggleTheme} class="curor-pointer {$isDarkMode ? 'text-gray-800 hover:text-gray-600' : 'text-yellow-400 hover:text-yellow-300'}">
+          {#if $isDarkMode}
+          
           <Sun size={30} />
-        </span>
-        <span class="text-gray-600 text-lg">[G] Console</span>
+            
+          {:else}
+          <Moon size={30} />
+          {/if}
+        </button>
+        <span class="text-gray-600 text-lg cursor-pointer">[G] Console</span>
         <span class="text-gray-600">
           <Music size={24} />
         </span>
@@ -63,7 +73,7 @@ const selectedProject = writable(projects[0]);
    />
       <ProjectsModal isOpen={$isModalOpen} onClose={closeModal} project={$selectedProject}>
         <section class="flex  items-start gap-4">
-          <div class="text-xl font-semibold mb-4">{$selectedProject.title || "Project Details"}</div>
+          <div class="text-xl font-medium mb-4">{$selectedProject.title || "Project Details"}</div>
           <div class="flex gap-4">
             <a aria-label="github link" href="https://github.com/nirjalpraj" target="_blank" class="text-gray-600 hover:text-gray-900">
               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
