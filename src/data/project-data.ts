@@ -7,7 +7,7 @@ export const projects: Project[] = [
     position: "left",
     githublink: "https://github.com/user/aastha-cooperative",
     websitelink: "https://aastha.example.com",
-    photoUrl: "https://example.com/aastha-thumbnail.jpg",
+    photoUrl: "./placeholder.png",
     description: [
       "Portfolio site for a savings and credit cooperative",
       "Features notices, news, and a gallery",
@@ -21,7 +21,7 @@ export const projects: Project[] = [
     position: "right",
     githublink: "https://github.com/user/niva-craftworks",
     websitelink: "https://niva.example.com",
-    photoUrl: "https://example.com/niva-thumbnail.jpg",
+    photoUrl: "./placeholder.png",
     description: [
       "E-commerce and portfolio website for a handicrafts business",
       "Allows users to explore the brand and place orders via messages",
@@ -34,7 +34,7 @@ export const projects: Project[] = [
     position: "left",
     githublink: "https://github.com/user/deshna-it",
     websitelink: "https://deshna.example.com",
-    photoUrl: "https://example.com/deshna-thumbnail.jpg",
+    photoUrl: "./placeholder.png",
     description: [
       "Website for an IT teaching company",
       "Features courses, a blog, career page, and contact page",
@@ -48,7 +48,7 @@ export const projects: Project[] = [
     position: "right",
     githublink: "https://github.com/user/everest-ledger",
     websitelink: "https://everestledger.example.com",
-    photoUrl: "https://example.com/everest-thumbnail.jpg",
+    photoUrl: "./placeholder.pngg",
     description: [
       "Ledger-keeping web app for inventory tracking",
       "Generates financial reports like profit/loss and sales reports",
@@ -61,7 +61,7 @@ export const projects: Project[] = [
     position: "left",
     githublink: "https://github.com/user/ibm-nepal",
     websitelink: "https://ibmnepal.example.com",
-    photoUrl: "https://example.com/ibm-thumbnail.jpg",
+    photoUrl: "./placeholder.png ",
     description: [
       "Portfolio app for child dairy products",
       "Currently in the design phase",
@@ -74,7 +74,7 @@ export const projects: Project[] = [
     position: "right",
     githublink: "https://github.com/user/husky-app",
     websitelink: "https://husky.example.com",
-    photoUrl: "https://example.com/husky-thumbnail.jpg",
+    photoUrl: "./placeholder.png",
     description: [
       "Language-learning app focusing on Nepali and Newari",
       "Similar to Duolingo, currently in beta testing",
@@ -88,7 +88,7 @@ export const projects: Project[] = [
     position: "left",
     githublink: "https://github.com/user/nepal-police",
     websitelink: "https://police.example.com",
-    photoUrl: "https://example.com/police-thumbnail.jpg",
+    photoUrl: "./placeholder.png",
     description: [
       "Internal intranet application for Nepal Police",
       "Tracks projects, objectives, tasks, and KPIs",
