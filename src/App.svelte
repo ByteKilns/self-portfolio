@@ -3,9 +3,10 @@
   import { writable } from 'svelte/store';
   import ProjectsModal from './components/ProjectsModal/ProjectsModal.svelte';
   import HeroContent from './components/HeroContent/HeroContent.svelte';
+  import ProjectGrid from './components/ProjectGrid/ProjectGrid.svelte';
   import type { Project } from './types/types';
   import { Globe } from 'lucide-svelte';
-  import { projects } from './data/project-data'; // Adjust the path as needed
+  import { projects } from './data/project-data'; 
 
   const currentNav = writable('home');
   const isModalOpen = writable(false);
@@ -25,8 +26,11 @@ const selectedProject = writable(projects[0]);
     $selectedProject = project;
   }
 </script>
+<svelte:head>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+</svelte:head>
 
-<div class="font-sans min-h-screen bg-[url('/Gradient.svg')] bg-cover bg-center">
+<div class="font-space-grotesk min-h-screen bg-[url('/Gradient.svg')] bg-cover bg-center">
   <div class="max-w-7xl mx-auto px-4 py-4">
     <!-- Navigation -->
     <nav class="flex justify-between items-center mb-16 mt-12">
@@ -51,37 +55,12 @@ const selectedProject = writable(projects[0]);
       <h1 class="text-2xl tracking-tight mb-4">Full Stack Developer</h1>
       <HeroContent/>
 
-      <!-- Projects Grid -->
-     <div class="flex flex-row justify-end gap-x-40 gap-y-10 text-[1.1rem]">
-  <div class="flex flex-col items-end space-y-5">
-    {#each projects.filter((project) => project.position === "left") as project}
-      <button
-        type="button"
-        class="text-gray-600 underline underline-offset-4 cursor-pointer"
-        on:click={() => {
-          handleProjectSelect(project);
-          handleProjectClick();
-        }}
-      >
-        {project.title}
-      </button>
-    {/each}
-  </div>
-  <div class="flex flex-col items-end space-y-5">
-    {#each projects.filter((project) => project.position === "right") as project}
-      <button
-        type="button"
-        class="text-gray-600 underline underline-offset-4 cursor-pointer"
-        on:click={() => {
-          handleProjectSelect(project);
-          handleProjectClick();
-        }}
-      >
-        {project.title}
-      </button>
-    {/each}
-  </div>
-</div>
+     
+     <ProjectGrid
+     {projects}
+     onProjectSelect={handleProjectSelect}
+     onProjectClick={handleProjectClick}
+   />
       <ProjectsModal isOpen={$isModalOpen} onClose={closeModal} project={$selectedProject}>
         <section class="flex  items-start gap-4">
           <div class="text-xl font-semibold mb-4">{$selectedProject.title || "Project Details"}</div>

@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-space-grotesk: "Space Grotesk", sans-serif;
+  }
+}
+
+@layer utilities {
+  .font-space-grotesk {
+    font-family: var(--font-space-grotesk);
+  }
+}
