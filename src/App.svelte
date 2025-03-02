@@ -50,7 +50,7 @@ const selectedProject = writable(projects[0]);
           <Sun size={30} />
             
           {:else}
-          <Moon size={30} />
+          <Moon size={24} />
           {/if}
         </button>
         <span class="{$isDarkMode ? "text-gray-200 hover:text-gray-300" :  "text-gray-600 hover:text-gray-900"} text-lg cursor-pointer">[G] Console</span>
@@ -62,7 +62,7 @@ const selectedProject = writable(projects[0]);
 
     <!-- Main Content -->
     <main>
-      <h1 class="text-2xl tracking-tight mb-4">Full Stack Developer</h1>
+      <h1 class="{$isDarkMode ? "text-gray-100 hover:text-gray-300" :  "text-gray-900 hover:text-gray-600"} text-2xl tracking-tight mb-4">Full Stack Developer</h1>
       <HeroContent
       {isDarkMode}
       />
@@ -76,7 +76,7 @@ const selectedProject = writable(projects[0]);
    />
       <ProjectsModal isOpen={$isModalOpen} onClose={closeModal} project={$selectedProject}>
         <section class="flex  items-start gap-4">
-          <div class="text-xl font-medium mb-4">{$selectedProject.title || "Project Details"}</div>
+          <div class="{$isDarkMode ? "text-gray-100 hover:text-gray-300" :  "text-gray-900 hover:text-gray-600"} text-xl font-medium mb-4">{$selectedProject.title || "Project Details"}</div>
           <div class="flex gap-4">
             <a aria-label="github link" href="https://github.com/nirjalpraj" target="_blank" class="text-gray-600 hover:text-gray-900">
               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
