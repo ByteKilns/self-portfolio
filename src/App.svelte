@@ -70,6 +70,7 @@ const selectedProject = writable(projects[0]);
      
      <ProjectGrid
      {projects}
+     {isDarkMode}
      onProjectSelect={handleProjectSelect}
      onProjectClick={handleProjectClick}
    />

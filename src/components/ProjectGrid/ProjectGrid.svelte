@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { writable } from 'svelte/store';
     import type { Project } from '../../types/types.ts'; 
     export let projects: Project[];
+    export let isDarkMode = writable(false);
     export let onProjectSelect: (project: Project) => void;
     export let onProjectClick: () => void;
   
@@ -8,12 +10,12 @@
     const rightProjects = projects.filter(project => project.position === "right");
   </script>
   
-  <div class="flex flex-row justify-end gap-x-40 gap-y-10 text-[1.1rem]">
+  <div class="flex flex-row justify-end gap-x-40 gap-y-10 text-[1.1rem] {$isDarkMode ? "text-gray-200 hover:text-gray-300" :  "text-gray-600 hover:text-gray-900"} ">
     <div class="flex flex-col items-end space-y-5">
       {#each leftProjects as project}
         <button
           type="button"
-          class="text-gray-600 underline underline-offset-4 cursor-pointer"
+          class=" underline underline-offset-4 cursor-pointer"
           on:click={() => {
             onProjectSelect(project);
             onProjectClick();
@@ -27,7 +29,7 @@
       {#each rightProjects as project}
         <button
           type="button"
-          class="text-gray-600 underline underline-offset-4 cursor-pointer"
+          class=" underline underline-offset-4 cursor-pointer"
           on:click={() => {
             onProjectSelect(project);
             onProjectClick();

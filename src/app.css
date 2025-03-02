@@ -6,19 +6,22 @@
     --font-space-grotesk: "Space Grotesk", sans-serif;
 
     /* Light mode colors */
-    --primary: #1e40af; /* Primary color for light mode */
+    --primary: #1e40af;
     --background: #ffffff;
-    --text-primary: #1f2937;
-    --text-secondary: #4b5563;
+    --text-primary: #e5e7eb; /* Changed to match ~text-gray-200 */
+    --text-primary-hover: #d1d5db; /* Added to match ~text-gray-300 */
+    --text-secondary: #0000;
     --hover: #2563eb;
   }
 
   .dark {
     /* Dark mode colors */
-    --primary: #60a5fa; /* Primary color for dark mode */
+    --primary: #60a5fa;
     --background: #1f2937;
-    --text-primary: #f9fafb;
-    --text-secondary: #9ca3af;
+    --text-primary: #4b5563; /* Changed to match ~text-gray-600 */
+    --text-primary-hover: #111827; /* Added to match ~text-gray-900 */
+
+    --text-secondary: #ffffff;
     --hover: #93c5fd;
   }
 
@@ -28,6 +31,16 @@
     transition:
       background-color 0.3s ease,
       color 0.3s ease;
+  }
+
+  /* Adding base styling for elements using text-primary */
+  [data-text-primary] {
+    color: var(--text-primary);
+    transition: color 0.3s ease;
+  }
+
+  [data-text-primary]:hover {
+    color: var(--text-primary-hover);
   }
 }
 
