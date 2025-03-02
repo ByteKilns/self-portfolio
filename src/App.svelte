@@ -34,17 +34,17 @@ const selectedProject = writable(projects[0]);
 </script>
 
 
-<div class="font-space-grotesk min-h-screen bg-[url('/Gradient.svg')] bg-cover bg-center">
+<div class="font-space-grotesk min-h-screen {$isDarkMode ? "bg-[url('/Gradient-dark.svg')]" :  "bg-[url('/Gradient.svg')]"} bg-cover bg-center">
   <div class="max-w-7xl mx-auto px-4 py-4">
     <!-- Navigation -->
     <nav class="flex justify-between items-center mb-16 mt-12">
       <div class="flex gap-24">
-        <a href="/" class="text-gray-600 hover:text-gray-900 text-lg">Home</a>
+        <a href="/" class="{$isDarkMode ? "text-gray-200 hover:text-gray-300" :  "text-gray-600 hover:text-gray-900"}  text-lg">Home</a>
         <!-- <a href="/intro" class="text-gray-600 hover:text-gray-900 text-lg">Intro</a> -->
-        <a href="/work" class="text-gray-600 hover:text-gray-900 text-lg">Currently Working On</a>
+        <a href="/work" class="{$isDarkMode ? "text-gray-200 hover:text-gray-300" :  "text-gray-600 hover:text-gray-900"} text-lg">Currently Working On</a>
       </div>
       <div class="flex items-center gap-8">
-        <button on:click={toggleTheme} class="curor-pointer {$isDarkMode ? 'text-gray-800 hover:text-gray-600' : 'text-yellow-400 hover:text-yellow-300'}">
+        <button on:click={toggleTheme} class="curor-pointer {$isDarkMode ? 'text-yellow-400 hover:text-yellow-300' : 'text-gray-800 hover:text-gray-600'}">
           {#if $isDarkMode}
           
           <Sun size={30} />
@@ -53,17 +53,19 @@ const selectedProject = writable(projects[0]);
           <Moon size={30} />
           {/if}
         </button>
-        <span class="text-gray-600 text-lg cursor-pointer">[G] Console</span>
-        <span class="text-gray-600">
+        <span class="{$isDarkMode ? "text-gray-200 hover:text-gray-300" :  "text-gray-600 hover:text-gray-900"} text-lg cursor-pointer">[G] Console</span>
+        <!-- <span class="text-gray-600">
           <Music size={24} />
-        </span>
+        </span> -->
       </div>
     </nav>
 
     <!-- Main Content -->
     <main>
       <h1 class="text-2xl tracking-tight mb-4">Full Stack Developer</h1>
-      <HeroContent/>
+      <HeroContent
+      {isDarkMode}
+      />
 
      
      <ProjectGrid
