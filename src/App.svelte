@@ -7,10 +7,13 @@
   import type { Project } from './types/types';
   import { Globe } from 'lucide-svelte';
   import { projects } from './data/project-data'; 
+  import ConsoleComponent from './components/ConsoleComponent/ConsoleComponent.svelte';
+  import ConsoleContent from './components/ConsoleContent/ConsoleContent.svelte';
+  import type { Box } from './types/types';
 
-  const currentNav = writable('home');
   const isModalOpen = writable(false);
   const isDarkMode = writable(false);
+  const isConsoleOpen = writable(false);
 
  
 const selectedProject = writable(projects[0]);
@@ -23,6 +26,12 @@ const selectedProject = writable(projects[0]);
     $isModalOpen = false;
   }
 
+  function handleConsoleToggle(){
+    $isConsoleOpen = !$isConsoleOpen;
+  }
+
+
+
   function handleProjectSelect(project: Project) {
     $selectedProject = project;
   }
@@ -31,6 +40,65 @@ const selectedProject = writable(projects[0]);
     $isDarkMode = !$isDarkMode;
     document.documentElement.classList.toggle('dark');
   }
+
+  
+  // Define types for our box data
+
+  
+  // Initial boxes with TypeScript typing
+  let box: Box = {
+      id: "box1",
+      x: 650, 
+      y: 100, 
+      width: 600, 
+      height: 400,
+      bgColor: "bg-blue-50",
+      borderColor: "border-blue-300",
+      content: {
+        title: "Chat with Me",
+        description: "",
+        titleColor: "text-blue-700"
+      },
+      zIndex: 1
+    };
+ 
+  
+  // Track the active box to bring it to front
+  let activeBoxId: string | null = null;
+  
+  // Event handlers with TypeScript typing
+  function handleDrag(boxId: string, event: CustomEvent<{x: number, y: number}>): void {
+    // const index = boxes.findIndex(box => box.id === boxId);
+
+      box.x = event.detail.x;
+      box.y = event.detail.y;
+      box = box; // Trigger reactivity
+    
+  }
+  
+  function handleResize(boxId: string, event: CustomEvent<{width: number, height: number, x: number, y: number}>): void {
+    // const index = boxes.findIndex(box => box.id === boxId);
+    // if (index !== -1) {
+      box.width = event.detail.width;
+      box.height = event.detail.height;
+      box.x = event.detail.x;
+      box.y = event.detail.y;
+      box = box; // Trigger reactivity
+    // }
+  }
+  
+  function activateBox(boxId: string): void {
+    activeBoxId = boxId;
+    
+    // Update z-index values
+    box = {
+      ...box, zIndex: box.id === boxId ? 10: 1
+    }
+  
+  }
+  
+
+ 
 </script>
 
 
@@ -41,7 +109,7 @@ const selectedProject = writable(projects[0]);
       <div class="flex gap-24">
         <a href="/" class="data-text-primary  text-lg">Home</a>
         <!-- <a href="/intro" class="text-gray-600 hover:text-gray-900 text-lg">Intro</a> -->
-        <a href="/work" class="data-text-primary text-lg">Currently Working On</a>
+        <button on:click={()=>{}}  class="data-text-primary text-lg">Currently Working On</button>
       </div>
       <div class="flex items-center gap-8">
         <button on:click={toggleTheme} class="curor-pointer {$isDarkMode ? 'text-yellow-400 hover:text-yellow-300' : 'text-gray-800 hover:text-gray-600'}">
@@ -53,7 +121,7 @@ const selectedProject = writable(projects[0]);
           <Moon size={24} />
           {/if}
         </button>
-        <span class="data-text-primary text-lg cursor-pointer">[G] Console</span>
+        <button on:click={handleConsoleToggle} class="data-text-primary text-lg cursor-pointer">[G] Console</button>
         <!-- <span class="text-gray-600">
           <Music size={24} />
         </span> -->
@@ -110,6 +178,34 @@ const selectedProject = writable(projects[0]);
           </div>
         </section>
       </ProjectsModal>
+      {#if $isConsoleOpen}
+      <ConsoleComponent
+      x={box.x}
+      y={box.y}
+      width={box.width}
+      height={box.height}
+      minWidth={150}
+      minHeight={100}
+      containerId="container"
+      bgColor={box.bgColor}
+      borderColor={box.borderColor}
+      zIndex={box.zIndex}
+      on:mousedown={() => activateBox(box.id)}
+      on:touchstart={() => activateBox(box.id)}
+      on:drag={(e) => handleDrag(box.id, e)}
+      on:resize={(e) => handleResize(box.id, e)}
+    >
+      <ConsoleContent
+      box={box}
+      />
+
+    </ConsoleComponent>
+    {/if}
+      
+       
+      
+      
+
     </main>
   </div>
 </div>

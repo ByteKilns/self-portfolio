@@ -116,3 +116,51 @@ export const projects: Project[] = [
     TechStack: ["React.js"],
   },
 ];
+
+// let boxes: Box[] = [
+//   {
+//     id: "box1",
+//     x: 50,
+//     y: 50,
+//     width: 300,
+//     height: 200,
+//     bgColor: "bg-blue-50",
+//     borderColor: "border-blue-300",
+//     content: {
+//       title: "Drag and Resize Me",
+//       description: "Grab anywhere to drag, or use the handles to resize.",
+//       titleColor: "text-blue-700"
+//     },
+//     zIndex: 1
+//   },
+//   {
+//     id: "box2",
+//     x: 400,
+//     y: 100,
+//     width: 250,
+//     height: 150,
+//     bgColor: "bg-green-50",
+//     borderColor: "border-green-300",
+//     content: {
+//       title: "Another Component",
+//       description: "Try dragging and resizing multiple components.",
+//       titleColor: "text-green-700"
+//     },
+//     zIndex: 1
+//   },
+//   {
+//     id: "box3",
+//     x: 200,
+//     y: 300,
+//     width: 280,
+//     height: 180,
+//     bgColor: "bg-purple-50",
+//     borderColor: "border-purple-300",
+//     content: {
+//       title: "TypeScript Powered",
+//       description: "This component uses TypeScript for type safety.",
+//       titleColor: "text-purple-700"
+//     },
+//     zIndex: 1
+//   }
+// ];
