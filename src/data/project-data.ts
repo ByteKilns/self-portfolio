@@ -5,9 +5,12 @@ export const projects: Project[] = [
   {
     title: "Aastha Saving and Cooperative Limited",
     position: "left",
+    deployed: false,
+    isLinkAvailable: false,
+
     githublink: "https://github.com/user/aastha-cooperative",
     websitelink: "https://aastha.example.com",
-    photoUrl: "https://example.com/aastha-thumbnail.jpg",
+    photoUrl: "./placeholder.png",
     description: [
       "Portfolio site for a savings and credit cooperative",
       "Features notices, news, and a gallery",
@@ -19,9 +22,12 @@ export const projects: Project[] = [
   {
     title: "Niva Craftworks",
     position: "right",
+    deployed: false,
+    isLinkAvailable: false,
+
     githublink: "https://github.com/user/niva-craftworks",
     websitelink: "https://niva.example.com",
-    photoUrl: "https://example.com/niva-thumbnail.jpg",
+    photoUrl: "./placeholder.png",
     description: [
       "E-commerce and portfolio website for a handicrafts business",
       "Allows users to explore the brand and place orders via messages",
@@ -32,9 +38,11 @@ export const projects: Project[] = [
   {
     title: "Deshna IT",
     position: "left",
+    deployed: true,
+    isLinkAvailable: true,
     githublink: "https://github.com/user/deshna-it",
     websitelink: "https://deshna.example.com",
-    photoUrl: "https://example.com/deshna-thumbnail.jpg",
+    photoUrl: "./placeholder.png",
     description: [
       "Website for an IT teaching company",
       "Features courses, a blog, career page, and contact page",
@@ -46,9 +54,12 @@ export const projects: Project[] = [
   {
     title: "Everest Ledger",
     position: "right",
+    deployed: false,
+    isLinkAvailable: false,
+
     githublink: "https://github.com/user/everest-ledger",
     websitelink: "https://everestledger.example.com",
-    photoUrl: "https://example.com/everest-thumbnail.jpg",
+    photoUrl: "./placeholder.pngg",
     description: [
       "Ledger-keeping web app for inventory tracking",
       "Generates financial reports like profit/loss and sales reports",
@@ -59,9 +70,12 @@ export const projects: Project[] = [
   {
     title: "IBM Nepal",
     position: "left",
+    deployed: false,
+    isLinkAvailable: false,
+
     githublink: "https://github.com/user/ibm-nepal",
     websitelink: "https://ibmnepal.example.com",
-    photoUrl: "https://example.com/ibm-thumbnail.jpg",
+    photoUrl: "./placeholder.png ",
     description: [
       "Portfolio app for child dairy products",
       "Currently in the design phase",
@@ -72,9 +86,12 @@ export const projects: Project[] = [
   {
     title: "Husky App",
     position: "right",
+    deployed: false,
+    isLinkAvailable: false,
+
     githublink: "https://github.com/user/husky-app",
     websitelink: "https://husky.example.com",
-    photoUrl: "https://example.com/husky-thumbnail.jpg",
+    photoUrl: "./placeholder.png",
     description: [
       "Language-learning app focusing on Nepali and Newari",
       "Similar to Duolingo, currently in beta testing",
@@ -86,9 +103,11 @@ export const projects: Project[] = [
   {
     title: "Nepal Police Digital Diary",
     position: "left",
+    deployed: true,
+    isLinkAvailable: false,
     githublink: "https://github.com/user/nepal-police",
     websitelink: "https://police.example.com",
-    photoUrl: "https://example.com/police-thumbnail.jpg",
+    photoUrl: "./placeholder.png",
     description: [
       "Internal intranet application for Nepal Police",
       "Tracks projects, objectives, tasks, and KPIs",
@@ -97,3 +116,51 @@ export const projects: Project[] = [
     TechStack: ["React.js"],
   },
 ];
+
+// let boxes: Box[] = [
+//   {
+//     id: "box1",
+//     x: 50,
+//     y: 50,
+//     width: 300,
+//     height: 200,
+//     bgColor: "bg-blue-50",
+//     borderColor: "border-blue-300",
+//     content: {
+//       title: "Drag and Resize Me",
+//       description: "Grab anywhere to drag, or use the handles to resize.",
+//       titleColor: "text-blue-700"
+//     },
+//     zIndex: 1
+//   },
+//   {
+//     id: "box2",
+//     x: 400,
+//     y: 100,
+//     width: 250,
+//     height: 150,
+//     bgColor: "bg-green-50",
+//     borderColor: "border-green-300",
+//     content: {
+//       title: "Another Component",
+//       description: "Try dragging and resizing multiple components.",
+//       titleColor: "text-green-700"
+//     },
+//     zIndex: 1
+//   },
+//   {
+//     id: "box3",
+//     x: 200,
+//     y: 300,
+//     width: 280,
+//     height: 180,
+//     bgColor: "bg-purple-50",
+//     borderColor: "border-purple-300",
+//     content: {
+//       title: "TypeScript Powered",
+//       description: "This component uses TypeScript for type safety.",
+//       titleColor: "text-purple-700"
+//     },
+//     zIndex: 1
+//   }
+// ];

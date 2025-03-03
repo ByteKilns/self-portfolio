@@ -1,9 +1,11 @@
 <script lang="ts">
+  import { writable } from 'svelte/store';
     import type { Project } from '../../types/types.ts'; // Import the Project type
     import { X } from 'lucide-svelte';
   
     // Define the props for the component
     export let isOpen = false;
+    export let isDarkMode = writable(false);
     export let onClose: () => void = () => {};
     export let project: Project | undefined = undefined; // Add the project prop with type Project
   
@@ -30,7 +32,7 @@
   }}
 >
   <div
-    class="px-16 py-10 fixed bottom-0 left-0 right-0 bg-white border border-black h-[80vh] transition-transform duration-700 ease-in-out"
+    class="px-16 py-10 fixed bottom-0 left-0 right-0 {$isDarkMode ? "bg-white" :  "bg-white "} text-gray-700 bg-cover bg-center  border border-black h-[80vh] transition-transform duration-700 ease-in-out"
     class:translate-y-full={!isOpen}
     class:translate-y-0={isOpen}
   >
