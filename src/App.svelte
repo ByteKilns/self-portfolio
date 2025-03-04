@@ -30,6 +30,10 @@ const selectedProject = writable(projects[0]);
     $isConsoleOpen = !$isConsoleOpen;
   }
 
+  function handleConsoleClose(){
+    $isConsoleOpen = false;
+  }
+
 
 
   function handleProjectSelect(project: Project) {
@@ -178,6 +182,7 @@ const selectedProject = writable(projects[0]);
           </div>
         </section>
       </ProjectsModal>
+
       {#if $isConsoleOpen}
       <ConsoleComponent
       x={box.x}
@@ -194,6 +199,7 @@ const selectedProject = writable(projects[0]);
       on:touchstart={() => activateBox(box.id)}
       on:drag={(e) => handleDrag(box.id, e)}
       on:resize={(e) => handleResize(box.id, e)}
+      onClose={handleConsoleClose}
     >
       <ConsoleContent
       box={box}
