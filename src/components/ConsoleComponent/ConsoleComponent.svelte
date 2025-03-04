@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { X } from 'lucide-svelte';
     import { onMount, createEventDispatcher } from 'svelte';
   
     // Types
@@ -236,48 +237,64 @@
       return cursorMap[direction] || '';
     }
   </script>
-  
+
+<div
+  bind:this={element}
+  class="absolute top-0 left-0 select-none box-border {bgColor} {borderColor} border"
+  style="width: {width}px; height: {height}px; transform: translate({x}px, {y}px); z-index: {zIndex};"
+>
+  <!-- Top bar for dragging -->
   <div
-    bind:this={element}
-    class="absolute top-0 left-0 select-none box-border {bgColor} {borderColor} border {cursorClass}"
-    style="width: {width}px; height: {height}px; transform: translate({x}px, {y}px); z-index: {zIndex};"
+    class="w-full h-8 flex items-center px-4 justify-between  {bgColor} border-b {borderColor} {cursorClass}"
     on:mousedown={handleMouseDown}
     on:touchstart={handleTouchStart}
+    aria-label="Resizable and draggable window"
+  >
+  <h3 class="text-lg font-medium text-blue-700">Chat With Me</h3>
+  <X class="h-6 text-red-700" />
+  </div>
+
+  <!-- Content area -->
+  <div 
+    class="w-full h-[calc(100%-2rem)] overflow-auto"
+    on:mousedown|stopPropagation
+    on:touchstart|stopPropagation
   >
     <slot />
-    
-    {#if isResizable}
-      <!-- Resize handles with Tailwind classes -->
-      <div class="absolute -top-1 left-1/2 w-2 h-2 bg-white border border-gray-300 -translate-x-1/2 {getResizeCursorClass('n')}" 
-           on:mousedown={(e) => handleResizeStart(e, 'n')}
-           on:touchstart={(e) => handleResizeTouchStart(e, 'n')}></div>
-      
-      <div class="absolute top-1/2 -right-1 w-2 h-2 bg-white border border-gray-300 -translate-y-1/2 {getResizeCursorClass('e')}" 
-           on:mousedown={(e) => handleResizeStart(e, 'e')}
-           on:touchstart={(e) => handleResizeTouchStart(e, 'e')}></div>
-      
-      <div class="absolute -bottom-1 left-1/2 w-2 h-2 bg-white border border-gray-300 -translate-x-1/2 {getResizeCursorClass('s')}" 
-           on:mousedown={(e) => handleResizeStart(e, 's')}
-           on:touchstart={(e) => handleResizeTouchStart(e, 's')}></div>
-      
-      <div class="absolute top-1/2 -left-1 w-2 h-2 bg-white border border-gray-300 -translate-y-1/2 {getResizeCursorClass('w')}" 
-           on:mousedown={(e) => handleResizeStart(e, 'w')}
-           on:touchstart={(e) => handleResizeTouchStart(e, 'w')}></div>
-      
-      <div class="absolute -top-1 -right-1 w-2 h-2 bg-white border border-gray-300 {getResizeCursorClass('ne')}" 
-           on:mousedown={(e) => handleResizeStart(e, 'ne')}
-           on:touchstart={(e) => handleResizeTouchStart(e, 'ne')}></div>
-      
-      <div class="absolute -bottom-1 -right-1 w-2 h-2 bg-white border border-gray-300 {getResizeCursorClass('se')}" 
-           on:mousedown={(e) => handleResizeStart(e, 'se')}
-           on:touchstart={(e) => handleResizeTouchStart(e, 'se')}></div>
-      
-      <div class="absolute -bottom-1 -left-1 w-2 h-2 bg-white border border-gray-300 {getResizeCursorClass('sw')}" 
-           on:mousedown={(e) => handleResizeStart(e, 'sw')}
-           on:touchstart={(e) => handleResizeTouchStart(e, 'sw')}></div>
-      
-      <div class="absolute -top-1 -left-1 w-2 h-2 bg-white border border-gray-300 {getResizeCursorClass('nw')}" 
-           on:mousedown={(e) => handleResizeStart(e, 'nw')}
-           on:touchstart={(e) => handleResizeTouchStart(e, 'nw')}></div>
-    {/if}
   </div>
+
+  {#if isResizable}
+    <!-- Resize handles remain the same, just adjusting their positions -->
+    <div class="absolute -top-1 left-1/2 w-2 h-2 bg-white border border-gray-300 -translate-x-1/2 {getResizeCursorClass('n')}" 
+         on:mousedown={(e) => handleResizeStart(e, 'n')}
+         on:touchstart={(e) => handleResizeTouchStart(e, 'n')}></div>
+    
+    <div class="absolute top-1/2 -right-1 w-2 h-2 bg-white border border-gray-300 -translate-y-1/2 {getResizeCursorClass('e')}" 
+         on:mousedown={(e) => handleResizeStart(e, 'e')}
+         on:touchstart={(e) => handleResizeTouchStart(e, 'e')}></div>
+    
+    <div class="absolute -bottom-1 left-1/2 w-2 h-2 bg-white border border-gray-300 -translate-x-1/2 {getResizeCursorClass('s')}" 
+         on:mousedown={(e) => handleResizeStart(e, 's')}
+         on:touchstart={(e) => handleResizeTouchStart(e, 's')}></div>
+    
+    <div class="absolute top-1/2 -left-1 w-2 h-2 bg-white border border-gray-300 -translate-y-1/2 {getResizeCursorClass('w')}" 
+         on:mousedown={(e) => handleResizeStart(e, 'w')}
+         on:touchstart={(e) => handleResizeTouchStart(e, 'w')}></div>
+    
+    <div class="absolute -top-1 -right-1 w-2 h-2 bg-white border border-gray-300 {getResizeCursorClass('ne')}" 
+         on:mousedown={(e) => handleResizeStart(e, 'ne')}
+         on:touchstart={(e) => handleResizeTouchStart(e, 'ne')}></div>
+    
+    <div class="absolute -bottom-1 -right-1 w-2 h-2 bg-white border border-gray-300 {getResizeCursorClass('se')}" 
+         on:mousedown={(e) => handleResizeStart(e, 'se')}
+         on:touchstart={(e) => handleResizeTouchStart(e, 'se')}></div>
+    
+    <div class="absolute -bottom-1 -left-1 w-2 h-2 bg-white border border-gray-300 {getResizeCursorClass('sw')}" 
+         on:mousedown={(e) => handleResizeStart(e, 'sw')}
+         on:touchstart={(e) => handleResizeTouchStart(e, 'sw')}></div>
+    
+    <div class="absolute -top-1 -left-1 w-2 h-2 bg-white border border-gray-300 {getResizeCursorClass('nw')}" 
+         on:mousedown={(e) => handleResizeStart(e, 'nw')}
+         on:touchstart={(e) => handleResizeTouchStart(e, 'nw')}></div>
+  {/if}
+</div>
