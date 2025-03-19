@@ -10,7 +10,6 @@
     --background: #ffffff;
     --text-primary: #4b5563; /* Changed to match ~text-gray-600 */
     --text-primary-hover: #111827; /* Added to match ~text-gray-900 */
-
     --text-secondary: #0000;
     --hover: #2563eb;
   }
@@ -21,7 +20,6 @@
     --background: #1f2937;
     --text-primary: #e5e7eb; /* Changed to match ~text-gray-200 */
     --text-primary-hover: #d1d5db; /* Added to match ~text-gray-300 */
-
     --text-secondary: #ffffff;
     --hover: #93c5fd;
   }

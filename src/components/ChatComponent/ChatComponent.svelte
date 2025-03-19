@@ -4,12 +4,12 @@
   import { io } from "socket.io-client"; // Import Socket.IO client
 
   // Using Svelte 5 runes syntax for all reactive state
-  let query = $state("");
+  let query = $state(""); 
   let chatHistory = $state<Chat[]>([
-    {
-      message: "Hey there! I'm here on behalf of Nirjal. How can I assist you?",
-      type: "answer",
-    },
+    // {
+    //   message: "Hey there! I'm here on behalf of Nirjal. How can I assist you?",
+    //   type: "answer",
+    // },
   ]);
   let inputElement: HTMLInputElement;
   let isTyping = $state(false);

@@ -20,7 +20,7 @@
   class="fixed inset-0 bg-black/30 backdrop-blur-[0.2px] bg-blend-overlay transition-opacity duration-700 ease-in-out"
   class:opacity-0={!isOpen}
   class:opacity-100={isOpen}
-  class:pointer-events-none={!isOpen}
+  class:pointer-events-none={!isOpen} 
   class:pointer-events-auto={isOpen}
   role="button"
   tabindex="0"
@@ -32,7 +32,7 @@
   }}
 >
   <div
-    class="px-16 py-10 fixed bottom-0 left-0 right-0 {$isDarkMode ? "bg-white" :  "bg-white "} text-gray-700 bg-cover bg-center  border border-black h-[80vh] transition-transform duration-700 ease-in-out"
+    class="px-16 py-5 fixed bottom-0 left-0 right-0 {$isDarkMode ? "bg-black" :  "bg-white "} text-gray-700 bg-cover bg-center  border {$isDarkMode ? " border-white " :  "border-black"} h-[80vh] transition-transform duration-700 ease-in-out"
     class:translate-y-full={!isOpen}
     class:translate-y-0={isOpen}
   >
