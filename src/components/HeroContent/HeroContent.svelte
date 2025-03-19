@@ -7,7 +7,7 @@
       — I'm [ Nirjal Prajapati ], a full-stack developer dedicated to crafting seamless, high-performing web applications that make an impact.
     </p>
     <p class="data-text-primary mb-6 text-[1.1rem]">
-      Let's connWect—feel free to reach out via <a href="mailto:nirjalprajapati@gmail.com" class="underline">email</a>  </p>
+      Let's connect—feel free to reach out via <a href="mailto:nirjalprajapati@gmail.com" class="underline">email</a>  </p>
   
     <!-- Social Links -->
     <div class="flex gap-4 mb-12">
