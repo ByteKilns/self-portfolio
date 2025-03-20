@@ -10,10 +10,15 @@
   import ConsoleComponent from './components/ConsoleComponent/ConsoleComponent.svelte';
   import ConsoleContent from './components/ConsoleContent/ConsoleContent.svelte';
   import type { Box } from './types/types';
+  import WorkingOnModal from './components/WorkingOnModal/WorkingOnModal.svelte';
+  import WorkingOnModalContent from './components/WorkingOnModalContent/WorkingOnModalContent.svelte'
 
   const isModalOpen = writable(false);
+  const isWorkingModalOpen = writable(false);
   const isDarkMode = writable(false);
   const isConsoleOpen = writable(false);
+  let workingOnButtonEl: HTMLElement;
+  let workingOnButtonPosition = { x: 0, y: 0, width: 0 };
 
  
 const selectedProject = writable(projects[0]);
@@ -29,6 +34,19 @@ const selectedProject = writable(projects[0]);
   function handleConsoleToggle(){
     $isConsoleOpen = !$isConsoleOpen;
   }
+
+  function handleWorkingModalToggle() {
+  if (!$isWorkingModalOpen) {
+    // Update position before opening
+    const rect = workingOnButtonEl.getBoundingClientRect();
+    workingOnButtonPosition = {
+      x: rect.left,
+      y: rect.bottom,
+      width: rect.width
+    };
+  }
+  $isWorkingModalOpen = !$isWorkingModalOpen;
+}
 
   function handleConsoleClose(){
     $isConsoleOpen = false;
@@ -112,7 +130,10 @@ const selectedProject = writable(projects[0]);
       <div class="flex gap-24">
         <a href="/" class="text-lg">Home</a>
         <!-- <a href="/intro" class="text-gray-600 hover:text-gray-900 text-lg">Intro</a> -->
-        <button on:click={()=>{}}  class="data-text-primary text-lg">Currently Working On</button>
+        <button bind:this={workingOnButtonEl}
+        on:click={handleWorkingModalToggle} 
+        data-text-primary 
+        class="text-lg cursor-pointer">Currently Working On</button>
       </div>
       <div class="flex items-center gap-8">
         <button on:click={toggleTheme} class="curor-pointer {$isDarkMode ? 'text-yellow-400 hover:text-yellow-300' : 'text-gray-800 hover:text-gray-600'}">
@@ -183,6 +204,13 @@ const selectedProject = writable(projects[0]);
           </div>
         </section>
       </ProjectsModal>
+
+      <WorkingOnModal isOpen={$isWorkingModalOpen} 
+      onClose={handleWorkingModalToggle}
+      anchorPosition={workingOnButtonPosition}
+      {isDarkMode}>
+        <WorkingOnModalContent />
+      </WorkingOnModal>
 
       {#if $isConsoleOpen}
       <ConsoleComponent
