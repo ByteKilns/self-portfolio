@@ -2,6 +2,8 @@
   import { writable } from 'svelte/store';
     import type { Project } from '../../types/types.ts'; // Import the Project type
     import { X } from 'lucide-svelte';
+    import { Globe } from 'lucide-svelte';
+
   
     // Define the props for the component
     export let isOpen = false;
@@ -31,17 +33,20 @@
     }
   }}
 >
-  <div
-    class="px-16 py-5 fixed bottom-0 left-0 right-0 {$isDarkMode ? "bg-black" :  "bg-white "} text-gray-700 bg-cover bg-center  border {$isDarkMode ? " border-white " :  "border-black"} h-[80vh] transition-transform duration-700 ease-in-out"
+  <div class="fixed bottom-0 left-0 right-0 p-[1px] {isDarkMode && "bg-gradient-to-r from-blue-500 via-purple-500 to-green-500 h-[80vh]"} transition-transform duration-700 ease-in-out"
     class:translate-y-full={!isOpen}
     class:translate-y-0={isOpen}
   >
-    <div class="p-6 flex flex-col items-end justify-end">
+    <div
+      class="px-16 py-5 h-full w-full {$isDarkMode ? "bg-[url('/modal-dark-bg.png')] bg-cover bg-center" : "bg-white"} text-gray-700 bg-cover bg-center"
+    >
+      <div class="pt-4 flex   justify-end">
         <button class="bg-transparent border-none p-0" on:click={onClose}>
-            <X class='text-red-600 cursor-pointer'/>
-          </button>
+          <X class='text-red-600 cursor-pointer'/>
+        </button>
+      </div>
+      <slot />
     </div>
-    <slot />
   </div>
 </div>
   
