@@ -4,7 +4,7 @@ FROM oven/bun:1 AS build
 WORKDIR /app
 
 # Copy package files
-COPY package.json bun.lock* ./
+COPY package.json bun.lock* ./ 
 
 # Install dependencies
 RUN bun install --frozen-lockfile
@@ -24,8 +24,11 @@ RUN rm -rf /usr/share/nginx/html/*
 # Copy the built static files from Vite's dist/ folder
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Expose port 80
-EXPOSE 80
+# Update the Nginx configuration to listen on port 5000
+RUN sed -i 's/listen       80;/listen       5000;/' /etc/nginx/conf.d/default.conf
+
+# Expose port 5000
+EXPOSE 5000
 
 # Start Nginx server (not the start script!)
 CMD ["nginx", "-g", "daemon off;"]
