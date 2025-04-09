@@ -24,7 +24,7 @@
     }
 
     // Connect to the Socket.IO server
-    socket = io("http://localhost:3000"); // Match your server URL and port
+    socket = io("https://self-portfolio-chat-hjcpds-5c28b2-23-88-97-23.traefik.me/"); // Match your server URL and port
 
     // Handle incoming messages from the server
     socket.on("message", (data) => {
