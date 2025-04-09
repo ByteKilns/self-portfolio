@@ -1,0 +1,42 @@
+# Node.js/Bun-related
+node_modules
+bun.lockb
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build output (Vite default is 'dist')
+dist
+
+# Git
+.git
+.gitignore
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# TypeScript config files (optional, since they’re small and useful)
+# tsconfig.app.json
+# tsconfig.node.json
+
+# Editor and OS files
+.DS_Store
+*.swp
+*.swo
+.vscode
+.idea
+
+# Logs and temporary files
+*.log
+*.log.*
+tmp/
+temp/
+
+# Miscellaneous
+Dockerfile
+*.md
+LICENSE
