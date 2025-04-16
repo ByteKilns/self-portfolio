@@ -154,8 +154,7 @@ const selectedProject = writable(projects[0]);
 
     <!-- Main Content -->
     <main>
-      <h1 class="{$isDarkMode ? "text-gray-100 hover:text-gray-300" :  "text-gray-900 hover:text-gray-800"} text-2xl tracking-tight mb-4">Full Stack Developer</h1>
-      <HeroContent/>
+      <HeroContent {isDarkMode}/>
 
      
      <ProjectGrid

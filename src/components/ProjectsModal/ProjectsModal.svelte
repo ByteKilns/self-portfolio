@@ -2,7 +2,6 @@
   import { writable } from 'svelte/store';
     import type { Project } from '../../types/types.ts'; // Import the Project type
     import { X } from 'lucide-svelte';
-    import { Globe } from 'lucide-svelte';
 
   
     // Define the props for the component
