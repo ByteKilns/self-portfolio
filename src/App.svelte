@@ -23,10 +23,11 @@
 
   const selectedProject = writable(projects[0]);
 
-  const isLoadingBackground = writable(true); // Start true
+  const isLoadingBackground = writable(true);
 
   // New reactive variable for the background style
   let backgroundStyle: string = '';
+  let mainContentEl: HTMLElement;
 
   function handleProjectClick() {
     $isModalOpen = true;
@@ -64,83 +65,117 @@
     $isDarkMode = !$isDarkMode;
     document.documentElement.classList.toggle('dark');
     // Update background style immediately when theme changes
-    updateBackgroundStyle($isDarkMode);
+    applyBackgroundStyle($isDarkMode);
   }
 
-  // Function to update the background style
-  function updateBackgroundStyle(darkMode: boolean) {
-    backgroundStyle = `background-image: url('${darkMode ? '/Gradient-dark.svg' : '/Gradient.svg'}'); background-size: cover; background-position: center;`;
+  // Function to apply the background style and ensure it's rendered
+  function applyBackgroundStyle(darkMode: boolean) {
+    const newStyle = `background-image: url('${darkMode ? '/Gradient-dark.svg' : '/Gradient.svg'}'); background-size: cover; background-position: center;`;
+    backgroundStyle = newStyle;
+    
+    // Force a reflow to ensure the style is applied
+    if (mainContentEl) {
+      mainContentEl.offsetHeight; // Force reflow
+    }
   }
 
   // --- Image and Page loading logic ---
   let loadTimeout: number;
   let bgImageLoadedCount = 0;
   const totalBgImages = 2; // For both dark and light themes
+  let imagesFullyLoaded = false;
+  let pageFullyLoaded = false;
 
   onMount(() => {
-    // 1. Explicitly load background images
+    // 1. Preload both background images
     const lightBgImage = new Image();
     const darkBgImage = new Image();
 
     const checkBgImagesLoaded = () => {
       bgImageLoadedCount++;
       if (bgImageLoadedCount === totalBgImages) {
-        // All background images are now in the browser's cache
-        // We can now safely apply the initial background
-        updateBackgroundStyle($isDarkMode);
-
-        // Now, wait for the rest of the page to load if necessary
-        // Or, you can set isLoadingBackground to false here if only background matters
-        checkAllLoaded(); // Call the general page load check
+        imagesFullyLoaded = true;
+        // Apply initial background immediately after images are loaded
+        applyBackgroundStyle($isDarkMode);
+        
+        // Check if we can hide loading screen
+        checkCanHideLoader();
       }
     };
 
     lightBgImage.onload = checkBgImagesLoaded;
     darkBgImage.onload = checkBgImagesLoaded;
-    lightBgImage.onerror = checkBgImagesLoaded; // Still count for error to dismiss loader
-    darkBgImage.onerror = checkBgImagesLoaded;
+    lightBgImage.onerror = () => {
+      console.warn('Failed to load light background image');
+      checkBgImagesLoaded();
+    };
+    darkBgImage.onerror = () => {
+      console.warn('Failed to load dark background image');
+      checkBgImagesLoaded();
+    };
 
+    // Start loading images
     lightBgImage.src = '/Gradient.svg';
     darkBgImage.src = '/Gradient-dark.svg';
 
-    // 2. Wait for full window load (including all other assets)
-    const checkAllLoaded = () => {
-      if (document.readyState === 'complete') {
-        clearTimeout(loadTimeout);
-        // Add a small delay to ensure rendering happens before hiding loader
+    // 2. Wait for full page load
+    const handlePageLoad = () => {
+      pageFullyLoaded = true;
+      checkCanHideLoader();
+    };
+
+    // Check if page is already loaded
+    if (document.readyState === 'complete') {
+      handlePageLoad();
+    } else {
+      window.addEventListener('load', handlePageLoad);
+    }
+
+    // 3. Function to check if we can hide the loader
+    const checkCanHideLoader = () => {
+      if (imagesFullyLoaded && pageFullyLoaded) {
+        // Add a small delay to ensure rendering is complete
         setTimeout(() => {
-          $isLoadingBackground = false;
-        }, 100); // Small delay
+          // Double-check that the background is actually applied
+          if (mainContentEl && backgroundStyle) {
+            const computedStyle = window.getComputedStyle(mainContentEl);
+            const bgImage = computedStyle.backgroundImage;
+            
+            // Only hide loader if background image is actually applied
+            if (bgImage && bgImage !== 'none') {
+              $isLoadingBackground = false;
+            } else {
+              // Retry after a short delay
+              setTimeout(() => {
+                $isLoadingBackground = false;
+              }, 200);
+            }
+          } else {
+            $isLoadingBackground = false;
+          }
+        }, 150); // Increased delay for better reliability
       }
     };
 
-    // If background images loaded before window.onload, trigger check
-    if (bgImageLoadedCount === totalBgImages) {
-        checkAllLoaded();
-    } else {
-        // Otherwise, wait for window.onload
-        window.addEventListener('load', checkAllLoaded);
-    }
-
-
-    // 3. Fallback timeout
+    // 4. Fallback timeout
     loadTimeout = setTimeout(() => {
       if ($isLoadingBackground) {
-        console.warn("Loading screen hidden by fallback timeout. Page resources might still be loading.");
-        $isLoadingBackground = false;
-        updateBackgroundStyle($isDarkMode); // Apply background if fallback triggered
+        console.warn("Loading screen hidden by fallback timeout. Some resources might still be loading.");
+        // Ensure background is applied before hiding loader
+        applyBackgroundStyle($isDarkMode);
+        setTimeout(() => {
+          $isLoadingBackground = false;
+        }, 100);
       }
-    }, 7000); // Increased fallback to 7 seconds for very slow connections
-
+    }, 8000); // Increased fallback timeout
 
     // Cleanup
     onDestroy(() => {
-      window.removeEventListener('load', checkAllLoaded);
+      window.removeEventListener('load', handlePageLoad);
       clearTimeout(loadTimeout);
     });
   });
   // --- End image loading logic ---
-
 
   // Initial boxes with TypeScript typing
   let box: Box = {
@@ -191,7 +226,8 @@
   </div>
 {/if}
 
-<div class="font-space-grotesk min-h-screen bg-cover bg-center main-content-wrapper transition-opacity duration-500"
+<div bind:this={mainContentEl}
+     class="font-space-grotesk min-h-screen bg-cover bg-center main-content-wrapper transition-opacity duration-500"
      style={backgroundStyle}
      class:opacity-0={$isLoadingBackground}
      class:opacity-100={!$isLoadingBackground}
@@ -277,10 +313,10 @@
 
       {#if $isConsoleOpen}
         <ConsoleComponent
-                x={box.x}
-                y={box.y}
-                width={box.width}
-                height={box.height}
+            x={box.x}
+            y={box.y}
+            width={box.width}
+            height={box.height}
                 minWidth={150}
                 minHeight={100}
                 containerId="container"
