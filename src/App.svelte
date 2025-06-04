@@ -82,9 +82,10 @@
   // --- Image and Page loading logic ---
   let loadTimeout: number;
   let bgImageLoadedCount = 0;
-  const totalBgImages = 2; // For both dark and light themes
+  const totalBgImages = 2;
   let imagesFullyLoaded = false;
   let pageFullyLoaded = false;
+  let allNetworkActivityComplete = false;
 
   onMount(() => {
     // 1. Preload both background images
@@ -95,10 +96,7 @@
       bgImageLoadedCount++;
       if (bgImageLoadedCount === totalBgImages) {
         imagesFullyLoaded = true;
-        // Apply initial background immediately after images are loaded
         applyBackgroundStyle($isDarkMode);
-        
-        // Check if we can hide loading screen
         checkCanHideLoader();
       }
     };
@@ -114,60 +112,105 @@
       checkBgImagesLoaded();
     };
 
-    // Start loading images
     lightBgImage.src = '/Gradient.svg';
     darkBgImage.src = '/Gradient-dark.svg';
 
-    // 2. Wait for full page load
+    // 2. Wait for initial page load
     const handlePageLoad = () => {
       pageFullyLoaded = true;
-      checkCanHideLoader();
+      // Start monitoring for complete network inactivity
+      monitorNetworkActivity();
     };
 
-    // Check if page is already loaded
     if (document.readyState === 'complete') {
       handlePageLoad();
     } else {
       window.addEventListener('load', handlePageLoad);
     }
 
-    // 3. Function to check if we can hide the loader
+    // 3. Monitor network activity to detect when tab loading icon stops
+    const monitorNetworkActivity = () => {
+      let networkCheckCount = 0;
+      const maxNetworkChecks = 50; // Maximum checks to prevent infinite waiting
+      
+      const checkNetworkInactivity = () => {
+        networkCheckCount++;
+        
+        // Use multiple methods to detect network completion
+        const checkMethods = [
+          () => document.readyState === 'complete',
+          () => performance.now() > 1000, // Minimum time threshold
+          () => !document.querySelector('img[loading]'), // No lazy loading images
+        ];
+
+        // Check if all conditions are met
+        const allConditionsMet = checkMethods.every(check => check());
+        
+        if (allConditionsMet && networkCheckCount > 3) {
+          // Wait a bit more to ensure tab loading icon stops
+          setTimeout(() => {
+            // Final check: Use requestIdleCallback if available
+            if (window.requestIdleCallback) {
+              window.requestIdleCallback(() => {
+                allNetworkActivityComplete = true;
+                checkCanHideLoader();
+              }, { timeout: 1000 });
+            } else {
+              // Fallback for browsers without requestIdleCallback
+              setTimeout(() => {
+                allNetworkActivityComplete = true;
+                checkCanHideLoader();
+              }, 500);
+            }
+          }, 300);
+        } else if (networkCheckCount < maxNetworkChecks) {
+          // Check again after a delay
+          setTimeout(checkNetworkInactivity, 200);
+        } else {
+          // Force completion after max checks
+          console.warn('Network activity monitoring timed out');
+          allNetworkActivityComplete = true;
+          checkCanHideLoader();
+        }
+      };
+
+      // Start the network activity check
+      setTimeout(checkNetworkInactivity, 100);
+    };
+
+    // 4. Function to check if we can hide the loader
     const checkCanHideLoader = () => {
-      if (imagesFullyLoaded && pageFullyLoaded) {
-        // Add a small delay to ensure rendering is complete
+      if (imagesFullyLoaded && pageFullyLoaded && allNetworkActivityComplete) {
+        // Final verification with a longer delay
         setTimeout(() => {
-          // Double-check that the background is actually applied
           if (mainContentEl && backgroundStyle) {
             const computedStyle = window.getComputedStyle(mainContentEl);
             const bgImage = computedStyle.backgroundImage;
             
-            // Only hide loader if background image is actually applied
             if (bgImage && bgImage !== 'none') {
               $isLoadingBackground = false;
             } else {
-              // Retry after a short delay
               setTimeout(() => {
                 $isLoadingBackground = false;
-              }, 200);
+              }, 300);
             }
           } else {
             $isLoadingBackground = false;
           }
-        }, 150); // Increased delay for better reliability
+        }, 400); // Longer delay to ensure everything is truly ready
       }
     };
 
-    // 4. Fallback timeout
+    // 5. Fallback timeout (increased)
     loadTimeout = setTimeout(() => {
       if ($isLoadingBackground) {
-        console.warn("Loading screen hidden by fallback timeout. Some resources might still be loading.");
-        // Ensure background is applied before hiding loader
+        console.warn("Loading screen hidden by fallback timeout");
         applyBackgroundStyle($isDarkMode);
         setTimeout(() => {
           $isLoadingBackground = false;
-        }, 100);
+        }, 200);
       }
-    }, 8000); // Increased fallback timeout
+    }, 12000); // Increased to 12 seconds
 
     // Cleanup
     onDestroy(() => {
@@ -313,10 +356,10 @@
 
       {#if $isConsoleOpen}
         <ConsoleComponent
-            x={box.x}
-            y={box.y}
-            width={box.width}
-            height={box.height}
+                x={box.x}
+                y={box.y}
+                width={box.width}
+                height={box.height}
                 minWidth={150}
                 minHeight={100}
                 containerId="container"
