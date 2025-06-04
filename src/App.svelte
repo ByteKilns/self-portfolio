@@ -12,6 +12,7 @@
   import type { Box } from './types/types';
   import WorkingOnModal from './components/WorkingOnModal/WorkingOnModal.svelte';
   import WorkingOnModalContent from './components/WorkingOnModalContent/WorkingOnModalContent.svelte'
+  import { onMount } from 'svelte'; 
 
   const isModalOpen = writable(false);
   const isWorkingModalOpen = writable(false);
@@ -19,6 +20,7 @@
   const isConsoleOpen = writable(false);
   let workingOnButtonEl: HTMLElement;
   let workingOnButtonPosition = { x: 0, y: 0, width: 0 };
+  const isLoadingBackground = writable(true);
 
  
 const selectedProject = writable(projects[0]);
@@ -63,6 +65,39 @@ const selectedProject = writable(projects[0]);
     document.documentElement.classList.toggle('dark');
   }
 
+
+    // --- Image loading logic ---
+  onMount(() => {
+    const lightImage = new Image();
+    const darkImage = new Image();
+
+    let loadedCount = 0;
+    const totalImages = 2; // We have two background images
+
+    const checkIfAllLoaded = () => {
+      loadedCount++;
+      if (loadedCount === totalImages) {
+        $isLoadingBackground = false;
+      }
+    };
+
+    lightImage.onload = checkIfAllLoaded;
+    darkImage.onload = checkIfAllLoaded;
+    lightImage.onerror = checkIfAllLoaded; // Also hide loading if an image fails to load
+    darkImage.onerror = checkIfAllLoaded; // Same here
+
+    lightImage.src = '/Gradient.svg';
+    darkImage.src = '/Gradient-dark.svg';
+
+    // Fallback: If for some reason the images don't trigger onload (e.g., cached),
+    // we can set a timeout to hide the loader after a few seconds.
+    // Adjust this duration based on your expected maximum load time.
+    setTimeout(() => {
+      if ($isLoadingBackground) {
+        $isLoadingBackground = false;
+      }
+    }, 3000); // Hide loading after 3 seconds as a fallback
+  });
   
 
   
@@ -122,6 +157,11 @@ const selectedProject = writable(projects[0]);
  
 </script>
 
+{#if $isLoadingBackground}
+  <div class="fixed inset-0 flex items-center justify-center bg-gray-900 text-white z-50 transition-opacity duration-500 opacity-100">
+    <p class="text-2xl font-bold animate-pulse">Loading...</p>
+    </div>
+{/if}
 
 <div class="font-space-grotesk min-h-screen {$isDarkMode ? "bg-[url('/Gradient-dark.svg')]" :  "bg-[url('/Gradient.svg')]"} bg-cover bg-center">
   <div class="max-w-7xl mx-auto px-4 py-4">
