@@ -12,8 +12,8 @@
   <div>
     <h1
       class={$isDarkMode
-        ? 'text-gray-100 hover:text-gray-300'
-        : 'text-gray-900 hover:text-gray-800'}
+        ? 'text-gray-100 hover:text-gray-300 text-2xl mb-4'
+        : 'text-gray-900 hover:text-gray-800 text-2xl mb-4'}
     >
       Full Stack Developer
     </h1>
