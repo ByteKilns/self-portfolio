@@ -12,7 +12,7 @@
   import type { Box } from './types/types';
   import WorkingOnModal from './components/WorkingOnModal/WorkingOnModal.svelte';
   import WorkingOnModalContent from './components/WorkingOnModalContent/WorkingOnModalContent.svelte';
-  import { onMount, onDestroy } from 'svelte'; // Import onDestroy
+  import { onMount, onDestroy } from 'svelte';
 
   const isModalOpen = writable(false);
   const isWorkingModalOpen = writable(false);
@@ -23,8 +23,10 @@
 
   const selectedProject = writable(projects[0]);
 
-  // Add a new writable store for the loading state
   const isLoadingBackground = writable(true); // Start true
+
+  // New reactive variable for the background style
+  let backgroundStyle: string = '';
 
   function handleProjectClick() {
     $isModalOpen = true;
@@ -61,40 +63,77 @@
   function toggleTheme() {
     $isDarkMode = !$isDarkMode;
     document.documentElement.classList.toggle('dark');
+    // Update background style immediately when theme changes
+    updateBackgroundStyle($isDarkMode);
+  }
+
+  // Function to update the background style
+  function updateBackgroundStyle(darkMode: boolean) {
+    backgroundStyle = `background-image: url('${darkMode ? '/Gradient-dark.svg' : '/Gradient.svg'}'); background-size: cover; background-position: center;`;
   }
 
   // --- Image and Page loading logic ---
-  let loadTimeout: number; // For clearing the fallback timeout
+  let loadTimeout: number;
+  let bgImageLoadedCount = 0;
+  const totalBgImages = 2; // For both dark and light themes
 
   onMount(() => {
-    const mainContentDiv = document.querySelector('.main-content-wrapper'); // Select the main content div
+    // 1. Explicitly load background images
+    const lightBgImage = new Image();
+    const darkBgImage = new Image();
 
-    const checkAllLoaded = () => {
-      // Check if main content div is visible AND
-      // if all background images are "loaded" (we assume they are once the DOM is ready)
-      // and if the initial selected project image is loaded (if it's already in the DOM)
+    const checkBgImagesLoaded = () => {
+      bgImageLoadedCount++;
+      if (bgImageLoadedCount === totalBgImages) {
+        // All background images are now in the browser's cache
+        // We can now safely apply the initial background
+        updateBackgroundStyle($isDarkMode);
 
-      // The simplest and most robust way is to wait for window.onload
-      // which signifies all resources (images, css, js) are loaded.
-      if (document.readyState === 'complete') {
-        clearTimeout(loadTimeout); // Clear the fallback timeout
-        $isLoadingBackground = false;
+        // Now, wait for the rest of the page to load if necessary
+        // Or, you can set isLoadingBackground to false here if only background matters
+        checkAllLoaded(); // Call the general page load check
       }
     };
 
-    // Use window.onload for full page load
-    window.addEventListener('load', checkAllLoaded);
+    lightBgImage.onload = checkBgImagesLoaded;
+    darkBgImage.onload = checkBgImagesLoaded;
+    lightBgImage.onerror = checkBgImagesLoaded; // Still count for error to dismiss loader
+    darkBgImage.onerror = checkBgImagesLoaded;
 
-    // Fallback: If for some reason the 'load' event doesn't fire or is delayed,
-    // we set a maximum time for the loading screen to be displayed.
+    lightBgImage.src = '/Gradient.svg';
+    darkBgImage.src = '/Gradient-dark.svg';
+
+    // 2. Wait for full window load (including all other assets)
+    const checkAllLoaded = () => {
+      if (document.readyState === 'complete') {
+        clearTimeout(loadTimeout);
+        // Add a small delay to ensure rendering happens before hiding loader
+        setTimeout(() => {
+          $isLoadingBackground = false;
+        }, 100); // Small delay
+      }
+    };
+
+    // If background images loaded before window.onload, trigger check
+    if (bgImageLoadedCount === totalBgImages) {
+        checkAllLoaded();
+    } else {
+        // Otherwise, wait for window.onload
+        window.addEventListener('load', checkAllLoaded);
+    }
+
+
+    // 3. Fallback timeout
     loadTimeout = setTimeout(() => {
       if ($isLoadingBackground) {
         console.warn("Loading screen hidden by fallback timeout. Page resources might still be loading.");
         $isLoadingBackground = false;
+        updateBackgroundStyle($isDarkMode); // Apply background if fallback triggered
       }
-    }, 5000); // Hide loading after 5 seconds as a fallback (increased from 3s)
+    }, 7000); // Increased fallback to 7 seconds for very slow connections
 
-    // Cleanup: Remove event listener when component is destroyed
+
+    // Cleanup
     onDestroy(() => {
       window.removeEventListener('load', checkAllLoaded);
       clearTimeout(loadTimeout);
@@ -143,7 +182,7 @@
     box = {
       ...box, zIndex: box.id === boxId ? 10 : 1
     }
-  }``
+  }
 </script>
 
 {#if $isLoadingBackground}
@@ -152,10 +191,11 @@
   </div>
 {/if}
 
-<div class="font-space-grotesk min-h-screen {$isDarkMode ? "bg-[url('/Gradient-dark.svg')]" : "bg-[url('/Gradient.svg')]"} bg-cover bg-center main-content-wrapper transition-opacity duration-500"
+<div class="font-space-grotesk min-h-screen bg-cover bg-center main-content-wrapper transition-opacity duration-500"
+     style={backgroundStyle}
      class:opacity-0={$isLoadingBackground}
      class:opacity-100={!$isLoadingBackground}
-     >
+   >
   <div class="max-w-7xl mx-auto px-4 py-4">
     <nav class="flex justify-between items-center mb-16 mt-12">
       <div class="flex gap-24">
