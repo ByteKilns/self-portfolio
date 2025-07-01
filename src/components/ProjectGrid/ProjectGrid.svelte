@@ -8,7 +8,7 @@
     const rightProjects = projects.filter(project => project.position === "right");
   </script>
   
-  <div class="flex flex-row justify-end gap-x-40 gap-y-10 text-[1.1rem] data-text-primary ">
+  <div class="flex flex-col md:flex-row justify-end gap-x-40 gap-y-10 text-[1.1rem] data-text-primary ">
     <div class="flex flex-col items-end space-y-5">
       {#each leftProjects as project}
         <button

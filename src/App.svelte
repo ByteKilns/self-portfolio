@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { Music, Sun, Moon } from 'lucide-svelte';
   import { writable } from 'svelte/store';
   import ProjectsModal from './components/ProjectsModal/ProjectsModal.svelte';
   import HeroContent from './components/HeroContent/HeroContent.svelte';
+  import Navbar from './components/Navbar/Navbar.svelte';
+  // Add the new responsive navbar import
   import ProjectGrid from './components/ProjectGrid/ProjectGrid.svelte';
   import type { Project } from './types/types';
   import { Globe } from 'lucide-svelte';
@@ -270,31 +271,19 @@
 {/if}
 
 <div bind:this={mainContentEl}
-     class="font-space-grotesk min-h-screen bg-cover bg-center main-content-wrapper transition-opacity duration-500"
+     class="font-space-grotesk h-[100vh]  bg-cover bg-center main-content-wrapper transition-opacity duration-500 overflow-x-hidden"
      style={backgroundStyle}
      class:opacity-0={$isLoadingBackground}
      class:opacity-100={!$isLoadingBackground}
    >
-  <div class="max-w-7xl mx-auto px-4 py-4">
-    <nav class="flex justify-between items-center mb-16 mt-12">
-      <div class="flex gap-24">
-        <a href="/" class="text-lg">Home</a>
-        <button bind:this={workingOnButtonEl}
-                on:click={handleWorkingModalToggle}
-                data-text-primary
-                class="text-lg cursor-pointer">Currently Working On</button>
-      </div>
-      <div class="flex items-center gap-8">
-        <button on:click={toggleTheme} class="curor-pointer {$isDarkMode ? 'text-yellow-400 hover:text-yellow-300' : 'text-gray-800 hover:text-gray-600'}">
-          {#if $isDarkMode}
-            <Sun size={30} />
-          {:else}
-            <Moon size={24} />
-          {/if}
-        </button>
-        <button on:click={handleConsoleToggle} class="data-text-primary text-lg cursor-pointer">[G] Console</button>
-      </div>
-    </nav>
+  <div class="max-w-lg md:max-w-2xl lg:max-w-4xl xl:max-w-7xl mx-auto px-10 md:px-4 py-4">
+    <Navbar 
+    bind:workingOnButtonEl
+    {handleWorkingModalToggle}
+    {toggleTheme}
+    {isDarkMode}
+    {handleConsoleToggle}
+  />
 
     <main>
       <HeroContent {isDarkMode}/>
@@ -305,7 +294,7 @@
               onProjectClick={handleProjectClick}
       />
       <ProjectsModal {isDarkMode} isOpen={$isModalOpen} onClose={closeModal} project={$selectedProject}>
-        <section class="flex  items-start gap-4">
+        <section class="flex flex-col overflow-scroll lg:flex-row  items-start gap-4">
           <div data-text-primary class="text-xl font-medium mb-4">{$selectedProject.title || "Project Details"}</div>
           <div data-text-primary class="flex gap-4">
             <a aria-label="github link" href="https://github.com/nirjalpraj" target="_blank" >
@@ -320,7 +309,7 @@
             {/if}
           </div>
         </section>
-        <section class="flex flex-row justify-between">
+        <section class="flex flex-col  lg:flex-row justify-between">
           <div>
             {#if $selectedProject.description}
               <p class="mb-4">
@@ -342,7 +331,7 @@
             {/if}
           </div>
           <div>
-            <img src={$selectedProject.photoUrl} alt="Project Image" class="w-full h-[25rem]" />
+            <img src={$selectedProject.photoUrl} alt="Project Image" class="hidden md:block w-full h-[25rem]" />
           </div>
         </section>
       </ProjectsModal>
