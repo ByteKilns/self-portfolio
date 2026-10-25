@@ -28,7 +28,7 @@
     }
   }}
 >
-  <div class="fixed bottom-0  left-0 right-0 p-[1px] {isDarkMode && "bg-gradient-to-r from-blue-500 via-purple-500 to-green-500 h-[80vh]"} transition-transform duration-700 ease-in-out {isOpen ? 'translate-y-0' : 'translate-y-full'}"
+  <div class="fixed bottom-0  left-0 right-0 p-[1px] {$isDarkMode && "bg-gradient-to-r from-blue-500 via-purple-500 to-green-500 h-[80vh]"} transition-transform duration-700 ease-in-out {isOpen ? 'translate-y-0' : 'translate-y-full'}"
   >
     <div
       class="overflow-scroll px-4 md:px-16 py-5 h-full w-full {$isDarkMode ? "bg-[url('/modal-dark-bg.webp')] bg-cover bg-center" : "bg-white"} text-gray-700 bg-cover bg-center"
