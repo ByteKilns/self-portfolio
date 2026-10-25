@@ -1,120 +1,80 @@
 <script lang="ts">
-  import type { Chat } from "$lib/types";
-  import { onMount } from "svelte";
-  import { io } from "socket.io-client"; // Import Socket.IO client
+  import { onDestroy, onMount, tick } from 'svelte';
+  import type { Chat } from '$lib/types';
+  import type { ChatTurn } from '$lib/chat/types';
+  import { sendChat } from '$lib/chat/client';
+
+  type ChatLine = Chat & { isError?: boolean };
+
+  const GREETING =
+    "Hi! I'm Nirjal Prajapati's CV assistant. Ask me about his skills, experience or projects.";
 
   // Using Svelte 5 runes syntax for all reactive state
-  let query = $state(""); 
-  let chatHistory = $state<Chat[]>([
-    // {
-    //   message: "Hey there! I'm here on behalf of Nirjal. How can I assist you?",
-    //   type: "answer",
-    // },
-  ]);
+  let query = $state('');
+  let chatHistory = $state<ChatLine[]>([{ message: GREETING, type: 'answer' }]);
   let inputElement: HTMLInputElement;
   let isTyping = $state(false);
-  let currentTypingMessage = $state("");
+  let controller: AbortController | null = null;
 
-  // Initialize Socket.IO connection
-  let socket: ReturnType<typeof io>;
   onMount(() => {
-    // Autofocus the input when component mounts
-    if (inputElement) {
-      inputElement.focus();
-    }
-
-    // Connect to the Socket.IO server
-    socket = io("https://self-portfolio-chat-hjcpds-5c28b2-23-88-97-23.traefik.me/"); // Match your server URL and port
-
-    // Handle incoming messages from the server
-    socket.on("message", (data) => {
-      console.log("Received message from server:", data);
-      if (data.sender === "Chatbot" && data.text) {
-        // Add the server response to chat history with typing effect
-        const responseIndex = chatHistory.length;
-        chatHistory.push({
-          message: "",
-          type: "answer",
-        });
-
-        typeMessage(data.text).then((finalMessage) => {
-          chatHistory[responseIndex].message = finalMessage;
-        });
-      }
-    });
-
-    // Handle errors from the server
-    socket.on("error", (data) => {
-      console.error("Error from server:", data);
-      chatHistory.push({
-        message: data.text || "An error occurred. Please try again.",
-        type: "answer",
-      });
-    });
-
-    // Handle disconnection
-    socket.on("disconnect", () => {
-      console.log("Disconnected from server");
-      chatHistory.push({
-        message: "Lost connection to the server. Please refresh the page.",
-        type: "answer",
-      });
-    });
-
-    // Handle connection errors
-    socket.on("connect_error", (error) => {
-      console.error("Connection error:", error);
-      chatHistory.push({
-        message: "Failed to connect to the server. Please check your network.",
-        type: "answer",
-      });
-    });
+    inputElement?.focus();
   });
 
-  // Cleanup on unmount
-  $effect(() => {
-    return () => {
-      if (socket) {
-        socket.disconnect();
-      }
-    };
+  onDestroy(() => {
+    controller?.abort();
   });
 
-  async function typeMessage(fullMessage: string, delay = 30) {
-    isTyping = true;
-    currentTypingMessage = "";
-
-    for (let i = 0; i < fullMessage.length; i++) {
-      currentTypingMessage += fullMessage[i];
-      await new Promise((resolve) => setTimeout(resolve, delay));
-    }
-
-    isTyping = false;
-    return currentTypingMessage;
+  function conversationHistory(): ChatTurn[] {
+    return chatHistory
+      .filter((chat, index) => !(index === 0 && chat.type === 'answer') && !chat.isError)
+      .map(
+        (chat): ChatTurn => ({
+          role: chat.type === 'query' ? 'user' : 'assistant',
+          content: chat.message
+        })
+      )
+      .filter((turn) => turn.content.trim() !== '')
+      .slice(-6);
   }
 
-  function handleKeyDown(event: KeyboardEvent) {
-    if (event.key === "Enter" && query.trim() !== "") {
-      console.log("Enter pressed with query:", query);
+  async function handleKeyDown(event: KeyboardEvent) {
+    if (event.key !== 'Enter' || query.trim() === '' || isTyping) return;
 
-      // Add user message to chat history
-      chatHistory.push({
-        message: query,
-        type: "query",
+    const message = query.trim();
+    const history = conversationHistory();
+
+    query = '';
+    chatHistory.push({ message, type: 'query' });
+    chatHistory.push({ message: '', type: 'answer' });
+    const answerIndex = chatHistory.length - 1;
+
+    isTyping = true;
+    controller = new AbortController();
+
+    try {
+      await sendChat({
+        message,
+        history,
+        onChunk(text) {
+          chatHistory[answerIndex].message += text;
+        },
+        signal: controller.signal
       });
-
-      // Emit the query to the server via Socket.IO
-      socket.emit("message", {
-        text: query,
-      });
-
-      // Clear the input
-      query = "";
-
-      // Refocus the input after sending
-      if (inputElement) {
-        inputElement.focus();
+    } catch (error) {
+      const name = error instanceof Error ? error.name : '';
+      if (name === 'AbortError') {
+        if (chatHistory[answerIndex].message === '') chatHistory.splice(answerIndex, 1);
+      } else {
+        const text = error instanceof Error ? error.message : 'Something went wrong.';
+        const partial = chatHistory[answerIndex].message;
+        chatHistory[answerIndex].message = partial ? `${partial}\n\n${text}` : text;
+        chatHistory[answerIndex].isError = true;
       }
+    } finally {
+      isTyping = false;
+      controller = null;
+      await tick();
+      inputElement?.focus();
     }
   }
 </script>
@@ -128,11 +88,7 @@
         <span>-</span>
       {/if}
       <div>
-        {#if i === chatHistory.length - 1 && chat.type === "answer" && isTyping}
-          {currentTypingMessage}
-        {:else}
-          {chat.message}
-        {/if}
+        {chat.message}
       </div>
     </div>
   {/each}
@@ -143,7 +99,7 @@
       class="bg-transparent outline-none w-full"
       bind:value={query}
       bind:this={inputElement}
-      on:keydown={handleKeyDown}
+      onkeydown={handleKeyDown}
       disabled={isTyping}
     />
   </div>
