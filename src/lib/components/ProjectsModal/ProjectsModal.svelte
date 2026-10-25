@@ -1,6 +1,6 @@
 <script lang="ts">
   import { writable } from 'svelte/store';
-    import type { Project } from '../../types/types.ts'; // Import the Project type
+    import type { Project } from '$lib/types'; // Import the Project type
     import { X } from 'lucide-svelte';
 
   

@@ -1,18 +1,18 @@
 <script lang="ts">
   import { writable } from 'svelte/store';
-  import ProjectsModal from './components/ProjectsModal/ProjectsModal.svelte';
-  import HeroContent from './components/HeroContent/HeroContent.svelte';
-  import Navbar from './components/Navbar/Navbar.svelte';
+  import ProjectsModal from '$lib/components/ProjectsModal/ProjectsModal.svelte';
+  import HeroContent from '$lib/components/HeroContent/HeroContent.svelte';
+  import Navbar from '$lib/components/Navbar/Navbar.svelte';
   // Add the new responsive navbar import
-  import ProjectGrid from './components/ProjectGrid/ProjectGrid.svelte';
-  import type { Project } from './types/types';
+  import ProjectGrid from '$lib/components/ProjectGrid/ProjectGrid.svelte';
+  import type { Project } from '$lib/types';
   import { Globe } from 'lucide-svelte';
-  import { projects } from './data/project-data';
-  import ConsoleComponent from './components/ConsoleComponent/ConsoleComponent.svelte';
-  import ConsoleContent from './components/ConsoleContent/ConsoleContent.svelte';
-  import type { Box } from './types/types';
-  import WorkingOnModal from './components/WorkingOnModal/WorkingOnModal.svelte';
-  import WorkingOnModalContent from './components/WorkingOnModalContent/WorkingOnModalContent.svelte';
+  import { projects } from '$lib/data/project-data';
+  import ConsoleComponent from '$lib/components/ConsoleComponent/ConsoleComponent.svelte';
+  import ConsoleContent from '$lib/components/ConsoleContent/ConsoleContent.svelte';
+  import type { Box } from '$lib/types';
+  import WorkingOnModal from '$lib/components/WorkingOnModal/WorkingOnModal.svelte';
+  import WorkingOnModalContent from '$lib/components/WorkingOnModalContent/WorkingOnModalContent.svelte';
   import { onMount, onDestroy } from 'svelte';
 
   const isModalOpen = writable(false);
@@ -81,7 +81,7 @@
   }
 
   // --- Image and Page loading logic ---
-  let loadTimeout: number;
+  let loadTimeout: ReturnType<typeof setTimeout>;
   let bgImageLoadedCount = 0;
   const totalBgImages = 2;
   let imagesFullyLoaded = false;

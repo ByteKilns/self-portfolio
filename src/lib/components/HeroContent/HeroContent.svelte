@@ -1,6 +1,6 @@
 <script>
   import { writable } from 'svelte/store';
-  import vector from '../../assets/vector.png';
+  import vector from '$lib/assets/vector.png';
   import { onMount } from 'svelte';
 
   export let isDarkMode = writable(false);

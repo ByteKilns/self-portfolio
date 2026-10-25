@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Chat } from "../../types/types";
+  import type { Chat } from "$lib/types";
   import { onMount } from "svelte";
   import { io } from "socket.io-client"; // Import Socket.IO client
 

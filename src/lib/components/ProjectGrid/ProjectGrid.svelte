@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Project } from '../../types/types.ts'; 
+    import type { Project } from '$lib/types';
     export let projects: Project[];
     export let onProjectSelect: (project: Project) => void;
     export let onProjectClick: () => void;
