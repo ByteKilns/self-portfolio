@@ -45,3 +45,21 @@
     font-family: var(--font-space-grotesk);
   }
 }
+
+html {
+  background-color: #edfbff;
+}
+
+html.dark {
+  background-color: #030e0e;
+}
+
+.main-content-wrapper {
+  background-image: url('/bg/gradient-light.webp');
+  background-size: cover;
+  background-position: center;
+}
+
+html.dark .main-content-wrapper {
+  background-image: url('/bg/gradient-dark.webp');
+}

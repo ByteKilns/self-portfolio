@@ -13,7 +13,7 @@
   import type { Box } from '$lib/types';
   import WorkingOnModal from '$lib/components/WorkingOnModal/WorkingOnModal.svelte';
   import WorkingOnModalContent from '$lib/components/WorkingOnModalContent/WorkingOnModalContent.svelte';
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount } from 'svelte';
 
   const isModalOpen = writable(false);
   const isWorkingModalOpen = writable(false);
@@ -23,12 +23,6 @@
   let workingOnButtonPosition = { x: 0, y: 0, width: 0 };
 
   const selectedProject = writable(projects[0]);
-
-  const isLoadingBackground = writable(true);
-
-  // New reactive variable for the background style
-  let backgroundStyle: string = '';
-  let mainContentEl: HTMLElement;
 
   function handleProjectClick() {
     $isModalOpen = true;
@@ -64,162 +58,17 @@
 
   function toggleTheme() {
     $isDarkMode = !$isDarkMode;
-    document.documentElement.classList.toggle('dark');
-    // Update background style immediately when theme changes
-    applyBackgroundStyle($isDarkMode);
-  }
-
-  // Function to apply the background style and ensure it's rendered
-  function applyBackgroundStyle(darkMode: boolean) {
-    const newStyle = `background-image: url('${darkMode ? '/Gradient-dark.svg' : '/Gradient.svg'}'); background-size: cover; background-position: center;`;
-    backgroundStyle = newStyle;
-    
-    // Force a reflow to ensure the style is applied
-    if (mainContentEl) {
-      mainContentEl.offsetHeight; // Force reflow
+    document.documentElement.classList.toggle('dark', $isDarkMode);
+    try {
+      localStorage.setItem('theme', $isDarkMode ? 'dark' : 'light');
+    } catch {
+      // localStorage can be unavailable (private mode); theme still applies for this page view.
     }
   }
-
-  // --- Image and Page loading logic ---
-  let loadTimeout: ReturnType<typeof setTimeout>;
-  let bgImageLoadedCount = 0;
-  const totalBgImages = 2;
-  let imagesFullyLoaded = false;
-  let pageFullyLoaded = false;
-  let allNetworkActivityComplete = false;
 
   onMount(() => {
-    // 1. Preload both background images
-    const lightBgImage = new Image();
-    const darkBgImage = new Image();
-
-    const checkBgImagesLoaded = () => {
-      bgImageLoadedCount++;
-      if (bgImageLoadedCount === totalBgImages) {
-        imagesFullyLoaded = true;
-        applyBackgroundStyle($isDarkMode);
-        checkCanHideLoader();
-      }
-    };
-
-    lightBgImage.onload = checkBgImagesLoaded;
-    darkBgImage.onload = checkBgImagesLoaded;
-    lightBgImage.onerror = () => {
-      console.warn('Failed to load light background image');
-      checkBgImagesLoaded();
-    };
-    darkBgImage.onerror = () => {
-      console.warn('Failed to load dark background image');
-      checkBgImagesLoaded();
-    };
-
-    lightBgImage.src = '/Gradient.svg';
-    darkBgImage.src = '/Gradient-dark.svg';
-
-    // 2. Wait for initial page load
-    const handlePageLoad = () => {
-      pageFullyLoaded = true;
-      // Start monitoring for complete network inactivity
-      monitorNetworkActivity();
-    };
-
-    if (document.readyState === 'complete') {
-      handlePageLoad();
-    } else {
-      window.addEventListener('load', handlePageLoad);
-    }
-
-    // 3. Monitor network activity to detect when tab loading icon stops
-    const monitorNetworkActivity = () => {
-      let networkCheckCount = 0;
-      const maxNetworkChecks = 50; // Maximum checks to prevent infinite waiting
-      
-      const checkNetworkInactivity = () => {
-        networkCheckCount++;
-        
-        // Use multiple methods to detect network completion
-        const checkMethods = [
-          () => document.readyState === 'complete',
-          () => performance.now() > 1000, // Minimum time threshold
-          () => !document.querySelector('img[loading]'), // No lazy loading images
-        ];
-
-        // Check if all conditions are met
-        const allConditionsMet = checkMethods.every(check => check());
-        
-        if (allConditionsMet && networkCheckCount > 3) {
-          // Wait a bit more to ensure tab loading icon stops
-          setTimeout(() => {
-            // Final check: Use requestIdleCallback if available
-            if (window.requestIdleCallback) {
-              window.requestIdleCallback(() => {
-                allNetworkActivityComplete = true;
-                checkCanHideLoader();
-              }, { timeout: 1000 });
-            } else {
-              // Fallback for browsers without requestIdleCallback
-              setTimeout(() => {
-                allNetworkActivityComplete = true;
-                checkCanHideLoader();
-              }, 500);
-            }
-          }, 300);
-        } else if (networkCheckCount < maxNetworkChecks) {
-          // Check again after a delay
-          setTimeout(checkNetworkInactivity, 200);
-        } else {
-          // Force completion after max checks
-          console.warn('Network activity monitoring timed out');
-          allNetworkActivityComplete = true;
-          checkCanHideLoader();
-        }
-      };
-
-      // Start the network activity check
-      setTimeout(checkNetworkInactivity, 100);
-    };
-
-    // 4. Function to check if we can hide the loader
-    const checkCanHideLoader = () => {
-      if (imagesFullyLoaded && pageFullyLoaded && allNetworkActivityComplete) {
-        // Final verification with a longer delay
-        setTimeout(() => {
-          if (mainContentEl && backgroundStyle) {
-            const computedStyle = window.getComputedStyle(mainContentEl);
-            const bgImage = computedStyle.backgroundImage;
-            
-            if (bgImage && bgImage !== 'none') {
-              $isLoadingBackground = false;
-            } else {
-              setTimeout(() => {
-                $isLoadingBackground = false;
-              }, 300);
-            }
-          } else {
-            $isLoadingBackground = false;
-          }
-        }, 400); // Longer delay to ensure everything is truly ready
-      }
-    };
-
-    // 5. Fallback timeout (increased)
-    loadTimeout = setTimeout(() => {
-      if ($isLoadingBackground) {
-        console.warn("Loading screen hidden by fallback timeout");
-        applyBackgroundStyle($isDarkMode);
-        setTimeout(() => {
-          $isLoadingBackground = false;
-        }, 200);
-      }
-    }, 12000); // Increased to 12 seconds
-
-    // Cleanup
-    onDestroy(() => {
-      window.removeEventListener('load', handlePageLoad);
-      clearTimeout(loadTimeout);
-    });
+    $isDarkMode = document.documentElement.classList.contains('dark');
   });
-  // --- End image loading logic ---
 
   // Initial boxes with TypeScript typing
   let box: Box = {
@@ -264,18 +113,7 @@
   }
 </script>
 
-{#if $isLoadingBackground}
-  <div class="fixed inset-0 flex items-center justify-center bg-gray-900 text-white z-50 transition-opacity duration-500 opacity-100">
-    <p class="text-2xl font-bold animate-pulse">Loading...</p>
-  </div>
-{/if}
-
-<div bind:this={mainContentEl}
-     class="font-space-grotesk h-[100vh]  bg-cover bg-center main-content-wrapper transition-opacity duration-500 overflow-x-hidden"
-     style={backgroundStyle}
-     class:opacity-0={$isLoadingBackground}
-     class:opacity-100={!$isLoadingBackground}
-   >
+<div class="font-space-grotesk h-[100vh]  bg-cover bg-center main-content-wrapper overflow-x-hidden">
   <div class="max-w-lg md:max-w-2xl lg:max-w-4xl xl:max-w-7xl mx-auto px-10 md:px-4 py-4">
     <Navbar 
     bind:workingOnButtonEl

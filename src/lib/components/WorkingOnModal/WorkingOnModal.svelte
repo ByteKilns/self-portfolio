@@ -15,11 +15,7 @@
 </script>
  
 <div
-    class="fixed inset-0 bg-black/30 backdrop-blur-[0.2px] bg-blend-overlay transition-opacity duration-700 ease-in-out"
-    class:opacity-0={!isOpen}
-    class:opacity-100={isOpen}
-    class:pointer-events-none={!isOpen} 
-    class:pointer-events-auto={isOpen}
+    class="fixed inset-0 bg-black/30 backdrop-blur-[0.2px] bg-blend-overlay transition-opacity duration-700 ease-in-out {isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}"
     role="button"
     tabindex="0"
     on:click={handleBackdropClick}
@@ -30,10 +26,8 @@
     }}
 >
     <div 
-        class="fixed w-[40vw] transition-transform duration-700 border-gray-700 border-1 ease-in-out"
+        class="fixed w-[40vw] transition-transform duration-700 border-gray-700 border-1 ease-in-out {isOpen ? 'translate-y-0' : 'translate-y-[-100%]'}"
         style="top: {anchorPosition.y + 40}px; left: {anchorPosition.x}px;"
-        class:translate-y-[-100%]={!isOpen}
-        class:translate-y-0={isOpen}
     >
         <div
             class="px-8 py-8 h-full w-full {$isDarkMode ? "bg-[url('/modal-dark-bg.webp')] bg-cover bg-center" : "bg-white"} text-gray-700 bg-cover bg-center"

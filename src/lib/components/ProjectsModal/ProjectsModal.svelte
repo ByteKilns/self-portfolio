@@ -18,11 +18,7 @@
   </script>
   
   <div
-  class="fixed inset-0 bg-black/30 backdrop-blur-[0.2px] bg-blend-overlay transition-opacity duration-700 ease-in-out"
-  class:opacity-0={!isOpen}
-  class:opacity-100={isOpen}
-  class:pointer-events-none={!isOpen} 
-  class:pointer-events-auto={isOpen}
+  class="fixed inset-0 bg-black/30 backdrop-blur-[0.2px] bg-blend-overlay transition-opacity duration-700 ease-in-out {isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}"
   role="button"
   tabindex="0"
   on:click={handleBackdropClick}
@@ -32,9 +28,7 @@
     }
   }}
 >
-  <div class="fixed bottom-0  left-0 right-0 p-[1px] {isDarkMode && "bg-gradient-to-r from-blue-500 via-purple-500 to-green-500 h-[80vh]"} transition-transform duration-700 ease-in-out"
-    class:translate-y-full={!isOpen}
-    class:translate-y-0={isOpen}
+  <div class="fixed bottom-0  left-0 right-0 p-[1px] {isDarkMode && "bg-gradient-to-r from-blue-500 via-purple-500 to-green-500 h-[80vh]"} transition-transform duration-700 ease-in-out {isOpen ? 'translate-y-0' : 'translate-y-full'}"
   >
     <div
       class="overflow-scroll px-4 md:px-16 py-5 h-full w-full {$isDarkMode ? "bg-[url('/modal-dark-bg.webp')] bg-cover bg-center" : "bg-white"} text-gray-700 bg-cover bg-center"
