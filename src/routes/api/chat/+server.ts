@@ -152,3 +152,5 @@ export async function _handleChat(event: RequestEvent, deps: ChatDeps): Promise<
 }
 
 export const POST = (event: RequestEvent) => _handleChat(event, { streamChat, limiters });
+
+export const config = { maxDuration: 60 };

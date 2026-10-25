@@ -1,47 +1,59 @@
-# Svelte + TS + Vite
+# Nirjal Prajapati — Portfolio
 
-This template should help get you started developing with Svelte and TypeScript in Vite.
+A personal portfolio for Nirjal Prajapati, built with SvelteKit (Svelte 5, Vite, Tailwind CSS) and deployed on Vercel. The home page is prerendered to static HTML and served from Vercel's CDN. The only server route is [`src/routes/api/chat/+server.ts`](src/routes/api/chat/+server.ts): it puts the whole CV and project list into the system prompt and streams Gemini's answer back as plain text — no RAG, no embeddings, no database.
 
-## Recommended IDE Setup
+## Development
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
-
-## Need an official Svelte framework?
-
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
-
-## Technical considerations
-
-**Why use this over SvelteKit?**
-
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
-
-This template contains as little as possible to get started with Vite + TypeScript + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
-
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
-
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
-
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
-
-**Why include `.vscode/extensions.json`?**
-
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `allowJs` in the TS template?**
-
-While `allowJs: false` would indeed prevent the use of `.js` files in the project, it does not prevent the use of JavaScript syntax in `.svelte` files. In addition, it would force `checkJs: false`, bringing the worst of both worlds: not being able to guarantee the entire codebase is TypeScript, and also having worse typechecking for the existing JavaScript. In addition, there are valid use cases in which a mixed codebase may be relevant.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/rixo/svelte-hmr#svelte-hmr).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```ts
-// store.ts
-// An extremely simple external store
-import { writable } from "svelte/store";
-export default writable(0);
+```bash
+bun install
+bun run dev       # http://localhost:5173
+bun run test      # Vitest (also checks that static/ files stay under 300 KB)
+bun run check     # svelte-kit sync + svelte-check
+bun run build     # production build + .vercel/output
+bun run preview   # preview the production build
+bun run format    # Prettier
 ```
+
+## Environment variables
+
+Copy `.env.example` to `.env` for local development:
+
+```bash
+GEMINI_API_KEY=your-key-here
+GEMINI_MODEL=gemini-3.5-flash-lite
+```
+
+- `GEMINI_API_KEY` is required — the chat returns `503` without it.
+- `GEMINI_MODEL` is optional; it defaults to `gemini-3.5-flash-lite`.
+
+They are read through `$env/dynamic/private`, so they are never exposed to the browser. For production, set both in **Vercel → Project → Settings → Environment Variables** (Production and Preview).
+
+## Editing the chat's knowledge
+
+The assistant only knows what is in these two files:
+
+- **CV:** `src/lib/server/cv.md` — the entire file is injected into the system prompt. Keep facts accurate; the bot is instructed not to invent anything.
+- **Projects:** `src/lib/data/project-data.ts` — each project's title, description, tech stack and links are appended to the prompt.
+
+The prompt itself lives in `src/lib/server/chat/prompt.ts`. Rate limits (10 requests/minute, 60/day per IP) and request validation are in `src/lib/server/chat/`.
+
+## Images
+
+Convert new images to WebP with:
+
+```bash
+node scripts/optimize-images.mjs <input> [output] [--width N] [--quality N] [--lossless]
+```
+
+Examples:
+
+```bash
+node scripts/optimize-images.mjs static/new-photo.png static/new-photo.webp --width 1600 --quality 60
+node scripts/optimize-images.mjs src/lib/assets/logo.png src/lib/assets/logo.webp --lossless
+```
+
+No file in `static/` may exceed **300 KB**; `bun run test` enforces this.
+
+## Deploying
+
+Push to GitHub — Vercel builds automatically from `main`, and every pull request gets its own preview URL. The project uses `@sveltejs/adapter-vercel` with the Node.js 22 runtime, and `/api/chat` sets `maxDuration = 60` so long streamed answers are not cut off.
