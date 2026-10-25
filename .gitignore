@@ -22,3 +22,19 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Build output
+.next/
+.svelte-kit/
+.vercel/
+build/
+*.tsbuildinfo
+
+# Local tooling / old repos
+.superpowers/
+my-porfolio-chat/

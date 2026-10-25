@@ -1,0 +1,8 @@
+.svelte-kit
+.vercel
+node_modules
+bun.lock
+static
+docs
+my-porfolio-chat
+.superpowers
