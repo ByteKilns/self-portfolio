@@ -36,7 +36,7 @@
         class:translate-y-0={isOpen}
     >
         <div
-            class="px-8 py-8 h-full w-full {$isDarkMode ? "bg-[url('/modal-dark-bg.png')] bg-cover bg-center" : "bg-white"} text-gray-700 bg-cover bg-center"
+            class="px-8 py-8 h-full w-full {$isDarkMode ? "bg-[url('/modal-dark-bg.webp')] bg-cover bg-center" : "bg-white"} text-gray-700 bg-cover bg-center"
         >
             <div class="flex flex-col items-end justify-end">
                 <button class="bg-transparent border-none p-0" on:click={onClose}>

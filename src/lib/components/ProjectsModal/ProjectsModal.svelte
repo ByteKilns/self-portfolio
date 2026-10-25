@@ -37,7 +37,7 @@
     class:translate-y-0={isOpen}
   >
     <div
-      class="overflow-scroll px-4 md:px-16 py-5 h-full w-full {$isDarkMode ? "bg-[url('/modal-dark-bg.png')] bg-cover bg-center" : "bg-white"} text-gray-700 bg-cover bg-center"
+      class="overflow-scroll px-4 md:px-16 py-5 h-full w-full {$isDarkMode ? "bg-[url('/modal-dark-bg.webp')] bg-cover bg-center" : "bg-white"} text-gray-700 bg-cover bg-center"
     >
       <div class="pt-4 flex   justify-end">
         <button class="bg-transparent border-none p-0" on:click={onClose}>

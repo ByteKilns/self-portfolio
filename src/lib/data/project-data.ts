@@ -10,7 +10,7 @@ export const projects: Project[] = [
 
     githublink: "https://github.com/user/aastha-cooperative",
     websitelink: "https://aastha.example.com",
-    photoUrl: "./placeholder.png",
+    photoUrl: "/placeholder.webp",
     description: [
       "Portfolio site for a savings and credit cooperative",
       "Features notices, news, and a gallery",
@@ -27,7 +27,7 @@ export const projects: Project[] = [
 
     githublink: "https://github.com/user/niva-craftworks",
     websitelink: "https://niva.example.com",
-    photoUrl: "./placeholder.png",
+    photoUrl: "/placeholder.webp",
     description: [
       "E-commerce and portfolio website for a handicrafts business",
       "Allows users to explore the brand and place orders via messages",
@@ -42,7 +42,7 @@ export const projects: Project[] = [
     isLinkAvailable: true,
     githublink: "https://github.com/user/deshna-it",
     websitelink: "https://deshna.example.com",
-    photoUrl: "./placeholder.png",
+    photoUrl: "/placeholder.webp",
     description: [
       "Website for an IT teaching company",
       "Features courses, a blog, career page, and contact page",
@@ -59,7 +59,7 @@ export const projects: Project[] = [
 
     githublink: "https://github.com/user/everest-ledger",
     websitelink: "https://everestledger.example.com",
-    photoUrl: "./placeholder.pngg",
+    photoUrl: "/placeholder.webp",
     description: [
       "Ledger-keeping web app for inventory tracking",
       "Generates financial reports like profit/loss and sales reports",
@@ -75,7 +75,7 @@ export const projects: Project[] = [
 
     githublink: "https://github.com/user/ibm-nepal",
     websitelink: "https://ibmnepal.example.com",
-    photoUrl: "./placeholder.png ",
+    photoUrl: "/placeholder.webp",
     description: [
       "Portfolio app for child dairy products",
       "Currently in the design phase",
@@ -91,7 +91,7 @@ export const projects: Project[] = [
 
     githublink: "https://github.com/user/husky-app",
     websitelink: "https://husky.example.com",
-    photoUrl: "./placeholder.png",
+    photoUrl: "/placeholder.webp",
     description: [
       "Language-learning app focusing on Nepali and Newari",
       "Similar to Duolingo, currently in beta testing",
@@ -107,7 +107,7 @@ export const projects: Project[] = [
     isLinkAvailable: false,
     githublink: "https://github.com/user/nepal-police",
     websitelink: "https://police.example.com",
-    photoUrl: "./placeholder.png",
+    photoUrl: "/placeholder.webp",
     description: [
       "Internal intranet application for Nepal Police",
       "Tracks projects, objectives, tasks, and KPIs",

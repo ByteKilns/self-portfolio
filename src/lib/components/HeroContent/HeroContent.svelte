@@ -1,6 +1,6 @@
 <script>
   import { writable } from 'svelte/store';
-  import vector from '$lib/assets/vector.png';
+  import vector from '$lib/assets/vector.webp';
   import { onMount } from 'svelte';
 
   export let isDarkMode = writable(false);
@@ -21,7 +21,7 @@
     <p class=" data-text-primary mb-2 text-[1.1rem]">
       Building robust digital experiences with passion and precision.
     </p>
-  <img alt="The project logo" src={vector} class="md:hidden w-72 h-auto rounded-full" />
+  <img alt="The project logo" src={vector} width={2000} height={2000} loading="lazy" decoding="async" class="md:hidden w-72 h-auto rounded-full" />
 
     <p class="data-text-primary mb-4 text-[1.1rem]">
       — I'm [ <span>Nirjal Prajapati</span> ], a full-stack developer dedicated to
@@ -73,7 +73,7 @@
       </a>
     </div>
   </div>
-  <img alt="The project logo" src={vector} class="hidden md:block w-72 h-auto rounded-full " />
+  <img alt="The project logo" src={vector} width={2000} height={2000} loading="lazy" decoding="async" class="hidden md:block w-72 h-auto rounded-full " />
 </div>
 
 <style>

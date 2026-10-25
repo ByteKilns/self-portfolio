@@ -331,7 +331,7 @@
             {/if}
           </div>
           <div>
-            <img src={$selectedProject.photoUrl} alt="Project Image" class="hidden md:block w-full h-[25rem]" />
+            <img src={$selectedProject.photoUrl} alt="Project Image" width={727} height={453} loading="lazy" decoding="async" class="hidden md:block w-full h-[25rem]" />
           </div>
         </section>
       </ProjectsModal>
