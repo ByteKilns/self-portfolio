@@ -52,6 +52,11 @@ describe('buildMessages', () => {
     expect(messages[0].content).toContain('only answer questions about Nirjal');
   });
 
+  it('uses the CV experience summary instead of recalculating dates', () => {
+    expect(messages[0].content).toContain('Experience summary');
+    expect(messages[0].content).toContain('Do not extend a role past its end date');
+  });
+
   it('puts the history in order after the system message', () => {
     expect(messages.slice(1, 3)).toEqual(history);
   });

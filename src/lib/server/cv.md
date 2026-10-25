@@ -53,6 +53,14 @@ April 2023 – December 2023
 - Refactored legacy code to improve performance and maintainability
 - Ensured cross-browser compatibility and accessibility compliance
 
+### Experience summary
+
+- Total professional experience: 2+ years (April 2023 – March 2025, about 24 months)
+- Hawkai Pvt. Ltd. — Frontend Developer: April 2023 – December 2023 (~9 months)
+- Search Eyes Business Solutions — Frontend Developer: December 2023 – November 2024 (~12 months)
+- Independent — Full Stack Developer (Freelance/Contract): November 2024 – March 2025 (~5 months)
+- The roles overlap by one month at each transition; the total is the continuous period April 2023 – March 2025.
+
 ## Education and Certifications
 
 ### Education
