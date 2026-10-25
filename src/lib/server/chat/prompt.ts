@@ -1,5 +1,5 @@
-import type { LlmMessage, ChatTurn } from '$lib/chat/types';
-import type { Project } from '$lib/types';
+import type { LlmMessage, ChatTurn } from '#lib/chat/types.ts';
+import type { Project } from '#lib/types.ts';
 
 export function buildMessages(input: {
   cv: string;

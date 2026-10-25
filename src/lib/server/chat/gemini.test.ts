@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ChatUpstreamError, streamChat } from './gemini';
-import type { LlmMessage } from '$lib/chat/types';
+import type { LlmMessage } from '#lib/chat/types.ts';
 
 const URL = 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions';
 const messages: LlmMessage[] = [

@@ -1,15 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { RequestEvent } from '@sveltejs/kit';
-import type { LlmMessage } from '$lib/chat/types';
+import type { LlmMessage } from '#lib/chat/types.ts';
 
 const mockEnv = vi.hoisted(() => ({
   GEMINI_API_KEY: 'test-key' as string | undefined,
   GEMINI_MODEL: 'gemini-3.8-flash' as string | undefined
 }));
-vi.mock('$env/dynamic/private', () => ({ env: mockEnv }));
+vi.mock('$app/env/private', () => mockEnv);
 
-import { createRateLimiter } from '$lib/server/chat/rateLimit';
-import { ChatUpstreamError, streamChat as realStreamChat } from '$lib/server/chat/gemini';
+import { createRateLimiter } from '#lib/server/chat/rateLimit.ts';
+import { ChatUpstreamError, streamChat as realStreamChat } from '#lib/server/chat/gemini.ts';
 import { _handleChat } from './+server';
 
 type StreamChat = typeof realStreamChat;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { ChatTurn } from '$lib/chat/types';
+import type { ChatTurn } from '#lib/chat/types.ts';
 import { sendChat } from './client';
 
 function responseFrom(chunks: string[], status = 200) {

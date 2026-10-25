@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { Project } from '$lib/types';
+import type { Project } from '#lib/types.ts';
 import { buildMessages } from './prompt';
 
 const cv = '# Nirjal\n\nFullstack developer with 2+ years of experience.';

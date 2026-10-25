@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onDestroy, onMount, tick } from 'svelte';
-  import type { Chat } from '$lib/types';
-  import type { ChatTurn } from '$lib/chat/types';
-  import { sendChat } from '$lib/chat/client';
+  import type { Chat } from '#lib/types.ts';
+  import type { ChatTurn } from '#lib/chat/types.ts';
+  import { sendChat } from '#lib/chat/client.ts';
 
   type ChatLine = Chat & { isError?: boolean };
 

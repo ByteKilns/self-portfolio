@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Box } from "$lib/types";
+  import type { Box } from "#lib/types.ts";
   import ChatComponent from "../ChatComponent/ChatComponent.svelte";
 
     export let box:Box; 

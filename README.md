@@ -4,6 +4,8 @@ A personal portfolio for Nirjal Prajapati, built with SvelteKit (Svelte 5, Vite,
 
 ## Development
 
+Requires **Node.js 22 or newer** (SvelteKit 3). With nvm: `nvm use 22`.
+
 ```bash
 bun install
 bun run dev       # http://localhost:5173
@@ -26,7 +28,7 @@ GEMINI_MODEL=gemini-3.5-flash-lite
 - `GEMINI_API_KEY` is required — the chat returns `503` without it.
 - `GEMINI_MODEL` is optional; it defaults to `gemini-3.5-flash-lite`.
 
-They are read through `$env/dynamic/private`, so they are never exposed to the browser. For production, set both in **Vercel → Project → Settings → Environment Variables** (Production and Preview).
+They are declared in `src/env.ts` and read through `$app/env/private`, so they are never exposed to the browser. For production, set both in **Vercel → Project → Settings → Environment Variables** (Production and Preview).
 
 ## Editing the chat's knowledge
 

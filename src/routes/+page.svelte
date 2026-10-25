@@ -1,18 +1,18 @@
 <script lang="ts">
   import { writable } from 'svelte/store';
-  import ProjectsModal from '$lib/components/ProjectsModal/ProjectsModal.svelte';
-  import HeroContent from '$lib/components/HeroContent/HeroContent.svelte';
-  import Navbar from '$lib/components/Navbar/Navbar.svelte';
+  import ProjectsModal from '#lib/components/ProjectsModal/ProjectsModal.svelte';
+  import HeroContent from '#lib/components/HeroContent/HeroContent.svelte';
+  import Navbar from '#lib/components/Navbar/Navbar.svelte';
   // Add the new responsive navbar import
-  import ProjectGrid from '$lib/components/ProjectGrid/ProjectGrid.svelte';
-  import type { Project } from '$lib/types';
+  import ProjectGrid from '#lib/components/ProjectGrid/ProjectGrid.svelte';
+  import type { Project } from '#lib/types.ts';
   import { Globe } from 'lucide-svelte';
-  import { projects } from '$lib/data/project-data';
-  import ConsoleComponent from '$lib/components/ConsoleComponent/ConsoleComponent.svelte';
-  import ConsoleContent from '$lib/components/ConsoleContent/ConsoleContent.svelte';
-  import type { Box } from '$lib/types';
-  import WorkingOnModal from '$lib/components/WorkingOnModal/WorkingOnModal.svelte';
-  import WorkingOnModalContent from '$lib/components/WorkingOnModalContent/WorkingOnModalContent.svelte';
+  import { projects } from '#lib/data/project-data.ts';
+  import ConsoleComponent from '#lib/components/ConsoleComponent/ConsoleComponent.svelte';
+  import ConsoleContent from '#lib/components/ConsoleContent/ConsoleContent.svelte';
+  import type { Box } from '#lib/types.ts';
+  import WorkingOnModal from '#lib/components/WorkingOnModal/WorkingOnModal.svelte';
+  import WorkingOnModalContent from '#lib/components/WorkingOnModalContent/WorkingOnModalContent.svelte';
   import { onMount } from 'svelte';
 
   const isModalOpen = writable(false);

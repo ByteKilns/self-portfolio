@@ -1,7 +1,7 @@
 import { existsSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { expect, test } from 'vitest';
-import { projects } from '$lib/data/project-data';
+import { projects } from '#lib/data/project-data.ts';
 
 function walk(dir: string): string[] {
   const files: string[] = [];

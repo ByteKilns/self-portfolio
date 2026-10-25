@@ -1,4 +1,4 @@
-import type { ChatTurn } from '$lib/chat/types';
+import type { ChatTurn } from '#lib/chat/types.ts';
 
 export const MAX_MESSAGE_CHARS = 1000;
 export const MAX_HISTORY = 6;

@@ -1,4 +1,4 @@
-import type { ChatTurn } from '$lib/chat/types';
+import type { ChatTurn } from '#lib/chat/types.ts';
 
 export async function sendChat(input: {
   message: string;

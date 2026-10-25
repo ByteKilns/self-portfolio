@@ -1,11 +1,11 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { env } from '$env/dynamic/private';
-import cv from '$lib/server/cv.md?raw';
-import { projects } from '$lib/data/project-data';
-import { ChatUpstreamError, streamChat } from '$lib/server/chat/gemini';
-import { buildMessages } from '$lib/server/chat/prompt';
-import { createRateLimiter } from '$lib/server/chat/rateLimit';
-import { parseChatRequest } from '$lib/server/chat/validate';
+import * as env from '$app/env/private';
+import cv from '#lib/server/cv.md?raw';
+import { projects } from '#lib/data/project-data.ts';
+import { ChatUpstreamError, streamChat } from '#lib/server/chat/gemini.ts';
+import { buildMessages } from '#lib/server/chat/prompt.ts';
+import { createRateLimiter } from '#lib/server/chat/rateLimit.ts';
+import { parseChatRequest } from '#lib/server/chat/validate.ts';
 
 type RateLimiter = ReturnType<typeof createRateLimiter>;
 

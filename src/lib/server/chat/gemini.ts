@@ -1,4 +1,4 @@
-import type { LlmMessage } from '$lib/chat/types';
+import type { LlmMessage } from '#lib/chat/types.ts';
 
 const ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions';
 
