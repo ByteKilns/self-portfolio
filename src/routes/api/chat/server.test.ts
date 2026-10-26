@@ -13,7 +13,10 @@ import { ChatUpstreamError, streamChat as realStreamChat } from '#lib/server/cha
 import { _handleChat } from './+server';
 
 type StreamChat = typeof realStreamChat;
-type Limiters = { minute: ReturnType<typeof createRateLimiter>; day: ReturnType<typeof createRateLimiter> };
+type Limiters = {
+  minute: ReturnType<typeof createRateLimiter>;
+  day: ReturnType<typeof createRateLimiter>;
+};
 
 const now = () => new Date('2026-10-25T12:00:00Z');
 
@@ -41,9 +44,9 @@ function makeEvent(
 }
 
 function fakeStream(chunks: string[]): StreamChat {
-  return (async function* () {
+  return async function* () {
     for (const chunk of chunks) yield chunk;
-  }) as unknown as StreamChat;
+  } as unknown as StreamChat;
 }
 
 const validBody = { message: 'What does Nirjal do?', history: [] };
@@ -146,9 +149,9 @@ describe('_handleChat streaming', () => {
   });
 
   it('maps a 429 from Gemini to 503 with the busy message', async () => {
-    const failing = (async function* () {
+    const failing = async function* () {
       throw new ChatUpstreamError(429, 'rate limited');
-    }) as unknown as StreamChat;
+    } as unknown as StreamChat;
 
     const response = await _handleChat(makeEvent(validBody), {
       streamChat: failing,
@@ -163,9 +166,9 @@ describe('_handleChat streaming', () => {
   });
 
   it('maps any other upstream error to 502', async () => {
-    const failing = (async function* () {
+    const failing = async function* () {
       throw new Error('boom');
-    }) as unknown as StreamChat;
+    } as unknown as StreamChat;
 
     const response = await _handleChat(makeEvent(validBody), {
       streamChat: failing,
@@ -183,14 +186,14 @@ describe('_handleChat streaming', () => {
     const controller = new AbortController();
     let receivedSignal: AbortSignal | undefined;
 
-    const waiting = (async function* (_messages: LlmMessage[], opts: { signal?: AbortSignal }) {
+    const waiting = async function* (_messages: LlmMessage[], opts: { signal?: AbortSignal }) {
       receivedSignal = opts.signal;
       yield 'Hi';
       await new Promise<void>((resolve) => {
         if (opts.signal?.aborted) return resolve();
         opts.signal?.addEventListener('abort', () => resolve(), { once: true });
       });
-    }) as unknown as StreamChat;
+    } as unknown as StreamChat;
 
     const event = makeEvent(validBody, { signal: controller.signal });
     const response = await _handleChat(event, {

@@ -1,8 +1,6 @@
-export function createRateLimiter(opts: {
-  limit: number;
-  windowMs: number;
-  now?: () => number;
-}): { check(key: string): { allowed: boolean; retryAfterMs: number } } {
+export function createRateLimiter(opts: { limit: number; windowMs: number; now?: () => number }): {
+  check(key: string): { allowed: boolean; retryAfterMs: number };
+} {
   const now = opts.now ?? Date.now;
   const hits = new Map<string, number[]>();
 

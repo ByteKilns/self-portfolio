@@ -1,7 +1,7 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import * as env from '$app/env/private';
 import cv from '#lib/server/cv.md?raw';
-import { projects } from '#lib/data/project-data.ts';
+import { liveProjects } from '#lib/content/index.ts';
 import { ChatUpstreamError, streamChat } from '#lib/server/chat/gemini.ts';
 import { buildMessages } from '#lib/server/chat/prompt.ts';
 import { createRateLimiter } from '#lib/server/chat/rateLimit.ts';
@@ -76,7 +76,7 @@ export async function _handleChat(event: RequestEvent, deps: ChatDeps): Promise<
 
   const messages = buildMessages({
     cv,
-    projects,
+    projects: liveProjects(),
     history: parsed.history,
     message: parsed.message,
     today: deps.now?.() ?? new Date()

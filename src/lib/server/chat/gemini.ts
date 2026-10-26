@@ -34,7 +34,10 @@ export async function* streamChat(
 
   if (!response.ok) {
     const detail = await response.text().catch(() => '');
-    throw new ChatUpstreamError(response.status, detail || `Gemini responded with ${response.status}`);
+    throw new ChatUpstreamError(
+      response.status,
+      detail || `Gemini responded with ${response.status}`
+    );
   }
   if (!response.body) {
     throw new ChatUpstreamError(502, 'Gemini returned an empty response body.');

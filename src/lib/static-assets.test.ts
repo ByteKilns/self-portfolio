@@ -1,7 +1,7 @@
 import { existsSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { expect, test } from 'vitest';
-import { projects } from '#lib/data/project-data.ts';
+import { content } from '#lib/content/index.ts';
 
 function walk(dir: string): string[] {
   const files: string[] = [];
@@ -23,11 +23,14 @@ test('no file in static/ is larger than 300 KB', () => {
   }
 });
 
-test('every project photoUrl points at a real file in static/', () => {
-  for (const project of projects) {
-    const url = project.photoUrl;
-    expect(url, `${project.title} photoUrl has leading or trailing whitespace`).toBe(url.trim());
-    const path = join('static', url.replace(/^\.?\//, ''));
-    expect(existsSync(path), `${project.title} photoUrl "${url}" does not exist at ${path}`).toBe(true);
+test('every project image points at a real file in static/', () => {
+  for (const project of content.projects) {
+    if (project.image === '') continue;
+    expect(project.image, `${project.name} image must be a static path`).toMatch(/^\//);
+    const path = join('static', project.image.replace(/^\//, ''));
+    expect(
+      existsSync(path),
+      `${project.name} image "${project.image}" does not exist at ${path}`
+    ).toBe(true);
   }
 });

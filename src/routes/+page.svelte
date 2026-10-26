@@ -1,213 +1,264 @@
 <script lang="ts">
-  import { writable } from 'svelte/store';
-  import ProjectsModal from '#lib/components/ProjectsModal/ProjectsModal.svelte';
-  import HeroContent from '#lib/components/HeroContent/HeroContent.svelte';
-  import Navbar from '#lib/components/Navbar/Navbar.svelte';
-  // Add the new responsive navbar import
-  import ProjectGrid from '#lib/components/ProjectGrid/ProjectGrid.svelte';
-  import type { Project } from '#lib/types.ts';
-  import { Globe } from 'lucide-svelte';
-  import { projects } from '#lib/data/project-data.ts';
-  import ConsoleComponent from '#lib/components/ConsoleComponent/ConsoleComponent.svelte';
-  import ConsoleContent from '#lib/components/ConsoleContent/ConsoleContent.svelte';
-  import type { Box } from '#lib/types.ts';
-  import WorkingOnModal from '#lib/components/WorkingOnModal/WorkingOnModal.svelte';
-  import WorkingOnModalContent from '#lib/components/WorkingOnModalContent/WorkingOnModalContent.svelte';
   import { onMount } from 'svelte';
+  import { browser } from '$app/env';
+  import { page } from '$app/state';
+  import { pushState } from '$app/navigation';
+  import { content, featured, liveProjects } from '#lib/content/index.ts';
+  import { pad, parts } from '#lib/content/format.ts';
+  import PageBackground from '#lib/components/site/PageBackground.svelte';
+  import Header from '#lib/components/site/Header.svelte';
+  import Hero from '#lib/components/site/Hero.svelte';
+  import WorkStage from '#lib/components/site/WorkStage.svelte';
+  import ProjectIndex from '#lib/components/site/ProjectIndex.svelte';
+  import Contact from '#lib/components/site/Contact.svelte';
+  import ProjectView from '#lib/components/site/ProjectView.svelte';
+  import Curtain from '#lib/components/site/Curtain.svelte';
+  import ConsoleDrawer from '#lib/components/site/ConsoleDrawer.svelte';
+  import Bit from '#lib/components/site/Bit.svelte';
 
-  const isModalOpen = writable(false);
-  const isWorkingModalOpen = writable(false);
-  const isDarkMode = writable(false);
-  const isConsoleOpen = writable(false);
-  let workingOnButtonEl: HTMLElement;
-  let workingOnButtonPosition = { x: 0, y: 0, width: 0 };
+  const site = content.site;
+  const list = liveProjects();
+  const scenes = featured(list);
 
-  const selectedProject = writable(projects[0]);
+  let project = $state<number | null>(null);
+  let consoleOpen = $state(false);
+  let nowOpen = $state(false);
+  let curtain = $state<string | null>(null);
+  let narrow = $state(false);
+  let reduced = $state(false);
+  let isDark = $state(false);
+  let lure = $state(false);
+  let cursor = $state(false);
 
-  function handleProjectClick() {
-    $isModalOpen = true;
+  let workEl = $state<HTMLElement | null>(null);
+  let archiveEl = $state<HTMLElement | null>(null);
+  let contactEl = $state<HTMLElement | null>(null);
+  let emailEl = $state<HTMLAnchorElement | null>(null);
+  let floorEl = $state<HTMLDivElement | null>(null);
+
+  let savedY = 0;
+  let lastStateProject: number | undefined = undefined;
+  let curtainTimer: ReturnType<typeof setTimeout> | undefined;
+  let curtainClearTimer: ReturnType<typeof setTimeout> | undefined;
+  let jumpTimer: ReturnType<typeof setTimeout> | undefined;
+
+  const nowItems = $derived(site.now.filter(Boolean).map((line) => parts(line)));
+  const cur = $derived(project != null ? (list[project] ?? null) : null);
+
+  function open(i: number) {
+    if (project === null) savedY = window.scrollY;
+    project = i;
+    consoleOpen = false;
+    window.scrollTo(0, 0);
+    if (browser) void pushState('', { project: i });
   }
 
-  function closeModal() {
-    $isModalOpen = false;
+  function closeAndRestore() {
+    project = null;
+    requestAnimationFrame(() => requestAnimationFrame(() => window.scrollTo(0, savedY || 0)));
   }
 
-  function handleConsoleToggle() {
-    $isConsoleOpen = !$isConsoleOpen;
-  }
-
-  function handleWorkingModalToggle() {
-    if (!$isWorkingModalOpen) {
-      const rect = workingOnButtonEl.getBoundingClientRect();
-      workingOnButtonPosition = {
-        x: rect.left,
-        y: rect.bottom,
-        width: rect.width
-      };
+  function back() {
+    if (page.state?.project != null) {
+      history.back();
+      return;
     }
-    $isWorkingModalOpen = !$isWorkingModalOpen;
+    closeAndRestore();
   }
 
-  function handleConsoleClose() {
-    $isConsoleOpen = false;
+  function openWithCurtain(i: number) {
+    if (reduced) return open(i);
+    curtain = list[i].name;
+    clearTimeout(curtainTimer);
+    clearTimeout(curtainClearTimer);
+    curtainTimer = setTimeout(() => {
+      open(i);
+      curtainClearTimer = setTimeout(() => (curtain = null), 560);
+    }, 440);
   }
 
-  function handleProjectSelect(project: Project) {
-    $selectedProject = project;
+  function step(d: number) {
+    const n = list.length;
+    if (n === 0) return;
+    project = ((project ?? 0) + d + n) % n;
+    window.scrollTo(0, 0);
+  }
+
+  function jump(get: () => HTMLElement | null) {
+    const go = () => {
+      const el = get();
+      if (el)
+        window.scrollTo({
+          top: el.getBoundingClientRect().top + window.scrollY - 10,
+          behavior: reduced ? 'auto' : 'smooth'
+        });
+    };
+    if (project !== null) {
+      project = null;
+      clearTimeout(jumpTimer);
+      jumpTimer = setTimeout(go, 60);
+    } else go();
+  }
+
+  function goHome() {
+    project = null;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function toggleTheme() {
-    $isDarkMode = !$isDarkMode;
-    document.documentElement.classList.toggle('dark', $isDarkMode);
+    isDark = !isDark;
+    document.documentElement.classList.toggle('dark', isDark);
     try {
-      localStorage.setItem('theme', $isDarkMode ? 'dark' : 'light');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
     } catch {
-      // localStorage can be unavailable (private mode); theme still applies for this page view.
+      // localStorage can be unavailable (private mode); the theme still applies for this page view.
     }
   }
 
-  onMount(() => {
-    $isDarkMode = document.documentElement.classList.contains('dark');
+  function onLure(on: boolean) {
+    lure = on;
+  }
+
+  function bitSay(text: string, ms: number) {
+    if (browser) window.dispatchEvent(new CustomEvent('bit:say', { detail: { text, ms } }));
+  }
+
+  $effect(() => {
+    const stateProject = page.state?.project;
+    const previous = lastStateProject;
+    lastStateProject = stateProject;
+    if (stateProject === previous) return;
+    if (typeof stateProject === 'number') {
+      if (project !== stateProject) {
+        project = stateProject;
+        window.scrollTo(0, 0);
+      }
+    } else if (project !== null) {
+      closeAndRestore();
+    }
   });
 
-  // Initial boxes with TypeScript typing
-  let box: Box = {
-    id: "box1",
-    x: 650,
-    y: 100,
-    width: 600,
-    height: 400,
-    bgColor: "bg-blue-50",
-    borderColor: "border-blue-300",
-    content: {
-      title: "Chat with Me",
-      description: "",
-      titleColor: "text-blue-700"
-    },
-    zIndex: 1
-  };
+  onMount(() => {
+    isDark = document.documentElement.classList.contains('dark');
+    narrow = window.innerWidth < 820;
+    reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Track the active box to bring it to front
-  let activeBoxId: string | null = null;
+    const onKey = (e: KeyboardEvent) => {
+      const tag = e.target instanceof HTMLElement ? e.target.tagName : '';
+      if (e.key === 'Escape') {
+        if (nowOpen) {
+          nowOpen = false;
+          return;
+        }
+        if (consoleOpen) {
+          consoleOpen = false;
+          return;
+        }
+        if (project != null) back();
+        return;
+      }
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === 'g' || e.key === 'G') {
+        e.preventDefault();
+        consoleOpen = !consoleOpen;
+      }
+      if (project != null && !consoleOpen) {
+        if (e.key === 'ArrowRight') step(1);
+        if (e.key === 'ArrowLeft') step(-1);
+      }
+    };
 
-  // Event handlers with TypeScript typing
-  function handleDrag(boxId: string, event: CustomEvent<{ x: number, y: number }>): void {
-    box.x = event.detail.x;
-    box.y = event.detail.y;
-    box = box; // Trigger reactivity
-  }
+    const onResize = () => {
+      narrow = window.innerWidth < 820;
+    };
 
-  function handleResize(boxId: string, event: CustomEvent<{ width: number, height: number, x: number, y: number }>): void {
-    box.width = event.detail.width;
-    box.height = event.detail.height;
-    box.x = event.detail.x;
-    box.y = event.detail.y;
-    box = box; // Trigger reactivity
-  }
+    addEventListener('keydown', onKey);
+    addEventListener('resize', onResize);
 
-  function activateBox(boxId: string): void {
-    activeBoxId = boxId;
-    box = {
-      ...box, zIndex: box.id === boxId ? 10 : 1
-    }
-  }
+    return () => {
+      removeEventListener('keydown', onKey);
+      removeEventListener('resize', onResize);
+      clearTimeout(curtainTimer);
+      clearTimeout(curtainClearTimer);
+      clearTimeout(jumpTimer);
+    };
+  });
 </script>
 
-<div class="font-space-grotesk h-[100vh]  bg-cover bg-center main-content-wrapper overflow-x-hidden">
-  <div class="max-w-lg md:max-w-2xl lg:max-w-4xl xl:max-w-7xl mx-auto px-10 md:px-4 py-4">
-    <Navbar 
-    bind:workingOnButtonEl
-    {handleWorkingModalToggle}
-    {toggleTheme}
-    {isDarkMode}
-    {handleConsoleToggle}
+<PageBackground />
+
+<div
+  style="position:relative;z-index:1;min-height:100vh;color:var(--fg);font-family:'Space Grotesk',system-ui,sans-serif;overflow-x:clip"
+>
+  <Header
+    {isDark}
+    {nowItems}
+    {nowOpen}
+    onHome={goHome}
+    onWork={() => jump(() => workEl)}
+    onContact={() => jump(() => contactEl)}
+    onToggleNow={() => (nowOpen = !nowOpen)}
+    onCloseNow={() => (nowOpen = false)}
+    onToggleTheme={toggleTheme}
+    onToggleConsole={() => (consoleOpen = !consoleOpen)}
   />
 
-    <main>
-      <HeroContent {isDarkMode}/>
+  {#if project === null}
+    <Hero {site} {isDark} onToggleConsole={() => (consoleOpen = !consoleOpen)} />
 
-      <ProjectGrid
-              {projects}
-              onProjectSelect={handleProjectSelect}
-              onProjectClick={handleProjectClick}
+    <WorkStage
+      projects={scenes}
+      {isDark}
+      {narrow}
+      {reduced}
+      total={list.length}
+      onOpen={openWithCurtain}
+      onArchive={() => jump(() => archiveEl)}
+      bind:workEl
+    />
+
+    <div
+      style="max-width:1600px;margin:0 auto;padding:0 clamp(20px,6vw,112px);box-sizing:border-box"
+    >
+      <ProjectIndex
+        projects={list}
+        {isDark}
+        {narrow}
+        {reduced}
+        onOpen={openWithCurtain}
+        bind:archiveEl
+        onBitSay={bitSay}
       />
-      <ProjectsModal {isDarkMode} isOpen={$isModalOpen} onClose={closeModal} project={$selectedProject}>
-        <section class="flex flex-col overflow-scroll lg:flex-row  items-start gap-4">
-          <div data-text-primary class="text-xl font-medium mb-4">{$selectedProject.title || "Project Details"}</div>
-          <div data-text-primary class="flex gap-4">
-            <a aria-label="github link" href={$selectedProject.githublink || 'https://github.com/nirjalpraj'} target="_blank" rel="noopener noreferrer">
-              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-              </svg>
-            </a>
-            {#if $selectedProject.isLinkAvailable}
-              <a href={$selectedProject.websitelink} target="_blank" rel="noopener noreferrer" aria-label="live site">
-                <Globe data-text-primary class="" />
-              </a>
-            {:else}
-              <span>[ Link not available currently ]</span>
-            {/if}
-          </div>
-        </section>
-        <section class="flex flex-col  lg:flex-row justify-between">
-          <div>
-            {#if $selectedProject.description}
-              <div class="mb-4">
-                <ul data-text-primary class="list-disc pl-5  ">
-                  {#each $selectedProject.description as desc}
-                    <li>{desc}</li>
-                  {/each}
-                </ul>
-              <div class="mt-4">
-                <h3 class="{$isDarkMode ? "text-gray-100 hover:text-gray-300" :  "text-gray-900 hover:text-gray-800"} underline underline-offset-4   font-medium mb-2">Tech Stack</h3>
-                <ul data-text-primary class="list-disc pl-5 ">
-                  {#each $selectedProject.TechStack as tech}
-                    <li>{tech}</li>
-                  {/each}
-                </ul>
-              </div>
-              </div>
-            {:else}
-              <p class="">No project selected.</p>
-            {/if}
-          </div>
-          <div>
-            <img src={$selectedProject.photoUrl} alt={$selectedProject.title} width={727} height={453} loading="lazy" decoding="async" class="hidden md:block w-full h-[25rem]" />
-          </div>
-        </section>
-      </ProjectsModal>
+    </div>
 
-      <WorkingOnModal isOpen={$isWorkingModalOpen}
-                      onClose={handleWorkingModalToggle}
-                      anchorPosition={workingOnButtonPosition}
-                      {isDarkMode}>
-        <WorkingOnModalContent />
-      </WorkingOnModal>
+    <Contact
+      {site}
+      onToggleConsole={() => (consoleOpen = !consoleOpen)}
+      bind:contactEl
+      bind:emailEl
+      bind:floorEl
+      {onLure}
+      onCursor={(on) => (cursor = on)}
+    />
+  {:else if cur}
+    <ProjectView
+      project={cur}
+      index={project}
+      total={list.length}
+      prevName={list[(project - 1 + list.length) % list.length].name}
+      nextName={list[(project + 1) % list.length].name}
+      {isDark}
+      onBack={back}
+      onPrev={() => step(-1)}
+      onNext={() => step(1)}
+    />
+  {/if}
 
-      {#if $isConsoleOpen}
-        <ConsoleComponent
-                x={box.x}
-                y={box.y}
-                width={box.width}
-                height={box.height}
-                minWidth={150}
-                minHeight={100}
-                containerId="container"
-                bgColor={box.bgColor}
-                borderColor={box.borderColor}
-                zIndex={box.zIndex}
-                on:mousedown={() => activateBox(box.id)}
-                on:touchstart={() => activateBox(box.id)}
-                on:drag={(e) => handleDrag(box.id, e)}
-                on:resize={(e) => handleResize(box.id, e)}
-                onClose={handleConsoleClose}
-        >
-          <ConsoleContent
-                  box={box}
-          />
+  {#if curtain !== null}
+    <Curtain text={curtain} />
+  {/if}
 
-        </ConsoleComponent>
-      {/if}
-    </main>
-  </div>
+  <ConsoleDrawer open={consoleOpen} onClose={() => (consoleOpen = false)} />
+
+  <Bit {narrow} {reduced} {floorEl} {emailEl} {lure} {cursor} />
 </div>

@@ -1,65 +1,192 @@
-@import "tailwindcss";
-
-@layer base {
-  :root {
-    /* Font */
-    --font-space-grotesk: "Space Grotesk", sans-serif;
-
-    /* Light mode colors */
-    --primary: #1e40af;
-    --background: #ffffff;
-    --text-primary: #4b5563; /* Changed to match ~text-gray-600 */
-    --text-primary-hover: #111827; /* Added to match ~text-gray-900 */
-    --text-secondary: #0000;
-    --hover: #2563eb;
-  }
-
-  .dark {
-    /* Dark mode colors */
-    --primary: #60a5fa;
-    --background: #1f2937;
-    --text-primary: #e5e7eb; /* Changed to match ~text-gray-200 */
-    --text-primary-hover: #d1d5db; /* Added to match ~text-gray-300 */
-    --text-secondary: #ffffff;
-    --hover: #93c5fd;
-  }
-
-  html {
-    background-color: var(--background);
-    color: var(--text-primary);
-  }
-
-  /* Adding base styling for elements using text-primary */
-  [data-text-primary] {
-    color: var(--text-primary);
-    transition: color 0.3s ease;
-  }
-
-  [data-text-primary]:hover {
-    color: var(--text-primary-hover);
-  }
+:root {
+  --fg: #1f2b35;
+  --fg2: #3a4955;
+  --fg3: #566672;
+  --line: rgba(31, 43, 53, 0.16);
+  --surface: rgba(236, 250, 254, 0.86);
+  --scrim: rgba(214, 238, 245, 0.45);
+  --accent: #0b7a74;
+  --card: linear-gradient(135deg, #a9e9f5, #eafbfe 75%);
+  --shadow: 0 24px 60px -28px rgba(18, 70, 84, 0.35);
+  --hi: rgba(11, 122, 116, 0.1);
+  --ink: #e9fafe;
 }
 
-@layer utilities {
-  .font-space-grotesk {
-    font-family: var(--font-space-grotesk);
-  }
+:root.dark {
+  --fg: #e7ecee;
+  --fg2: #b3bfc3;
+  --fg3: #7f8d92;
+  --line: rgba(231, 236, 238, 0.14);
+  --surface: rgba(6, 15, 18, 0.78);
+  --scrim: rgba(2, 6, 8, 0.5);
+  --accent: #5fd0c2;
+  --sun: #f4c21b;
+  --card: linear-gradient(135deg, #0f4644, #071519 70%);
+  --shadow: 0 30px 80px -24px rgba(0, 0, 0, 0.7);
+  --hi: rgba(95, 208, 194, 0.13);
+  --ink: #04090c;
+}
+
+html,
+body {
+  margin: 0;
 }
 
 html {
   background-color: #edfbff;
+  color-scheme: light;
 }
 
 html.dark {
   background-color: #030e0e;
+  color-scheme: dark;
 }
 
-.main-content-wrapper {
-  background-image: url('/bg/gradient-light.webp');
-  background-size: cover;
-  background-position: center;
+body {
+  -webkit-font-smoothing: antialiased;
 }
 
-html.dark .main-content-wrapper {
-  background-image: url('/bg/gradient-dark.webp');
+a {
+  color: inherit;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 1.5px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+input::placeholder {
+  color: var(--fg3);
+}
+
+::selection {
+  background: var(--accent);
+  color: #04090c;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes drawerIn {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes wipe {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes zoomOut {
+  from {
+    transform: scale(1.12);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@keyframes curtain {
+  0% {
+    clip-path: inset(100% 0 0 0);
+  }
+  42%,
+  58% {
+    clip-path: inset(0 0 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+@keyframes bubbleIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 6px) scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes heartUp {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.6);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--hx), -70px) scale(1.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
