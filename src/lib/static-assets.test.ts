@@ -28,8 +28,9 @@ test('every project image points at a real file in static/', () => {
     if (project.image === '') continue;
     expect(project.image, `${project.name} image must be a static path`).toMatch(/^\//);
     const path = join('static', project.image.replace(/^\//, ''));
-    expect(existsSync(path), `${project.name} image "${project.image}" does not exist at ${path}`).toBe(
-      true
-    );
+    expect(
+      existsSync(path),
+      `${project.name} image "${project.image}" does not exist at ${path}`
+    ).toBe(true);
   }
 });

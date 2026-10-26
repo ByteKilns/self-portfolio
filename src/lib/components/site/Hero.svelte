@@ -22,10 +22,10 @@
       <h1 style="margin:0 0 24px;font-weight:400;font-size:clamp(24px,2vw,30px)">
         <span data-perch="side" data-say="hi! I’m Bit.">Full Stack Developer</span>
       </h1>
-      <p style="margin:0 0 10px;font-size:clamp(17px,1.35vw,21px);line-height:1.6">{site.tagline}</p>
-      <p
-        style="margin:0 0 20px;font-size:clamp(17px,1.35vw,21px);line-height:1.6;text-wrap:pretty"
-      >
+      <p style="margin:0 0 10px;font-size:clamp(17px,1.35vw,21px);line-height:1.6">
+        {site.tagline}
+      </p>
+      <p style="margin:0 0 20px;font-size:clamp(17px,1.35vw,21px);line-height:1.6;text-wrap:pretty">
         — I’m [ Nirjal Prajapati ], a full-stack developer dedicated to crafting seamless,
         high-performing web applications that make an impact.
       </p>

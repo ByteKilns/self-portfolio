@@ -24,7 +24,9 @@
   } = $props();
 </script>
 
-<div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px;border-bottom:2px solid #9d9686">
+<div
+  style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px;border-bottom:2px solid #9d9686"
+>
   <button
     onclick={onAdd}
     style="padding:6px 12px;font:inherit;font-size:13px;color:#1b1f22;cursor:pointer;background:#d9d3c5;border:2px solid;border-color:#fffef8 #77705f #77705f #fffef8"

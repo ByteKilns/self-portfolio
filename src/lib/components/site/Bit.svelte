@@ -204,17 +204,15 @@
   bind:this={mascotEl}
   style="position:fixed;left:0;top:0;z-index:35;width:clamp(100px,9vw,128px);pointer-events:none;will-change:transform;transform:translate3d(-999px,0,0);transform-origin:50% 100%"
 >
-  <div
-    bind:this={bubbleEl}
-    style="position:absolute;left:50%;bottom:100%;width:0;height:0"
-  >
+  <div bind:this={bubbleEl} style="position:absolute;left:50%;bottom:100%;width:0;height:0">
     {#if bubble}
       <div
         style="position:absolute;left:50%;bottom:0;white-space:nowrap;padding:7px 12px;border-radius:12px;background:var(--fg);color:var(--ink);font-family:'Space Mono',monospace;font-size:12px;animation:bubbleIn .25s cubic-bezier(.2,.9,.3,1.4) both;transform:translateX(-50%);pointer-events:none"
-        >{bubble}<span
-          style="position:absolute;left:50%;top:100%;margin-left:-6px;border:6px solid transparent;border-top-color:var(--fg)"
-        ></span></div
       >
+        {bubble}<span
+          style="position:absolute;left:50%;top:100%;margin-left:-6px;border:6px solid transparent;border-top-color:var(--fg)"
+        ></span>
+      </div>
     {/if}
   </div>
   <div bind:this={innerEl} style="position:relative;transform-origin:50% 100%">
@@ -264,32 +262,25 @@
       <svg viewBox="0 0 120 120" width="100%" style="display:block;overflow:visible">
         <defs>
           <linearGradient id="bitBody" x1="0" y1="0" x2="0" y2="1"
-            ><stop offset="0" stop-color="#9af3e6"></stop><stop
-              offset="1"
-              stop-color="#34b2a4"
+            ><stop offset="0" stop-color="#9af3e6"></stop><stop offset="1" stop-color="#34b2a4"
             ></stop></linearGradient
           >
           <linearGradient id="bitLeaf" x1="0" y1="0" x2="1" y2="1"
-            ><stop offset="0" stop-color="#c7f59a"></stop><stop
-              offset="1"
-              stop-color="#6fcf7d"
+            ><stop offset="0" stop-color="#c7f59a"></stop><stop offset="1" stop-color="#6fcf7d"
             ></stop></linearGradient
           >
         </defs>
-        <ellipse
-          bind:this={shadowEl}
-          cx="60"
-          cy="112"
-          rx="30"
-          ry="5"
-          fill="#000"
-          opacity=".22"
+        <ellipse bind:this={shadowEl} cx="60" cy="112" rx="30" ry="5" fill="#000" opacity=".22"
         ></ellipse>
         <g bind:this={bodyEl}>
           <ellipse cx="45" cy="108" rx="10" ry="5.5" fill="#2a9a8d"></ellipse>
           <ellipse cx="75" cy="108" rx="10" ry="5.5" fill="#2a9a8d"></ellipse>
-          <g bind:this={armLEl}><ellipse cx="19" cy="80" rx="6.5" ry="10" fill="#4cc4b5"></ellipse></g>
-          <g bind:this={armREl}><ellipse cx="101" cy="80" rx="6.5" ry="10" fill="#4cc4b5"></ellipse></g>
+          <g bind:this={armLEl}
+            ><ellipse cx="19" cy="80" rx="6.5" ry="10" fill="#4cc4b5"></ellipse></g
+          >
+          <g bind:this={armREl}
+            ><ellipse cx="101" cy="80" rx="6.5" ry="10" fill="#4cc4b5"></ellipse></g
+          >
           <g bind:this={sproutEl}>
             <path
               d="M60 36 Q58 24 61 15"

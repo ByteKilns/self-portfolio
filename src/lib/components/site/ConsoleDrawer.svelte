@@ -141,7 +141,8 @@
       {#if typing}
         <div style="display:grid;grid-template-columns:20px minmax(0,1fr)">
           <span style="color:var(--fg3)">-</span><span
-            style="color:var(--fg3);letter-spacing:.2em;animation:blink 1s steps(2) infinite">···</span
+            style="color:var(--fg3);letter-spacing:.2em;animation:blink 1s steps(2) infinite"
+            >···</span
           >
         </div>
       {/if}

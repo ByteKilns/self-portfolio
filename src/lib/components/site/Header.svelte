@@ -62,9 +62,10 @@
           onclick={onToggleNow}
           aria-expanded={nowOpen}
           style="background:none;border:0;padding:0;font:inherit;color:var(--fg);cursor:pointer;position:relative"
-          class="hover-accent">Currently Working On{#if nowOpen}<span
-            style="position:absolute;left:0;right:0;bottom:-8px;height:1px;background:currentColor"
-          ></span>{/if}</button
+          class="hover-accent"
+          >Currently Working On{#if nowOpen}<span
+              style="position:absolute;left:0;right:0;bottom:-8px;height:1px;background:currentColor"
+            ></span>{/if}</button
         >
         {#if nowOpen}
           <NowPopover {nowItems} onClose={onCloseNow} />

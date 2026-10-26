@@ -14,6 +14,9 @@ export async function PUT({ request }: { request: Request }) {
     const saved = await writeContent(await request.json());
     return json({ ok: true, savedAt: saved.savedAt });
   } catch (error) {
-    return json({ error: error instanceof Error ? error.message : 'invalid content' }, { status: 400 });
+    return json(
+      { error: error instanceof Error ? error.message : 'invalid content' },
+      { status: 400 }
+    );
   }
 }

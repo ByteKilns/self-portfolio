@@ -17,7 +17,9 @@ function str(value: unknown, fallback = ''): string {
 }
 
 function strList(value: unknown): string[] {
-  return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : [];
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === 'string')
+    : [];
 }
 
 function project(value: unknown, index: number): Project {
@@ -42,7 +44,8 @@ function project(value: unknown, index: number): Project {
 }
 
 function site(value: unknown): Site {
-  if (typeof value !== 'object' || value === null || Array.isArray(value)) return { ...DEFAULT_SITE };
+  if (typeof value !== 'object' || value === null || Array.isArray(value))
+    return { ...DEFAULT_SITE };
   const raw = value as Record<string, unknown>;
   return {
     email: str(raw.email, DEFAULT_SITE.email),

@@ -217,7 +217,9 @@
       bind:workEl
     />
 
-    <div style="max-width:1600px;margin:0 auto;padding:0 clamp(20px,6vw,112px);box-sizing:border-box">
+    <div
+      style="max-width:1600px;margin:0 auto;padding:0 clamp(20px,6vw,112px);box-sizing:border-box"
+    >
       <ProjectIndex
         projects={list}
         {isDark}
@@ -235,7 +237,7 @@
       bind:contactEl
       bind:emailEl
       bind:floorEl
-      onLure={onLure}
+      {onLure}
       onCursor={(on) => (cursor = on)}
     />
   {:else if cur}
@@ -258,5 +260,5 @@
 
   <ConsoleDrawer open={consoleOpen} onClose={() => (consoleOpen = false)} />
 
-  <Bit {narrow} {reduced} {floorEl} {emailEl} {lure} cursor={cursor} />
+  <Bit {narrow} {reduced} {floorEl} {emailEl} {lure} {cursor} />
 </div>

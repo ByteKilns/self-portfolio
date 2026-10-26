@@ -22,7 +22,9 @@
   const mailto = $derived('mailto:' + site.email);
 </script>
 
-<div style="max-width:1600px;margin:0 auto;padding:0 clamp(20px,6vw,112px) 40px;box-sizing:border-box">
+<div
+  style="max-width:1600px;margin:0 auto;padding:0 clamp(20px,6vw,112px) 40px;box-sizing:border-box"
+>
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <section
     bind:this={contactEl}
@@ -61,7 +63,9 @@
     </div>
 
     <div bind:this={floorEl} style="position:relative;height:150px;flex:none">
-      <div style="position:absolute;left:0;right:0;bottom:0;border-top:1px dashed var(--line)"></div>
+      <div
+        style="position:absolute;left:0;right:0;bottom:0;border-top:1px dashed var(--line)"
+      ></div>
     </div>
 
     <div

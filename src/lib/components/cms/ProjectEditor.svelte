@@ -61,7 +61,9 @@
   <fieldset
     style="margin:0;padding:12px 14px 14px;border:2px groove #f3eee2;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px 14px"
   >
-    <legend style="padding:0 6px;font-family:VT323,monospace;font-size:22px;line-height:1">Identity</legend>
+    <legend style="padding:0 6px;font-family:VT323,monospace;font-size:22px;line-height:1"
+      >Identity</legend
+    >
     <label
       style="grid-column:1/-1;display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d"
       >Project name
@@ -71,7 +73,8 @@
         style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:15px;color:#1b1f22;outline:none;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f"
       />
     </label>
-    <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d">Live URL
+    <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d"
+      >Live URL
       <input
         value={project.url}
         oninput={(e) => onField('url', (e.target as HTMLInputElement).value)}
@@ -79,7 +82,8 @@
         style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;color:#1b1f22;outline:none;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f"
       />
     </label>
-    <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d">Year
+    <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d"
+      >Year
       <input
         value={project.year}
         oninput={(e) => onField('year', (e.target as HTMLInputElement).value)}
@@ -87,7 +91,8 @@
         style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;color:#1b1f22;outline:none;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f"
       />
     </label>
-    <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d">Role
+    <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d"
+      >Role
       <input
         value={project.role}
         oninput={(e) => onField('role', (e.target as HTMLInputElement).value)}
@@ -95,7 +100,8 @@
         style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;color:#1b1f22;outline:none;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f"
       />
     </label>
-    <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d">Client
+    <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d"
+      >Client
       <input
         value={project.client}
         oninput={(e) => onField('client', (e.target as HTMLInputElement).value)}
@@ -108,7 +114,9 @@
   <fieldset
     style="margin:0;padding:12px 14px 14px;border:2px groove #f3eee2;display:flex;flex-direction:column;gap:12px"
   >
-    <legend style="padding:0 6px;font-family:VT323,monospace;font-size:22px;line-height:1">Story</legend>
+    <legend style="padding:0 6px;font-family:VT323,monospace;font-size:22px;line-height:1"
+      >Story</legend
+    >
     <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d"
       ><span style="display:flex;justify-content:space-between;gap:8px"
         ><span>Summary — one or two lines for cards</span><span style="color:{sumColor}"
@@ -126,19 +134,14 @@
       >Highlights — one per line
       <textarea
         value={pointsText}
-        oninput={(e) =>
-          onField(
-            'points',
-            (e.target as HTMLTextAreaElement).value.split('\n')
-          )}
+        oninput={(e) => onField('points', (e.target as HTMLTextAreaElement).value.split('\n'))}
         rows="4"
         placeholder="What it does&#10;What you built&#10;What it changed"
         style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;line-height:1.5;color:#1b1f22;outline:none;resize:vertical;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f"
       ></textarea>
     </label>
-    <div
-      style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:#4a463d"
-      >Tech stack — enter to add
+    <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:#4a463d">
+      Tech stack — enter to add
       <div
         style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:6px;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f"
       >
@@ -179,7 +182,9 @@
   <fieldset
     style="margin:0;padding:12px 14px 14px;border:2px groove #f3eee2;display:flex;flex-wrap:wrap;gap:14px"
   >
-    <legend style="padding:0 6px;font-family:VT323,monospace;font-size:22px;line-height:1">Media</legend>
+    <legend style="padding:0 6px;font-family:VT323,monospace;font-size:22px;line-height:1"
+      >Media</legend
+    >
     <div
       style="flex:0 1 240px;aspect-ratio:16/10;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f;position:relative;overflow:hidden"
     >
@@ -192,11 +197,14 @@
       {:else}
         <div
           style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:{tint};color:#e7ecee;font-family:'Space Grotesk',sans-serif;font-size:44px;letter-spacing:-.05em"
-          >{monogram}</div
         >
+          {monogram}
+        </div>
       {/if}
     </div>
-    <div style="flex:1 1 220px;display:flex;flex-direction:column;gap:10px;font-size:12px;color:#4a463d">
+    <div
+      style="flex:1 1 220px;display:flex;flex-direction:column;gap:10px;font-size:12px;color:#4a463d"
+    >
       <div style="display:flex;flex-wrap:wrap;gap:6px">
         <label
           style="padding:6px 12px;font-size:13px;color:#1b1f22;cursor:pointer;background:#d9d3c5;border:2px solid;border-color:#fffef8 #77705f #77705f #fffef8"
@@ -215,7 +223,8 @@
           >
         {/if}
       </div>
-      <label style="display:flex;flex-direction:column;gap:4px">…or image path
+      <label style="display:flex;flex-direction:column;gap:4px"
+        >…or image path
         <input
           value={imagePath}
           oninput={(e) => onField('image', (e.target as HTMLInputElement).value)}
@@ -241,16 +250,17 @@
   <fieldset
     style="margin:0;padding:12px 14px 14px;border:2px groove #f3eee2;display:flex;flex-wrap:wrap;gap:10px 28px;align-items:center"
   >
-    <legend style="padding:0 6px;font-family:VT323,monospace;font-size:22px;line-height:1">Display</legend>
+    <legend style="padding:0 6px;font-family:VT323,monospace;font-size:22px;line-height:1"
+      >Display</legend
+    >
     <label style="display:flex;align-items:center;gap:8px;cursor:pointer"
       ><input
         type="checkbox"
         checked={project.featured}
         onchange={(e) => onField('featured', (e.target as HTMLInputElement).checked)}
         style="width:16px;height:16px;accent-color:#0b7a74"
-      />Featured on the stage <span style="font-size:12px;color:{featColor}"
-        >({featCount}/4)</span
-      ></label
+      />Featured on the stage
+      <span style="font-size:12px;color:{featColor}">({featCount}/4)</span></label
     >
     <label style="display:flex;align-items:center;gap:8px;cursor:pointer"
       ><input
@@ -272,14 +282,15 @@
       >
         <div
           style="display:flex;gap:5px;align-items:center;padding:7px 10px;background:rgba(6,15,18,.9);border-bottom:1px solid rgba(231,236,238,.14)"
-          ><span
+        >
+          <span style="width:6px;height:6px;border-radius:50%;background:#7f8d92"></span><span
             style="width:6px;height:6px;border-radius:50%;background:#7f8d92"
-          ></span><span style="width:6px;height:6px;border-radius:50%;background:#7f8d92"></span
-          ><span style="width:6px;height:6px;border-radius:50%;background:#7f8d92"></span><span
+          ></span><span style="width:6px;height:6px;border-radius:50%;background:#7f8d92"
+          ></span><span
             style="margin-left:6px;font-family:'Space Mono',monospace;font-size:10px;color:#7f8d92;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"
             >{hostLabel}</span
-          ></div
-        >
+          >
+        </div>
         <div style="aspect-ratio:16/10;position:relative">
           {#if hasImage}
             <img
@@ -290,8 +301,9 @@
           {:else}
             <div
               style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:{tint};font-size:48px;letter-spacing:-.05em"
-              >{monogram}</div
             >
+              {monogram}
+            </div>
           {/if}
         </div>
       </div>
@@ -299,8 +311,7 @@
         <span style="font-family:'Space Mono',monospace;font-size:11px;color:#7f8d92"
           >{previewTag}</span
         >
-        <span
-          style="font-size:26px;line-height:1.05;letter-spacing:-.03em;text-wrap:balance"
+        <span style="font-size:26px;line-height:1.05;letter-spacing:-.03em;text-wrap:balance"
           >{project.name}</span
         >
         <span style="font-size:14px;line-height:1.55;color:#b3bfc3;text-wrap:pretty"

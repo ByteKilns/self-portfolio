@@ -59,12 +59,7 @@
       ></span>
     </div>
     <div style="display:flex;gap:16px;align-items:center;padding:20px 20px 6px">
-      <svg
-        width="64"
-        height="64"
-        viewBox="0 0 120 120"
-        aria-hidden="true"
-        style="flex:none"
+      <svg width="64" height="64" viewBox="0 0 120 120" aria-hidden="true" style="flex:none"
         ><ellipse cx="60" cy="112" rx="30" ry="5" fill="#000" opacity=".18"></ellipse><rect
           x="20"
           y="34"
@@ -113,7 +108,8 @@
       >
       <div style="display:flex;flex-direction:column;gap:4px">
         <span style="font-family:VT323,monospace;font-size:26px;line-height:1">{loginHead}</span>
-        <span style="font-size:12px;line-height:1.5;color:#4a463d;text-wrap:pretty">{loginSub}</span>
+        <span style="font-size:12px;line-height:1.5;color:#4a463d;text-wrap:pretty">{loginSub}</span
+        >
       </div>
     </div>
     <div style="display:flex;flex-direction:column;gap:12px;padding:14px 20px 18px">
@@ -151,11 +147,13 @@
         </label>
       {/if}
       {#if hasLoginErr}
-        <div role="alert" style="padding:6px 9px;font-size:12px;color:#fffdf5;background:#8a2a1c"
-          >{loginErr}</div
-        >
+        <div role="alert" style="padding:6px 9px;font-size:12px;color:#fffdf5;background:#8a2a1c">
+          {loginErr}
+        </div>
       {/if}
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:4px">
+      <div
+        style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:4px"
+      >
         <label
           style="display:flex;align-items:center;gap:8px;font-size:12px;color:#4a463d;cursor:pointer"
           ><input
@@ -172,9 +170,9 @@
         >
       </div>
     </div>
-    <div
-      style="padding:5px 10px;border-top:2px solid #9d9686;font-size:11px;color:#4a463d"
-    >Bit: {loginTip}</div>
+    <div style="padding:5px 10px;border-top:2px solid #9d9686;font-size:11px;color:#4a463d">
+      Bit: {loginTip}
+    </div>
   </form>
 </div>
 

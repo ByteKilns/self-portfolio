@@ -16,7 +16,9 @@
   <fieldset
     style="margin:0;padding:12px 14px 14px;border:2px groove #f3eee2;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px 14px"
   >
-    <legend style="padding:0 6px;font-family:VT323,monospace;font-size:22px;line-height:1">Contact</legend>
+    <legend style="padding:0 6px;font-family:VT323,monospace;font-size:22px;line-height:1"
+      >Contact</legend
+    >
     <label
       style="grid-column:1/-1;display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d"
       >Email
@@ -48,7 +50,9 @@
   <fieldset
     style="margin:0;padding:12px 14px 14px;border:2px groove #f3eee2;display:flex;flex-direction:column;gap:12px"
   >
-    <legend style="padding:0 6px;font-family:VT323,monospace;font-size:22px;line-height:1">Intro</legend>
+    <legend style="padding:0 6px;font-family:VT323,monospace;font-size:22px;line-height:1"
+      >Intro</legend
+    >
     <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d"
       >Tagline under “Full Stack Developer”
       <input
@@ -61,8 +65,7 @@
       >Currently working on — one per line, wrap words in **double stars** to bold them
       <textarea
         value={nowText}
-        oninput={(e) =>
-          onSite('now', (e.target as HTMLTextAreaElement).value.split('\n'))}
+        oninput={(e) => onSite('now', (e.target as HTMLTextAreaElement).value.split('\n'))}
         rows="5"
         style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;line-height:1.5;color:#1b1f22;outline:none;resize:vertical;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f"
       ></textarea>

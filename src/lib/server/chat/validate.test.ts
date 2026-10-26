@@ -26,13 +26,20 @@ describe('parseChatRequest', () => {
   it('rejects a history that is not an array or is too long', () => {
     expect(parseChatRequest({ message: 'hi', history: 'nope' }).ok).toBe(false);
     expect(
-      parseChatRequest({ message: 'hi', history: Array.from({ length: MAX_HISTORY + 1 }, () => okTurn) }).ok
+      parseChatRequest({
+        message: 'hi',
+        history: Array.from({ length: MAX_HISTORY + 1 }, () => okTurn)
+      }).ok
     ).toBe(false);
   });
 
   it('rejects history items with the wrong role or non-string content', () => {
-    expect(parseChatRequest({ message: 'hi', history: [{ role: 'system', content: 'x' }] }).ok).toBe(false);
-    expect(parseChatRequest({ message: 'hi', history: [{ role: 'user', content: 42 }] }).ok).toBe(false);
+    expect(
+      parseChatRequest({ message: 'hi', history: [{ role: 'system', content: 'x' }] }).ok
+    ).toBe(false);
+    expect(parseChatRequest({ message: 'hi', history: [{ role: 'user', content: 42 }] }).ok).toBe(
+      false
+    );
   });
 
   it('trims the message and returns valid history', () => {

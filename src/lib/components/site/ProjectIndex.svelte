@@ -37,8 +37,7 @@
   const match = $derived(
     all.filter(
       ({ p }) =>
-        (tag === 'All' ||
-          (tag === 'Featured' ? p.featured : (p.stack || []).includes(tag))) &&
+        (tag === 'All' || (tag === 'Featured' ? p.featured : (p.stack || []).includes(tag))) &&
         (!q || p.name.toLowerCase().includes(q.toLowerCase()))
     )
   );
@@ -102,7 +101,9 @@
     style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px 32px;margin-bottom:22px"
   >
     <div style="display:flex;flex-direction:column;gap:10px">
-      <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">( index )</span>
+      <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)"
+        >( index )</span
+      >
       <h2
         data-perch="top"
         data-px="0.3"
@@ -134,9 +135,7 @@
         aria-pressed={tag === t}
         style="white-space:nowrap;padding:6px 12px;border-radius:999px;border:1px solid {tag === t
           ? 'var(--fg)'
-          : 'var(--line)'};background:{tag === t
-          ? 'var(--fg)'
-          : 'transparent'};color:{tag === t
+          : 'var(--line)'};background:{tag === t ? 'var(--fg)' : 'transparent'};color:{tag === t
           ? 'var(--ink)'
           : 'var(--fg2)'};font-family:'Space Mono',monospace;font-size:12px;cursor:pointer;transition:background .2s,color .2s"
         >{t}</button
@@ -175,8 +174,8 @@
               style="font-family:'Space Mono',monospace;font-size:11px;color:var(--fg3);white-space:nowrap"
               >{r.meta}</span
             >
-            <span
-              style="transition:transform .3s cubic-bezier(.2,.8,.2,1);transform:{r.arrow}">↗</span
+            <span style="transition:transform .3s cubic-bezier(.2,.8,.2,1);transform:{r.arrow}"
+              >↗</span
             >
           </a>
         {/each}
@@ -245,7 +244,8 @@
         <div
           style="display:flex;justify-content:space-between;gap:12px;font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)"
         >
-          <span style="color:var(--accent)">[ {pad(hi + 1)} ] {ap.featured ? '★ featured' : ''}</span
+          <span style="color:var(--accent)"
+            >[ {pad(hi + 1)} ] {ap.featured ? '★ featured' : ''}</span
           ><span>{ap.stack ? ap.stack.join(' · ') : ''}</span>
         </div>
         <div style="font-size:16px;line-height:1.55;color:var(--fg2)">

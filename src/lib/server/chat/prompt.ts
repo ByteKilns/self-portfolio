@@ -15,10 +15,7 @@ export function buildMessages(input: {
     .map((project) => {
       const lines = [`## ${project.name}`];
       if (project.summary) lines.push(project.summary);
-      lines.push(
-        ...project.points.map((line) => `- ${line}`),
-        `Tech: ${project.stack.join(', ')}`
-      );
+      lines.push(...project.points.map((line) => `- ${line}`), `Tech: ${project.stack.join(', ')}`);
       if (project.url !== '') {
         lines.push(`Live: ${project.url}`);
       }

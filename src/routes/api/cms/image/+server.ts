@@ -12,9 +12,15 @@ export async function POST({ request }: { request: Request }) {
     if (!(file instanceof File)) {
       return json({ error: 'file is required' }, { status: 400 });
     }
-    const path = await saveImage(new Uint8Array(await file.arrayBuffer()), typeof name === 'string' ? name : '');
+    const path = await saveImage(
+      new Uint8Array(await file.arrayBuffer()),
+      typeof name === 'string' ? name : ''
+    );
     return json({ path });
   } catch (error) {
-    return json({ error: error instanceof Error ? error.message : 'upload failed' }, { status: 400 });
+    return json(
+      { error: error instanceof Error ? error.message : 'upload failed' },
+      { status: 400 }
+    );
   }
 }

@@ -89,8 +89,7 @@
         <div
           style="display:flex;flex-wrap:wrap;gap:8px 24px;margin-bottom:18px;font-family:'Space Mono',monospace;font-size:13px;color:var(--fg3)"
         >
-          {#each meta as m, i (i)}<span
-              ><span style="color:var(--accent)">{m.k}</span> {m.v}</span
+          {#each meta as m, i (i)}<span><span style="color:var(--accent)">{m.k}</span> {m.v}</span
             >{/each}
         </div>
       {/if}

@@ -28,8 +28,8 @@
         <span>—</span>
         <span style="text-wrap:pretty"
           >{#each n as pt, j (j)}{#if pt.b}<strong style="font-weight:600;color:var(--fg)"
-              >{pt.t}</strong
-            >{:else}{pt.t}{/if}{/each}</span
+                >{pt.t}</strong
+              >{:else}{pt.t}{/if}{/each}</span
         >
       </div>
     {/each}

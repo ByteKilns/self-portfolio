@@ -36,9 +36,7 @@
   );
 </script>
 
-<div
-  style="flex:1 1 280px;max-width:400px;min-width:0;display:flex;flex-direction:column;gap:8px"
->
+<div style="flex:1 1 280px;max-width:400px;min-width:0;display:flex;flex-direction:column;gap:8px">
   <input
     value={q}
     oninput={onQ}

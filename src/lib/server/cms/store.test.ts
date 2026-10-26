@@ -65,7 +65,9 @@ test('writeContent rejects inline images', async () => {
     ...sample,
     projects: [{ ...sample.projects[0], image: 'data:image/png;base64,AA' }]
   };
-  await expect(writeContent(inline, file)).rejects.toThrow('invalid content: inline images not allowed');
+  await expect(writeContent(inline, file)).rejects.toThrow(
+    'invalid content: inline images not allowed'
+  );
 });
 
 test('saveImage writes a webp no wider than 1600 and under 300 KB', async () => {

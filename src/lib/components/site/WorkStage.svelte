@@ -4,9 +4,24 @@
   import { host, mono as monogram, pad, slug, tint as tintOf } from '#lib/content/format.ts';
 
   const LAYOUT = {
-    A: { num: ['0%', '-4%'], vis: ['31%', '6%', '67%', '0deg'], sec: ['77%', '60%', '18%', '4deg'], txt: ['0%', '24%', '27%'] },
-    B: { num: ['64%', '-6%'], vis: ['0%', '12%', '57%', '-2deg'], sec: ['48%', '0%', '17%', '-5deg'], txt: ['64%', '30%', '34%'] },
-    C: { num: ['0%', '48%'], vis: ['40%', '14%', '55%', '1.5deg'], sec: ['10%', '58%', '17%', '3deg'], txt: ['0%', '0%', '36%'] }
+    A: {
+      num: ['0%', '-4%'],
+      vis: ['31%', '6%', '67%', '0deg'],
+      sec: ['77%', '60%', '18%', '4deg'],
+      txt: ['0%', '24%', '27%']
+    },
+    B: {
+      num: ['64%', '-6%'],
+      vis: ['0%', '12%', '57%', '-2deg'],
+      sec: ['48%', '0%', '17%', '-5deg'],
+      txt: ['64%', '30%', '34%']
+    },
+    C: {
+      num: ['0%', '48%'],
+      vis: ['40%', '14%', '55%', '1.5deg'],
+      sec: ['10%', '58%', '17%', '3deg'],
+      txt: ['0%', '0%', '36%']
+    }
   } as const;
 
   type Feat = Project & { idx: number };
@@ -114,7 +129,8 @@
       if (sec.style.height) sec.style.height = '';
       track.style.transform = '';
       const max = track.scrollWidth - track.clientWidth;
-      if (progressEl) progressEl.style.transform = `scaleX(${max > 0 ? track.scrollLeft / max : 0})`;
+      if (progressEl)
+        progressEl.style.transform = `scaleX(${max > 0 ? track.scrollLeft / max : 0})`;
     }
 
     const nodes = track.querySelectorAll('[data-scene]');
@@ -141,8 +157,7 @@
     });
     if (newSeen) seen = newSeen;
 
-    const label =
-      (best >= 0 && bestD < 0.5 ? pad(best + 1) : '00') + ' / ' + pad(projects.length);
+    const label = (best >= 0 && bestD < 0.5 ? pad(best + 1) : '00') + ' / ' + pad(projects.length);
     if (counterEl && counterEl.textContent !== label) counterEl.textContent = label;
   }
 
@@ -185,9 +200,7 @@
       bind:this={trackEl}
       style="flex:1;display:flex;align-items:center;gap:clamp(48px,8vw,140px);padding:0 clamp(20px,6vw,112px);overflow-x:{narrow
         ? 'auto'
-        : 'visible'};scroll-snap-type:{narrow
-        ? 'x mandatory'
-        : 'none'};will-change:transform"
+        : 'visible'};scroll-snap-type:{narrow ? 'x mandatory' : 'none'};will-change:transform"
     >
       <div
         style="flex:none;width:min(560px,80vw);scroll-snap-align:start;display:flex;flex-direction:column;gap:24px"
@@ -272,7 +285,8 @@
                   <div
                     style="width:100%;aspect-ratio:16/10;background:{s.tint};position:relative;display:flex;align-items:center;justify-content:center"
                   >
-                    <span style="font-size:clamp(64px,9vw,150px);letter-spacing:-.06em;color:var(--fg);opacity:.92"
+                    <span
+                      style="font-size:clamp(64px,9vw,150px);letter-spacing:-.06em;color:var(--fg);opacity:.92"
                       >{s.mono}</span
                     >
                     <span
@@ -351,13 +365,13 @@
                 >
                   {#each s.points as pt, k (k)}<div
                       style="display:grid;grid-template-columns:20px minmax(0,1fr)"
-                      ><span style="color:var(--accent)">+</span><span>{pt}</span></div
-                    >{/each}
+                    >
+                      <span style="color:var(--accent)">+</span><span>{pt}</span>
+                    </div>{/each}
                 </div>
               </div>
             </div>
-            <span
-              style="display:flex;align-items:center;gap:10px;font-size:16px;color:var(--fg)"
+            <span style="display:flex;align-items:center;gap:10px;font-size:16px;color:var(--fg)"
               ><span
                 style="text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1.5px"
                 >open project</span

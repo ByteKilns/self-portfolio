@@ -41,7 +41,9 @@
   });
 
   async function sha(s: string) {
-    const bytes = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)));
+    const bytes = new Uint8Array(
+      await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s))
+    );
     return Array.from(bytes)
       .map((b) => b.toString(16).padStart(2, '0'))
       .join('');
@@ -242,7 +244,9 @@
   function exportJson() {
     const data = { v: 1, site, projects: projects.map(clean) };
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.href = URL.createObjectURL(
+      new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+    );
     a.download = 'portfolio-content.json';
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
@@ -296,7 +300,10 @@
 
   function removeChip(label: string) {
     if (!cur) return;
-    update('stack', (cur.stack || []).filter((x) => x !== label));
+    update(
+      'stack',
+      (cur.stack || []).filter((x) => x !== label)
+    );
   }
 
   onMount(() => {
@@ -467,8 +474,9 @@
           {:else}
             <div
               style="flex:999 1 460px;padding:48px 20px;text-align:center;border:2px groove #f3eee2;font-size:14px;color:#4a463d"
-              >No project selected. Hit <strong>+ New</strong> to start one.</div
             >
+              No project selected. Hit <strong>+ New</strong> to start one.
+            </div>
           {/if}
         </div>
       {:else}

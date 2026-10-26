@@ -35,10 +35,9 @@ const twoChunks =
 describe('streamChat', () => {
   it('yields the content from SSE data lines', async () => {
     const fetchFn = (async () => streamFrom([twoChunks])) as typeof fetch;
-    expect(await collect(streamChat(messages, { apiKey: 'key', model: 'test-model', fetchFn }))).toEqual([
-      'Hel',
-      'lo'
-    ]);
+    expect(
+      await collect(streamChat(messages, { apiKey: 'key', model: 'test-model', fetchFn }))
+    ).toEqual(['Hel', 'lo']);
   });
 
   it('handles bytes split mid-line across chunks', async () => {
@@ -48,10 +47,9 @@ describe('streamChat', () => {
         'ta":{"content":"Hel"}}]}\n\ndata: {"choices":[{"delta":{"content":"lo"}}]}\n\ndata: [DO',
         'NE]\n\n'
       ])) as typeof fetch;
-    expect(await collect(streamChat(messages, { apiKey: 'key', model: 'test-model', fetchFn }))).toEqual([
-      'Hel',
-      'lo'
-    ]);
+    expect(
+      await collect(streamChat(messages, { apiKey: 'key', model: 'test-model', fetchFn }))
+    ).toEqual(['Hel', 'lo']);
   });
 
   it('skips events without delta.content', async () => {
@@ -64,26 +62,25 @@ describe('streamChat', () => {
         'data: {"choices":[{"delta":{"content":"lo"}}]}\n\n',
         'data: [DONE]\n\n'
       ])) as typeof fetch;
-    expect(await collect(streamChat(messages, { apiKey: 'key', model: 'test-model', fetchFn }))).toEqual([
-      'Hel',
-      'lo'
-    ]);
+    expect(
+      await collect(streamChat(messages, { apiKey: 'key', model: 'test-model', fetchFn }))
+    ).toEqual(['Hel', 'lo']);
   });
 
   it('throws ChatUpstreamError(429) on a rate-limited response', async () => {
     const fetchFn = (async () => new Response('rate limited', { status: 429 })) as typeof fetch;
-    const error = await collect(streamChat(messages, { apiKey: 'key', model: 'test-model', fetchFn })).catch(
-      (e) => e
-    );
+    const error = await collect(
+      streamChat(messages, { apiKey: 'key', model: 'test-model', fetchFn })
+    ).catch((e) => e);
     expect(error).toBeInstanceOf(ChatUpstreamError);
     expect(error.status).toBe(429);
   });
 
   it('throws ChatUpstreamError with the response status for other failures', async () => {
     const fetchFn = (async () => new Response('boom', { status: 500 })) as typeof fetch;
-    const error = await collect(streamChat(messages, { apiKey: 'key', model: 'test-model', fetchFn })).catch(
-      (e) => e
-    );
+    const error = await collect(
+      streamChat(messages, { apiKey: 'key', model: 'test-model', fetchFn })
+    ).catch((e) => e);
     expect(error).toBeInstanceOf(ChatUpstreamError);
     expect(error.status).toBe(500);
   });
@@ -116,7 +113,12 @@ describe('streamChat', () => {
     }) as typeof fetch;
 
     await collect(
-      streamChat(messages, { apiKey: 'key', model: 'test-model', signal: controller.signal, fetchFn })
+      streamChat(messages, {
+        apiKey: 'key',
+        model: 'test-model',
+        signal: controller.signal,
+        fetchFn
+      })
     );
     expect(calledSignal).toBe(controller.signal);
   });
