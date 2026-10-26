@@ -14,6 +14,7 @@
   import ProjectView from '#lib/components/site/ProjectView.svelte';
   import Curtain from '#lib/components/site/Curtain.svelte';
   import ConsoleDrawer from '#lib/components/site/ConsoleDrawer.svelte';
+  import Bit from '#lib/components/site/Bit.svelte';
 
   const site = content.site;
   const list = liveProjects();
@@ -256,4 +257,6 @@
   {/if}
 
   <ConsoleDrawer open={consoleOpen} onClose={() => (consoleOpen = false)} />
+
+  <Bit {narrow} {reduced} {floorEl} {emailEl} {lure} cursor={cursor} />
 </div>
