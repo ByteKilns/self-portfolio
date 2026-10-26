@@ -82,6 +82,7 @@
   $effect(() => {
     void messages.length;
     void typing;
+    messages.forEach((m) => void m.text);
     void tick().then(() => {
       if (logEl) logEl.scrollTop = logEl.scrollHeight;
     });
@@ -124,11 +125,13 @@
     >
       {#each messages as m, i (i)}
         {#if m.who === 'bot'}
-          <div
-            style="display:grid;grid-template-columns:20px minmax(0,1fr);animation:riseIn .25s ease both"
-          >
-            <span style="color:var(--fg3)">-</span><span style="text-wrap:pretty">{m.text}</span>
-          </div>
+          {#if m.text !== ''}
+            <div
+              style="display:grid;grid-template-columns:20px minmax(0,1fr);animation:riseIn .25s ease both"
+            >
+              <span style="color:var(--fg3)">-</span><span style="text-wrap:pretty">{m.text}</span>
+            </div>
+          {/if}
         {:else}
           <div style="display:grid;grid-template-columns:20px minmax(0,1fr)">
             <span style="color:var(--accent)">?</span><span style="color:var(--fg2)">{m.text}</span>

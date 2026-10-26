@@ -23,10 +23,10 @@
 </script>
 
 <div style="max-width:1600px;margin:0 auto;padding:0 clamp(20px,6vw,112px) 40px;box-sizing:border-box">
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <section
     bind:this={contactEl}
     data-screen-label="Contact"
-    aria-label="Contact"
     onmousemove={() => onCursor(true)}
     onmouseleave={() => onCursor(false)}
     style="position:relative;margin-top:clamp(64px,10vh,120px);min-height:min(82vh,800px);box-sizing:border-box;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:radial-gradient(70% 90% at 85% 110%,var(--hi),transparent 70%),radial-gradient(50% 60% at 0% 0%,var(--hi),transparent 70%);display:flex;flex-direction:column;gap:40px;padding:clamp(24px,4vw,56px) clamp(24px,4vw,56px) 28px"
