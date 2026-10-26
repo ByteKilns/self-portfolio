@@ -1,31 +1,39 @@
 import { describe, expect, it } from 'vitest';
-import type { Project } from '#lib/types.ts';
+import type { Project } from '#lib/content/types.ts';
 import { buildMessages } from './prompt';
 
 const cv = '# Nirjal\n\nFullstack developer with 2+ years of experience.';
 
 const projects: Project[] = [
   {
-    title: 'Alpha Project',
-    position: 'left',
-    deployed: true,
-    isLinkAvailable: true,
-    githublink: 'https://github.com/example/alpha',
-    websitelink: 'https://alpha.example.com',
-    photoUrl: '/placeholder.webp',
-    description: ['First line', 'Second line'],
-    TechStack: ['Svelte', 'TypeScript']
+    id: 'alpha-project',
+    name: 'Alpha Project',
+    summary: 'A one-line summary.',
+    points: ['First line', 'Second line'],
+    stack: ['Svelte', 'TypeScript'],
+    url: 'https://alpha.example.com',
+    year: '',
+    role: '',
+    client: '',
+    image: '',
+    hue: 185,
+    featured: true,
+    draft: false
   },
   {
-    title: 'Beta Project',
-    position: 'right',
-    deployed: false,
-    isLinkAvailable: false,
-    githublink: '',
-    websitelink: 'https://beta.example.com',
-    photoUrl: '/placeholder.webp',
-    description: ['Beta line'],
-    TechStack: ['React']
+    id: 'beta-project',
+    name: 'Beta Project',
+    summary: '',
+    points: ['Beta line'],
+    stack: ['React'],
+    url: '',
+    year: '',
+    role: '',
+    client: '',
+    image: '',
+    hue: 205,
+    featured: false,
+    draft: false
   }
 ];
 
@@ -38,23 +46,39 @@ const message = 'What are his skills?';
 
 describe('buildMessages', () => {
   const messages = buildMessages({ cv, projects, history, message, today });
+  const system = messages[0].content;
 
   it('starts with a system message containing the CV, every project title and today', () => {
     expect(messages[0].role).toBe('system');
-    expect(messages[0].content).toContain(cv);
+    expect(system).toContain(cv);
     for (const project of projects) {
-      expect(messages[0].content).toContain(project.title);
+      expect(system).toContain(project.name);
     }
-    expect(messages[0].content).toContain('2026-10-25');
+    expect(system).toContain('2026-10-25');
+  });
+
+  it('renders a project block in the documented order', () => {
+    expect(system).toContain(
+      '## Alpha Project\nA one-line summary.\n- First line\n- Second line\nTech: Svelte, TypeScript\nLive: https://alpha.example.com'
+    );
+  });
+
+  it('omits the summary line when the summary is empty', () => {
+    expect(system).toContain('## Beta Project\n- Beta line\nTech: React');
+  });
+
+  it('omits the Live line when the url is empty', () => {
+    const beta = system.slice(system.indexOf('## Beta Project'));
+    expect(beta).not.toContain('Live:');
   });
 
   it('includes the anti-injection instruction', () => {
-    expect(messages[0].content).toContain('only answer questions about Nirjal');
+    expect(system).toContain('only answer questions about Nirjal');
   });
 
   it('uses the CV experience summary instead of recalculating dates', () => {
-    expect(messages[0].content).toContain('Experience summary');
-    expect(messages[0].content).toContain('Do not extend a role past its end date');
+    expect(system).toContain('Experience summary');
+    expect(system).toContain('Do not extend a role past its end date');
   });
 
   it('puts the history in order after the system message', () => {

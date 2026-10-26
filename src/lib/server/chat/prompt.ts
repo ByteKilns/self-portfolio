@@ -1,5 +1,5 @@
 import type { LlmMessage, ChatTurn } from '#lib/chat/types.ts';
-import type { Project } from '#lib/types.ts';
+import type { Project } from '#lib/content/types.ts';
 
 export function buildMessages(input: {
   cv: string;
@@ -13,13 +13,14 @@ export function buildMessages(input: {
 
   const projectBlocks = projects
     .map((project) => {
-      const lines = [
-        `## ${project.title}`,
-        ...project.description.map((line) => `- ${line}`),
-        `Tech: ${project.TechStack.join(', ')}`
-      ];
-      if (project.isLinkAvailable) {
-        lines.push(`Live: ${project.websitelink}`);
+      const lines = [`## ${project.name}`];
+      if (project.summary) lines.push(project.summary);
+      lines.push(
+        ...project.points.map((line) => `- ${line}`),
+        `Tech: ${project.stack.join(', ')}`
+      );
+      if (project.url !== '') {
+        lines.push(`Live: ${project.url}`);
       }
       return lines.join('\n');
     })
