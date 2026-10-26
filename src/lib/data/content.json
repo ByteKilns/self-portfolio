@@ -1,0 +1,152 @@
+{
+  "v": 1,
+  "site": {
+    "email": "nirjalprajapati@gmail.com",
+    "github": "https://github.com/nirjalpraj",
+    "linkedin": "https://www.linkedin.com/in/nirjal-prajapati-b343a11a5/",
+    "tagline": "Building robust digital experiences with passion and precision.",
+    "now": [
+      "I’m quietly tangling with **Node** and **React** insides. Solving it like a sly detective. Just a low-key techie!",
+      "I’m currently reading **To Kill a Mockingbird**—so far, no birds have been harmed, but I’m keeping an eye on Atticus just in case."
+    ]
+  },
+  "projects": [
+    {
+      "id": "aastha-saving-and-cooperative-limited",
+      "name": "Aastha Saving and Cooperative Limited",
+      "summary": "A home for a savings & credit cooperative — notices, news, gallery and live interest rates.",
+      "points": [
+        "Portfolio site for a savings and credit cooperative",
+        "Features notices, news, and a gallery",
+        "Provides updates on interest rates",
+        "Built with Next.js, Tailwind CSS, ShadCN, and Payload CMS"
+      ],
+      "stack": ["Next.js", "Tailwind CSS", "ShadCN", "Payload CMS"],
+      "url": "",
+      "year": "",
+      "role": "",
+      "client": "",
+      "image": "/projects/aastha.webp",
+      "hue": 185,
+      "featured": true,
+      "draft": false
+    },
+    {
+      "id": "deshna-it",
+      "name": "Deshna IT",
+      "summary": "",
+      "points": [
+        "Website for an IT teaching company",
+        "Features courses, a blog, career page, and contact page",
+        "Enables course inquiries",
+        "Developed with Next.js, Tailwind CSS, ShadCN, Payload CMS, and designed in Figma"
+      ],
+      "stack": ["Next.js", "Tailwind CSS", "ShadCN", "Payload CMS", "Figma"],
+      "url": "https://deshna.example.com",
+      "year": "",
+      "role": "",
+      "client": "",
+      "image": "",
+      "hue": 205,
+      "featured": true,
+      "draft": false
+    },
+    {
+      "id": "ibm-nepal",
+      "name": "IBM Nepal",
+      "summary": "",
+      "points": [
+        "Portfolio app for child dairy products",
+        "Currently in the design phase",
+        "Planned to be built with Next.js and designed in Figma"
+      ],
+      "stack": ["Next.js", "Figma"],
+      "url": "",
+      "year": "",
+      "role": "",
+      "client": "",
+      "image": "",
+      "hue": 230,
+      "featured": true,
+      "draft": false
+    },
+    {
+      "id": "nepal-police-digital-diary",
+      "name": "Nepal Police Digital Diary",
+      "summary": "",
+      "points": [
+        "Internal intranet application for Nepal Police",
+        "Tracks projects, objectives, tasks, and KPIs",
+        "Developed the frontend using React.js"
+      ],
+      "stack": ["React.js"],
+      "url": "",
+      "year": "",
+      "role": "",
+      "client": "",
+      "image": "",
+      "hue": 165,
+      "featured": false,
+      "draft": false
+    },
+    {
+      "id": "niva-craftworks",
+      "name": "Niva Craftworks",
+      "summary": "",
+      "points": [
+        "E-commerce and portfolio website for a handicrafts business",
+        "Allows users to explore the brand and place orders via messages",
+        "Designed with Figma and developed using Next.js, Tailwind CSS, ShadCN, and Payload CMS"
+      ],
+      "stack": ["Next.js", "Tailwind CSS", "ShadCN", "Payload CMS", "Figma"],
+      "url": "",
+      "year": "",
+      "role": "",
+      "client": "",
+      "image": "",
+      "hue": 190,
+      "featured": false,
+      "draft": false
+    },
+    {
+      "id": "everest-ledger",
+      "name": "Everest Ledger",
+      "summary": "",
+      "points": [
+        "Ledger-keeping web app for inventory tracking",
+        "Generates financial reports like profit/loss and sales reports",
+        "Built with Next.js, NestJS, and Material UI"
+      ],
+      "stack": ["Next.js", "NestJS", "Material UI"],
+      "url": "",
+      "year": "",
+      "role": "",
+      "client": "",
+      "image": "",
+      "hue": 250,
+      "featured": false,
+      "draft": false
+    },
+    {
+      "id": "husky-app",
+      "name": "Husky App",
+      "summary": "",
+      "points": [
+        "Language-learning app focusing on Nepali and Newari",
+        "Similar to Duolingo, currently in beta testing",
+        "Contributed to Flutter frontend and developed chat feature's frontend and backend",
+        "Tech stack includes Flutter, Node.js, Express, and Socket.io"
+      ],
+      "stack": ["Flutter", "Node.js", "Express", "Socket.io"],
+      "url": "",
+      "year": "",
+      "role": "",
+      "client": "",
+      "image": "",
+      "hue": 175,
+      "featured": false,
+      "draft": false
+    }
+  ],
+  "savedAt": null
+}
