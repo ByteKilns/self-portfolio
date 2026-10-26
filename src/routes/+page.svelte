@@ -8,6 +8,8 @@
   import PageBackground from '#lib/components/site/PageBackground.svelte';
   import Header from '#lib/components/site/Header.svelte';
   import Hero from '#lib/components/site/Hero.svelte';
+  import WorkStage from '#lib/components/site/WorkStage.svelte';
+  import ProjectIndex from '#lib/components/site/ProjectIndex.svelte';
   import Contact from '#lib/components/site/Contact.svelte';
   import ProjectView from '#lib/components/site/ProjectView.svelte';
   import Curtain from '#lib/components/site/Curtain.svelte';
@@ -67,6 +69,7 @@
     if (reduced) return open(i);
     curtain = list[i].name;
     clearTimeout(curtainTimer);
+    clearTimeout(curtainClearTimer);
     curtainTimer = setTimeout(() => {
       open(i);
       curtainClearTimer = setTimeout(() => (curtain = null), 560);
@@ -202,26 +205,27 @@
   {#if project === null}
     <Hero {site} {isDark} onToggleConsole={() => (consoleOpen = !consoleOpen)} />
 
-    <section
-      bind:this={workEl}
-      data-screen-label="Work"
-      aria-label="Selected work"
-      style="position:relative"
-    >
-      <div style="padding:40px 0;font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">
-        WORK
-      </div>
-    </section>
+    <WorkStage
+      projects={scenes}
+      {isDark}
+      {narrow}
+      {reduced}
+      total={list.length}
+      onOpen={openWithCurtain}
+      onArchive={() => jump(() => archiveEl)}
+      bind:workEl
+    />
 
     <div style="max-width:1600px;margin:0 auto;padding:0 clamp(20px,6vw,112px);box-sizing:border-box">
-      <section
-        bind:this={archiveEl}
-        data-screen-label="Index"
-        aria-label="All projects"
-        style="padding-top:clamp(72px,12vh,140px)"
-      >
-        INDEX
-      </section>
+      <ProjectIndex
+        projects={list}
+        {isDark}
+        {narrow}
+        {reduced}
+        onOpen={openWithCurtain}
+        bind:archiveEl
+        onBitSay={bitSay}
+      />
     </div>
 
     <Contact
