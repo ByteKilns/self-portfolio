@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#04090c}
+body{-webkit-font-smoothing:antialiased}
+a{color:inherit}a:hover{color:var(--accent)}
+:root{--fg:#e7ecee;--fg2:#b3bfc3;--fg3:#7f8d92;--line:rgba(231,236,238,.14);--surface:rgba(6,15,18,.78);--scrim:rgba(2,6,8,.5);--accent:#5fd0c2;--sun:#f4c21b;--card:linear-gradient(135deg,#0f4644,#071519 70%);--shadow:0 30px 80px -24px rgba(0,0,0,.7);--hi:rgba(95,208,194,.13);--ink:#04090c;--grain-op:.14;--grain-blend:screen;
+--page:radial-gradient(60% 50% at 100% 0%,rgba(10,66,66,.8),transparent 72%),radial-gradient(55% 60% at 100% 100%,rgba(42,96,96,.7),transparent 70%),radial-gradient(45% 45% at 0% 100%,rgba(20,16,36,.9),transparent 70%),#04090c;
+--grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+[data-theme="light"]{--fg:#1f2b35;--fg2:#3a4955;--fg3:#566672;--line:rgba(31,43,53,.16);--surface:rgba(236,250,254,.86);--scrim:rgba(214,238,245,.45);--accent:#0b7a74;--card:linear-gradient(135deg,#a9e9f5,#eafbfe 75%);--shadow:0 24px 60px -28px rgba(18,70,84,.35);--hi:rgba(11,122,116,.1);--ink:#e9fafe;--grain-op:.2;--grain-blend:multiply;
+--page:radial-gradient(55% 45% at 100% 0%,rgba(196,243,253,1),transparent 72%),radial-gradient(45% 45% at 0% 100%,rgba(247,253,255,.95),transparent 70%),#e9fafe}
+input::placeholder{color:var(--fg3)}
+::selection{background:var(--accent);color:#04090c}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes riseIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes drawerIn{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
+@keyframes popIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@keyframes blink{50%{opacity:.2}}
+@keyframes wipe{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes zoomOut{from{transform:scale(1.12)}to{transform:scale(1)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes curtain{0%{clip-path:inset(100% 0 0 0)}42%,58%{clip-path:inset(0 0 0 0)}100%{clip-path:inset(0 0 100% 0)}}
+@keyframes bubbleIn{from{opacity:0;transform:translate(-50%,6px) scale(.85)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+@keyframes heartUp{0%{opacity:0;transform:translate(0,0) scale(.6)}20%{opacity:1}100%{opacity:0;transform:translate(var(--hx),-70px) scale(1.1)}}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div data-theme="{{ theme }}" style="min-height:100vh;background:var(--page);background-attachment:fixed;color:var(--fg);font-family:'Space Grotesk',system-ui,sans-serif;position:relative;overflow-x:clip">
+  <div style="max-width:1600px;margin:0 auto;padding:0 clamp(20px,6vw,112px);box-sizing:border-box;position:relative;z-index:30">
+    <header style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px 32px;padding-top:clamp(28px,7vh,72px);font-size:clamp(17px,1.4vw,22px)">
+      <nav style="display:flex;align-items:center;flex-wrap:wrap;gap:16px clamp(28px,5vw,96px);padding-left:clamp(0px,2.5vw,40px)">
+        <a href="#" onClick="{{ goHome }}" style="text-decoration:none;color:var(--fg)" style-hover="color:var(--accent)">Home</a>
+        <a href="#" onClick="{{ goWork }}" style="text-decoration:none;color:var(--fg)" style-hover="color:var(--accent)">Work</a>
+        <div style="position:relative">
+          <button onClick="{{ toggleNow }}" aria-expanded="{{ nowOpen }}" style="background:none;border:0;padding:0;font:inherit;color:var(--fg);cursor:pointer;position:relative" style-hover="color:var(--accent)">Currently Working On<sc-if value="{{ nowOpen }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:0;right:0;bottom:-8px;height:1px;background:currentColor"></span></sc-if></button>
+          <sc-if value="{{ nowOpen }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ closeNow }}" style="position:fixed;inset:0;z-index:20"></div>
+            <div role="dialog" aria-label="Currently working on" style="position:absolute;z-index:21;top:calc(100% + 26px);left:-32px;width:min(540px,calc(100vw - 40px));box-sizing:border-box;padding:26px 32px 30px;background:var(--surface);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:4px;box-shadow:var(--shadow);animation:popIn .22s cubic-bezier(.2,.7,.2,1) both;font-size:clamp(16px,1.2vw,19px);line-height:1.6">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:14px"><span>What am I currently doing?</span><button onClick="{{ closeNow }}" style="background:none;border:0;padding:0;cursor:pointer;font-family:'Space Mono',monospace;font-size:13px;color:var(--fg3)" style-hover="color:var(--accent)">[ esc ]</button></div>
+              <div style="display:flex;flex-direction:column;gap:12px;color:var(--fg2)">
+                <div style="display:grid;grid-template-columns:22px minmax(0,1fr)"><span>—</span><span style="text-wrap:pretty">I’m quietly tangling with <strong style="font-weight:600;color:var(--fg)">Node</strong> and <strong style="font-weight:600;color:var(--fg)">React</strong> insides. Solving it like a sly detective. Just a low-key techie!</span></div>
+                <div style="display:grid;grid-template-columns:22px minmax(0,1fr)"><span>—</span><span style="text-wrap:pretty">I’m currently reading <strong style="font-weight:600;color:var(--fg)">To Kill a Mockingbird</strong>—so far, no birds have been harmed, but I’m keeping an eye on Atticus just in case.</span></div>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+        <a href="#" onClick="{{ goContact }}" style="text-decoration:none;color:var(--fg)" style-hover="color:var(--accent)">Contact</a>
+      </nav>
+      <div style="display:flex;align-items:center;gap:clamp(24px,3vw,48px)">
+        <button onClick="{{ toggleTheme }}" aria-label="Toggle theme" style="background:none;border:0;padding:4px;cursor:pointer;display:flex;color:var(--fg)">
+          <sc-if value="{{ isDark }}" hint-placeholder-val="{{ true }}"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" style="stroke:var(--sun)"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></sc-if>
+          <sc-if value="{{ isLight }}" hint-placeholder-val="{{ false }}"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg></sc-if>
+        </button>
+        <button onClick="{{ toggleConsole }}" style="background:none;border:0;padding:0;font:inherit;color:var(--fg);cursor:pointer" style-hover="color:var(--accent)">[G] Console</button>
+      </div>
+    </header>
+  </div>
+
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:1600px;margin:0 auto;padding:0 clamp(20px,6vw,112px);box-sizing:border-box;animation:fadeIn .4s ease both">
+      <section data-screen-label="Hero" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:40px;padding:clamp(40px,10vh,104px) 0 clamp(56px,10vh,110px)">
+        <div style="flex:1 1 520px;max-width:1080px">
+          <h1 style="margin:0 0 24px;font-weight:400;font-size:clamp(24px,2vw,30px)">Full Stack Developer</h1>
+          <p style="margin:0 0 10px;font-size:clamp(17px,1.35vw,21px);line-height:1.6">Building robust digital experiences with passion and precision.</p>
+          <p style="margin:0 0 20px;font-size:clamp(17px,1.35vw,21px);line-height:1.6;text-wrap:pretty">— I’m [ Nirjal Prajapati ], a full-stack developer dedicated to crafting seamless, high-performing web applications that make an impact.</p>
+          <p style="margin:0 0 28px;font-size:clamp(17px,1.35vw,21px);line-height:1.6">Let’s connect—feel free to reach out via <a href="mailto:hello@example.com" style="color:var(--fg);text-underline-offset:4px;text-decoration-thickness:1.5px" style-hover="color:var(--accent)">email</a></p>
+          <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+            <a href="#" aria-label="GitHub" style="color:var(--fg);display:flex" style-hover="color:var(--accent)"><svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"></path></svg></a>
+            <a href="#" aria-label="LinkedIn" style="color:var(--fg);display:flex" style-hover="color:var(--accent)"><svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.140 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"></path></svg></a>
+            <button onClick="{{ toggleConsole }}" style="margin-left:12px;white-space:nowrap;display:flex;align-items:center;gap:12px;padding:10px 16px;background:none;border:1px solid var(--line);border-radius:4px;font:inherit;font-size:16px;color:var(--fg2);cursor:pointer" style-hover="color:var(--fg);border-color:var(--accent)"><span style="color:var(--accent)">?</span>ask my resume anything<span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">G</span></button>
+          </div>
+        </div>
+        <img src="{{ avatarSrc }}" alt="Illustration of Nirjal at a laptop" style="flex:none;width:clamp(180px,15vw,285px);height:auto;display:block;-webkit-mask-image:radial-gradient(closest-side,#000 80%,transparent 100%);mask-image:radial-gradient(closest-side,#000 80%,transparent 100%)">
+      </section>
+    </div>
+
+    <section ref="{{ workRef }}" data-screen-label="Work" aria-label="Selected work" style="position:relative">
+      <div style="position:{{ stickyPos }};top:0;height:{{ stickyH }};overflow:hidden;display:flex;flex-direction:column">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px clamp(20px,6vw,112px) 0;font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">
+          <span>( work ) selected projects</span>
+          <div style="display:flex;align-items:center;gap:14px">
+            <span ref="{{ counterRef }}" style="color:var(--accent)">00 / 03</span>
+            <span style="position:relative;width:clamp(80px,12vw,180px);height:1px;background:var(--line);overflow:hidden"><span ref="{{ progressRef }}" style="position:absolute;inset:0;background:var(--accent);transform:scaleX(0);transform-origin:0 50%"></span></span>
+          </div>
+        </div>
+        <div ref="{{ trackRef }}" style="flex:1;display:flex;align-items:center;gap:clamp(48px,8vw,140px);padding:0 clamp(20px,6vw,112px);overflow-x:{{ trackOverflow }};scroll-snap-type:{{ trackSnap }};will-change:transform">
+
+          <div style="flex:none;width:min(560px,80vw);scroll-snap-align:start;display:flex;flex-direction:column;gap:24px">
+            <h2 style="margin:0;font-weight:400;font-size:clamp(40px,5.4vw,92px);line-height:.98;letter-spacing:-.035em;text-wrap:balance">Featured work.</h2>
+            <p style="margin:0;max-width:36ch;font-size:clamp(17px,1.35vw,21px);line-height:1.6;color:var(--fg2)">{{ fCount }} projects get the full stage. Everything else lives in the index below.</p>
+            <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">{{ scrollHint }}</span>
+          </div>
+
+          <sc-for list="{{ scenes }}" as="s" hint-placeholder-count="2">
+            <article data-scene="" onMouseEnter="{{ s.enter }}" onMouseLeave="{{ s.leave }}" onClick="{{ s.open }}" style="flex:none;position:relative;width:min(1240px,86vw);height:{{ sceneH }};display:flex;flex-direction:column;gap:18px;cursor:pointer;scroll-snap-align:center">
+              <div data-par="-0.4" aria-hidden="true" style="position:absolute;left:{{ s.numL }};top:{{ s.numT }};display:{{ numDisp }};z-index:0;font-size:clamp(160px,24vw,380px);line-height:.8;letter-spacing:-.07em;font-weight:400;color:transparent;-webkit-text-stroke:1px var(--line);pointer-events:none">{{ s.num }}</div>
+
+              <div data-par="0.1" style="position:{{ absPos }};left:{{ s.visL }};top:{{ s.visT }};width:{{ s.visW }};z-index:1">
+                <div style="transform:rotate({{ s.visR }}) scale({{ s.visS }});transition:transform .7s cubic-bezier(.2,.8,.2,1)">
+                  <div style="clip-path:{{ s.clip }};transition:clip-path 1.2s cubic-bezier(.7,0,.2,1);border-radius:6px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line)">
+                    <div style="display:flex;align-items:center;gap:6px;padding:9px 12px;background:var(--surface);border-bottom:1px solid var(--line)">
+                      <span style="width:8px;height:8px;border-radius:50%;background:var(--fg3);opacity:.6"></span><span style="width:8px;height:8px;border-radius:50%;background:var(--fg3);opacity:.6"></span><span style="width:8px;height:8px;border-radius:50%;background:var(--fg3);opacity:.6"></span>
+                      <span style="margin-left:10px;font-family:'Space Mono',monospace;font-size:11px;color:var(--fg3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.url }}</span>
+                    </div>
+                    <sc-if value="{{ s.hasImage }}" hint-placeholder-val="{{ false }}"><img src="{{ s.image }}" alt="{{ s.name }} screenshot" style="width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top;display:block;transform:scale({{ s.imgS }});transition:transform 1.4s cubic-bezier(.2,.8,.2,1)"></sc-if>
+                    <sc-if value="{{ s.noImage }}" hint-placeholder-val="{{ true }}">
+                      <div style="width:100%;aspect-ratio:16/10;background:{{ s.tint }};position:relative;display:flex;align-items:center;justify-content:center">
+                        <span style="font-size:clamp(64px,9vw,150px);letter-spacing:-.06em;color:var(--fg);opacity:.92">{{ s.mono }}</span>
+                        <span style="position:absolute;left:16px;bottom:14px;font-family:'Space Mono',monospace;font-size:11px;color:var(--fg2)">[ screenshot ]</span>
+                      </div>
+                    </sc-if>
+                  </div>
+                </div>
+              </div>
+
+              <div data-par="0.32" style="position:{{ absPos }};left:{{ s.secL }};top:{{ s.secT }};width:{{ s.secW }};display:{{ secDisp }};z-index:3">
+                <div style="opacity:{{ s.secOp }};transform:rotate({{ s.secR }}) translateY({{ s.secY }});transition:opacity .8s ease .35s,transform 1s cubic-bezier(.2,.8,.2,1) .35s">
+                  <sc-if value="{{ s.hasImage }}" hint-placeholder-val="{{ false }}">
+                    <div style="border-radius:14px;overflow:hidden;border:4px solid var(--surface);box-shadow:var(--shadow);aspect-ratio:9/16;max-height:46vh">
+                      <img src="{{ s.image }}" alt="" style="width:100%;height:100%;object-fit:cover;object-position:78% 40%;display:block;transform:scale(1.9)">
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ s.noImage }}" hint-placeholder-val="{{ true }}">
+                    <div style="padding:16px 18px;border-radius:6px;background:var(--surface);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);box-shadow:var(--shadow);font-family:'Space Mono',monospace;font-size:12px;line-height:1.9;color:var(--fg2)">
+                      <div style="color:var(--fg3)">$ cat {{ s.file }}</div>
+                      <div><span style="color:var(--accent)">project</span> {{ s.num }}</div>
+                      <div><span style="color:var(--accent)">notes</span> write-up soon</div>
+                    </div>
+                  </sc-if>
+                </div>
+              </div>
+
+              <div style="position:{{ absPos }};left:{{ s.txtL }};top:{{ s.txtT }};width:{{ s.txtW }};z-index:2;display:flex;flex-direction:column;gap:14px;opacity:{{ s.txtOp }};transform:translateY({{ s.txtY }});transition:opacity .8s ease .15s,transform 1s cubic-bezier(.2,.8,.2,1) .15s">
+                <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">[ {{ s.num }} / {{ fTotal }} ] featured</span>
+                <h3 style="margin:0;font-weight:400;font-size:clamp(28px,3vw,52px);line-height:1.02;letter-spacing:-.03em;text-wrap:balance;color:{{ s.titleColor }};transition:color .3s">{{ s.name }}</h3>
+                <p style="margin:0;font-size:clamp(16px,1.2vw,19px);line-height:1.55;color:var(--fg2);text-wrap:pretty">{{ s.summary }}</p>
+                <div style="display:flex;flex-wrap:wrap;gap:8px">
+                  <sc-for list="{{ s.chips }}" as="c" hint-placeholder-count="2"><span style="white-space:nowrap;padding:5px 10px;border:1px solid var(--line);border-radius:999px;font-family:'Space Mono',monospace;font-size:11px;color:var(--fg2);animation:float 4.5s ease-in-out infinite;animation-delay:{{ c.delay }}">{{ c.label }}</span></sc-for>
+                </div>
+                <div style="display:grid;grid-template-rows:{{ s.rows }};transition:grid-template-rows .5s cubic-bezier(.2,.8,.2,1)">
+                  <div style="overflow:hidden;min-height:0">
+                    <div style="display:flex;flex-direction:column;gap:4px;padding-top:4px;font-size:15px;line-height:1.5;color:var(--fg2)">
+                      <sc-for list="{{ s.points }}" as="pt" hint-placeholder-count="0"><div style="display:grid;grid-template-columns:20px minmax(0,1fr)"><span style="color:var(--accent)">+</span><span>{{ pt }}</span></div></sc-for>
+                    </div>
+                  </div>
+                </div>
+                <span style="display:flex;align-items:center;gap:10px;font-size:16px;color:var(--fg)"><span style="text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1.5px">open project</span><span style="display:inline-block;transition:transform .35s cubic-bezier(.2,.8,.2,1);transform:{{ s.arrow }}">↗</span></span>
+              </div>
+            </article>
+          </sc-for>
+
+          <div style="flex:none;width:min(520px,80vw);scroll-snap-align:center;display:flex;flex-direction:column;gap:22px;padding-right:clamp(20px,6vw,112px)">
+            <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">[ + {{ moreCount }} more ]</span>
+            <h2 style="margin:0;font-weight:400;font-size:clamp(36px,4.4vw,76px);line-height:1;letter-spacing:-.035em;text-wrap:balance">The rest live in the index.</h2>
+            <a href="#" onClick="{{ goArchive }}" style="align-self:flex-start;font-size:18px;color:var(--fg);text-underline-offset:6px" style-hover="color:var(--accent)">Browse all {{ total }} projects ↓</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <div style="max-width:1600px;margin:0 auto;padding:0 clamp(20px,6vw,112px);box-sizing:border-box">
+      <section ref="{{ archiveRef }}" data-screen-label="Index" aria-label="All projects" style="padding-top:clamp(72px,12vh,140px)">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px 32px;margin-bottom:22px">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">( index )</span>
+            <h2 style="margin:0;font-weight:400;font-size:clamp(28px,3vw,48px);letter-spacing:-.03em">All projects <span style="font-family:'Space Mono',monospace;font-size:14px;letter-spacing:0;color:var(--fg3);white-space:nowrap">[ {{ shownCount }} / {{ total }} ]</span></h2>
+          </div>
+          <label style="display:flex;align-items:center;gap:10px;min-width:min(320px,100%);padding:8px 0;border-bottom:1px solid var(--line);font-family:'Space Mono',monospace;font-size:14px">
+            <span style="color:var(--accent)">?</span>
+            <input value="{{ q }}" onChange="{{ onQ }}" placeholder="search projects" aria-label="Search projects" style="flex:1;min-width:0;background:transparent;border:0;outline:none;font:inherit;color:var(--fg);caret-color:var(--accent)">
+          </label>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:clamp(24px,4vh,40px)">
+          <sc-for list="{{ tags }}" as="t" hint-placeholder-count="4">
+            <button onClick="{{ t.pick }}" aria-pressed="{{ t.on }}" style="white-space:nowrap;padding:6px 12px;border-radius:999px;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.color }};font-family:'Space Mono',monospace;font-size:12px;cursor:pointer;transition:background .2s,color .2s">{{ t.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(32px,5vw,88px);align-items:start">
+          <div onMouseLeave="{{ archLeave }}">
+            <div style="border-bottom:1px solid var(--line)">
+              <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+                <a href="#" onClick="{{ r.open }}" onMouseEnter="{{ r.enter }}" onFocus="{{ r.enter }}" style="display:grid;grid-template-columns:48px minmax(0,1fr) auto 22px;align-items:baseline;gap:14px;padding:14px 0;border-top:1px solid var(--line);text-decoration:none;color:{{ r.color }};padding-left:{{ r.indent }};transition:padding .3s ease,color .2s;animation:riseIn .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:{{ r.delay }}">
+                  <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">{{ r.num }}</span>
+                  <span style="font-size:clamp(17px,1.35vw,21px);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.name }}</span>
+                  <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--fg3);white-space:nowrap">{{ r.meta }}</span>
+                  <span style="transition:transform .3s cubic-bezier(.2,.8,.2,1);transform:{{ r.arrow }}">↗</span>
+                </a>
+              </sc-for>
+            </div>
+            <sc-if value="{{ noRows }}" hint-placeholder-val="{{ false }}"><p style="margin:18px 0 0;font-family:'Space Mono',monospace;font-size:13px;color:var(--fg3)">no matches — try another tag or search.</p></sc-if>
+            <sc-if value="{{ canExpand }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ toggleAll }}" style="margin-top:18px;background:none;border:0;padding:0;cursor:pointer;font-family:'Space Mono',monospace;font-size:13px;color:var(--fg2)" style-hover="color:var(--accent)">{{ expandLabel }}</button>
+            </sc-if>
+          </div>
+          <div style="position:sticky;top:32px;display:{{ prevDisp }};flex-direction:column;gap:14px">
+            <div style="position:relative;width:100%;aspect-ratio:4/3;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:var(--card)">{{ archStage }}</div>
+            <div style="display:flex;justify-content:space-between;gap:12px;font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)"><span style="color:var(--accent)">[ {{ ap.num }} ] {{ ap.badge }}</span><span>{{ ap.meta }}</span></div>
+            <div style="font-size:16px;line-height:1.55;color:var(--fg2)">{{ ap.summary }}</div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div style="max-width:1600px;margin:0 auto;padding:0 clamp(20px,6vw,112px) 40px;box-sizing:border-box">
+      <section ref="{{ contactRef }}" data-screen-label="Contact" onMouseMove="{{ onContactMove }}" onMouseLeave="{{ onContactLeave }}" style="position:relative;margin-top:clamp(64px,10vh,120px);min-height:min(82vh,800px);box-sizing:border-box;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:radial-gradient(70% 90% at 85% 110%,var(--hi),transparent 70%),radial-gradient(50% 60% at 0% 0%,var(--hi),transparent 70%);display:flex;flex-direction:column;gap:40px;padding:clamp(24px,4vw,56px) clamp(24px,4vw,56px) 28px">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">
+          <span>( contact )</span>
+          <span>say hi to Bit — he lives here.</span>
+        </div>
+        <div style="flex:1">
+          <h2 style="margin:0 0 20px;font-weight:400;font-size:clamp(36px,5vw,84px);line-height:1;letter-spacing:-.03em;max-width:13ch;text-wrap:balance">Got something worth building?</h2>
+          <p style="margin:0 0 clamp(28px,5vh,48px);max-width:46ch;font-size:clamp(17px,1.35vw,21px);line-height:1.6;color:var(--fg2)">Let’s connect—feel free to reach out.</p>
+          <a ref="{{ emailRef }}" href="mailto:hello@example.com" onMouseEnter="{{ lureOn }}" onMouseLeave="{{ lureOff }}" style="display:inline-flex;align-items:center;gap:18px;padding:18px 28px;border:1px solid var(--accent);border-radius:999px;text-decoration:none;color:var(--fg);font-size:clamp(20px,2.2vw,34px);transition:background .3s,color .3s" style-hover="background:var(--accent);color:#04090c">hello@example.com <span style="font-size:.8em">↗</span></a>
+        </div>
+
+        <div style="position:relative;height:150px;flex:none">
+          <div style="position:absolute;left:0;right:0;bottom:0;border-top:1px dashed var(--line)"></div>
+          <div ref="{{ mascotRef }}" style="position:absolute;left:0;bottom:0;width:clamp(100px,9vw,128px);will-change:transform;transform:translate3d(-999px,0,0)">
+            <sc-if value="{{ bubbleOn }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;left:50%;bottom:100%;margin-bottom:6px;white-space:nowrap;padding:7px 12px;border-radius:12px;background:var(--fg);color:var(--ink);font-family:'Space Mono',monospace;font-size:12px;animation:bubbleIn .25s cubic-bezier(.2,.9,.3,1.4) both;transform:translateX(-50%);pointer-events:none">{{ bubble }}<span style="position:absolute;left:50%;top:100%;margin-left:-6px;border:6px solid transparent;border-top-color:var(--fg)"></span></div>
+            </sc-if>
+            <sc-for list="{{ hearts }}" as="h" hint-placeholder-count="0">
+              <span style="position:absolute;left:{{ h.left }};top:20%;color:#ff8fa8;font-size:{{ h.size }};pointer-events:none;--hx:{{ h.dx }};animation:heartUp 1.1s ease-out both;animation-delay:{{ h.delay }}">♥</span>
+            </sc-for>
+            <button onClick="{{ pokeBit }}" onMouseEnter="{{ bitHoverOn }}" onMouseLeave="{{ bitHoverOff }}" aria-label="Bit, the mascot. Click to say hi." style="display:block;width:100%;background:none;border:0;padding:0;cursor:pointer">
+              <svg viewBox="0 0 120 120" width="100%" style="display:block;overflow:visible">
+                <defs>
+                  <linearGradient id="bitBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9af3e6"></stop><stop offset="1" stop-color="#34b2a4"></stop></linearGradient>
+                  <linearGradient id="bitLeaf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c7f59a"></stop><stop offset="1" stop-color="#6fcf7d"></stop></linearGradient>
+                </defs>
+                <ellipse ref="{{ shadowRef }}" cx="60" cy="112" rx="30" ry="5" fill="#000" opacity=".22"></ellipse>
+                <g ref="{{ bodyRef }}">
+                  <ellipse cx="45" cy="108" rx="10" ry="5.5" fill="#2a9a8d"></ellipse>
+                  <ellipse cx="75" cy="108" rx="10" ry="5.5" fill="#2a9a8d"></ellipse>
+                  <g ref="{{ armLRef }}"><ellipse cx="19" cy="80" rx="6.5" ry="10" fill="#4cc4b5"></ellipse></g>
+                  <g ref="{{ armRRef }}"><ellipse cx="101" cy="80" rx="6.5" ry="10" fill="#4cc4b5"></ellipse></g>
+                  <g ref="{{ sproutRef }}">
+                    <path d="M60 36 Q58 24 61 15" stroke="#5fbf6e" stroke-width="3" fill="none" stroke-linecap="round"></path>
+                    <ellipse cx="53" cy="17" rx="8" ry="4.5" fill="url(#bitLeaf)" transform="rotate(-28 53 17)"></ellipse>
+                    <ellipse cx="68" cy="13" rx="8.5" ry="4.8" fill="url(#bitLeaf)" transform="rotate(24 68 13)"></ellipse>
+                  </g>
+                  <rect x="20" y="34" width="80" height="74" rx="37" fill="url(#bitBody)"></rect>
+                  <ellipse cx="42" cy="47" rx="11" ry="5" fill="#fff" opacity=".38" transform="rotate(-22 42 47)"></ellipse>
+                  <ellipse cx="60" cy="95" rx="22" ry="10" fill="#fff" opacity=".14"></ellipse>
+                  <ellipse ref="{{ cheekLRef }}" cx="35" cy="80" rx="6.5" ry="3.8" fill="#ff8fa8" opacity=".5"></ellipse>
+                  <ellipse ref="{{ cheekRRef }}" cx="85" cy="80" rx="6.5" ry="3.8" fill="#ff8fa8" opacity=".5"></ellipse>
+                  <g ref="{{ eyesRef }}">
+                    <ellipse cx="46" cy="66" rx="10" ry="11.5" fill="#fff"></ellipse>
+                    <ellipse cx="74" cy="66" rx="10" ry="11.5" fill="#fff"></ellipse>
+                    <g ref="{{ pupilLRef }}"><circle cx="46" cy="67" r="5.8" fill="#10262a"></circle><circle cx="48.2" cy="64.2" r="2" fill="#fff"></circle><circle cx="44.2" cy="69.6" r=".9" fill="#fff"></circle></g>
+                    <g ref="{{ pupilRRef }}"><circle cx="74" cy="67" r="5.8" fill="#10262a"></circle><circle cx="76.2" cy="64.2" r="2" fill="#fff"></circle><circle cx="72.2" cy="69.6" r=".9" fill="#fff"></circle></g>
+                  </g>
+                  <g ref="{{ happyRef }}" opacity="0" fill="none" stroke="#10262a" stroke-width="3.2" stroke-linecap="round"><path d="M38 68 Q46 58 54 68"></path><path d="M66 68 Q74 58 82 68"></path></g>
+                  <path ref="{{ mouthRef }}" d="M55 83 Q60 88 65 83" fill="none" stroke="#10262a" stroke-width="2.6" stroke-linecap="round"></path>
+                  <g ref="{{ mouthORef }}" opacity="0"><ellipse cx="60" cy="85" rx="4.6" ry="4" fill="#10262a"></ellipse><ellipse cx="60" cy="87" rx="2.6" ry="1.5" fill="#ff8fa8"></ellipse></g>
+                </g>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;font-size:16px;color:var(--fg2)">
+          <div style="display:flex;gap:28px;flex-wrap:wrap">
+            <a href="#" style="color:var(--fg2);text-underline-offset:5px" style-hover="color:var(--accent)">GitHub</a>
+            <a href="#" style="color:var(--fg2);text-underline-offset:5px" style-hover="color:var(--accent)">LinkedIn</a>
+            <button onClick="{{ toggleConsole }}" style="background:none;border:0;padding:0;cursor:pointer;font:inherit;color:var(--fg2)" style-hover="color:var(--accent)">[G] ask my resume</button>
+          </div>
+          <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">© 2026 Nirjal Prajapati</span>
+        </div>
+      </section>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isProject }}" hint-placeholder-val="{{ false }}">
+    <main data-screen-label="Project" style="max-width:1600px;margin:0 auto;box-sizing:border-box;padding:clamp(40px,9vh,96px) clamp(20px,6vw,112px) 88px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px;font-family:'Space Mono',monospace;font-size:13px;color:var(--fg3);animation:fadeIn .5s ease both">
+        <span>work / {{ project.num }} of {{ total }}</span>
+        <button onClick="{{ goBack }}" style="background:none;border:0;padding:0;cursor:pointer;font:inherit;color:var(--fg2)" style-hover="color:var(--accent)">[ esc ] back</button>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px;margin-bottom:clamp(28px,5vh,48px);animation:riseIn .7s .1s cubic-bezier(.2,.8,.2,1) both">
+        <h1 style="margin:0;font-weight:400;font-size:clamp(30px,3.4vw,58px);letter-spacing:-.03em;line-height:1.02">{{ project.name }}</h1>
+        <span style="font-size:clamp(16px,1.2vw,19px);color:var(--fg2)">[ Link not available currently ]</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(32px,5vw,80px);align-items:start;font-size:clamp(17px,1.3vw,20px);line-height:1.6">
+        <div style="animation:riseIn .7s .25s cubic-bezier(.2,.8,.2,1) both">
+          <sc-if value="{{ project.hasPoints }}" hint-placeholder-val="{{ true }}">
+            <sc-for list="{{ project.points }}" as="pt" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:26px minmax(0,1fr)"><span style="color:var(--fg3)">—</span><span>{{ pt }}</span></div></sc-for>
+            <h2 style="margin:36px 0 14px;font-weight:400;font-size:inherit;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:7px">Tech Stack</h2>
+            <div style="display:flex;flex-wrap:wrap;gap:10px 22px;color:var(--fg2)"><sc-for list="{{ project.stack }}" as="t" hint-placeholder-count="4"><span style="white-space:nowrap">[ {{ t }} ]</span></sc-for></div>
+          </sc-if>
+          <sc-if value="{{ project.noPoints }}" hint-placeholder-val="{{ false }}"><p style="margin:0;color:var(--fg2)">[ Write-up coming soon ]</p></sc-if>
+        </div>
+        <div style="animation:wipe 1.1s .2s cubic-bezier(.7,0,.2,1) both">
+          <sc-if value="{{ project.hasImage }}" hint-placeholder-val="{{ true }}"><img src="{{ project.image }}" alt="{{ project.name }}" style="width:100%;aspect-ratio:8/5;object-fit:cover;object-position:top;display:block;border-radius:6px;border:1px solid var(--line)"></sc-if>
+          <sc-if value="{{ project.noImage }}" hint-placeholder-val="{{ false }}"><div style="width:100%;aspect-ratio:8/5;border-radius:6px;background:{{ project.tint }};display:flex;align-items:center;justify-content:center;position:relative"><span style="font-size:clamp(80px,10vw,170px);letter-spacing:-.06em">{{ project.mono }}</span><span style="position:absolute;left:18px;bottom:14px;font-family:'Space Mono',monospace;font-size:12px;color:var(--fg2)">[ screenshot ]</span></div></sc-if>
+        </div>
+      </div>
+      <div style="margin-top:clamp(48px,9vh,96px);padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;font-size:clamp(17px,1.3vw,20px)">
+        <a href="#" onClick="{{ prevProject }}" style="color:var(--fg);text-underline-offset:7px">← {{ prevName }}</a>
+        <a href="#" onClick="{{ nextProject }}" style="color:var(--fg);text-underline-offset:7px">{{ nextName }} →</a>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ curtainOn }}" hint-placeholder-val="{{ false }}">
+    <div aria-hidden="true" style="position:fixed;inset:0;z-index:90;background:var(--accent);color:#04090c;display:flex;align-items:center;justify-content:center;animation:curtain 1s cubic-bezier(.7,0,.2,1) both;pointer-events:none">
+      <span style="font-size:clamp(28px,3.4vw,58px);letter-spacing:-.03em;padding:0 24px;text-align:center">{{ curtainText }}</span>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ consoleOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeConsole }}" style="position:fixed;inset:0;z-index:40;background:var(--scrim);animation:fadeIn .2s ease both"></div>
+    <aside role="dialog" aria-label="Console" style="position:fixed;top:0;right:0;bottom:0;z-index:41;width:min(500px,100vw);box-sizing:border-box;display:flex;flex-direction:column;background:var(--surface);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-left:1px solid var(--line);box-shadow:var(--shadow);animation:drawerIn .28s cubic-bezier(.2,.7,.2,1) both">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;padding:clamp(28px,7vh,72px) 36px 22px;border-bottom:1px solid var(--line)">
+        <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap"><span style="font-size:clamp(17px,1.4vw,22px)">[G] Console</span><span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">talk to my resume</span></div>
+        <button onClick="{{ closeConsole }}" style="background:none;border:0;padding:0;cursor:pointer;font-family:'Space Mono',monospace;font-size:13px;color:var(--fg2)" style-hover="color:var(--accent)">[ esc ]</button>
+      </div>
+      <div ref="{{ logRef }}" style="flex:1;overflow-y:auto;padding:28px 36px;display:flex;flex-direction:column;gap:18px;font-size:17px;line-height:1.6">
+        <sc-for list="{{ messages }}" as="m" hint-placeholder-count="1">
+          <sc-if value="{{ m.isBot }}" hint-placeholder-val="{{ true }}"><div style="display:grid;grid-template-columns:20px minmax(0,1fr);animation:riseIn .25s ease both"><span style="color:var(--fg3)">-</span><span style="text-wrap:pretty">{{ m.text }}</span></div></sc-if>
+          <sc-if value="{{ m.isUser }}" hint-placeholder-val="{{ false }}"><div style="display:grid;grid-template-columns:20px minmax(0,1fr)"><span style="color:var(--accent)">?</span><span style="color:var(--fg2)">{{ m.text }}</span></div></sc-if>
+        </sc-for>
+        <sc-if value="{{ typing }}" hint-placeholder-val="{{ false }}"><div style="display:grid;grid-template-columns:20px minmax(0,1fr)"><span style="color:var(--fg3)">-</span><span style="color:var(--fg3);letter-spacing:.2em;animation:blink 1s steps(2) infinite">···</span></div></sc-if>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px 18px;padding:0 36px 16px;font-size:15px">
+        <sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="4"><button onClick="{{ s.send }}" style="background:none;border:0;padding:4px 0;cursor:pointer;font:inherit;color:var(--fg2)" style-hover="color:var(--accent)">[ {{ s.label }} ]</button></sc-for>
+      </div>
+      <div style="border-top:1px solid var(--line);padding:18px 36px 26px">
+        <label style="display:grid;grid-template-columns:20px minmax(0,1fr);align-items:center;font-size:18px"><span style="color:var(--accent)">?</span><input ref="{{ inputRef }}" value="{{ draft }}" onChange="{{ onDraft }}" onKeyDown="{{ onInputKey }}" placeholder="ask about skills, projects, contact…" aria-label="Ask the console" style="width:100%;background:transparent;border:0;outline:none;padding:6px 0;font:inherit;color:var(--fg);caret-color:var(--accent)"></label>
+      </div>
+    </aside>
+  </sc-if>
+
+  <sc-if value="{{ grain }}" hint-placeholder-val="{{ true }}">
+    <div aria-hidden="true" style="position:fixed;inset:0;z-index:100;pointer-events:none;background-image:var(--grain);opacity:var(--grain-op);mix-blend-mode:var(--grain-blend)"></div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;demoProjects&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;default&quot;:&quot;dark&quot;,&quot;tsType&quot;:&quot;'dark' | 'light'&quot;},&quot;reducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;grain&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const PROJECTS = [
+  { name: 'Aastha Saving and Cooperative Limited', image: 'assets/project-aastha.png', hue: 185,
+    summary: 'A home for a savings & credit cooperative — notices, news, gallery and live interest rates.',
+    points: ['Portfolio site for a savings and credit cooperative', 'Features notices, news, and a gallery', 'Provides updates on interest rates', 'Built with Next.js, Tailwind CSS, ShadCN, and Payload CMS'],
+    stack: ['Next.js', 'Tailwind CSS', 'ShadCN', 'Payload CMS'], featured: true },
+  { name: 'Deshna IT', hue: 205, featured: true }, { name: 'IBM Nepal', hue: 230, featured: true }, { name: 'Nepal Police Digital Diary', hue: 165 },
+  { name: 'Niva Craftworks', hue: 190 }, { name: 'Everest Ledger', hue: 250 }, { name: 'Husky App', hue: 175 },
+];
+const DEMO = Array.from({ length: 13 }, (_, k) => ({ name: 'Upcoming project ' + String(k + 8).padStart(2, '0'), hue: 160 + (k * 23) % 100, demo: true,
+  stack: [['React', 'Node'], ['Next.js'], ['Node'], ['React']][k % 4] }));
+const PAGE = 8;
+const LAYOUT = {
+  A: { num: ['0%', '-4%'], vis: ['31%', '6%', '67%', '0deg'], sec: ['77%', '60%', '18%', '4deg'], txt: ['0%', '24%', '27%'] },
+  B: { num: ['64%', '-6%'], vis: ['0%', '12%', '57%', '-2deg'], sec: ['48%', '0%', '17%', '-5deg'], txt: ['64%', '30%', '34%'] },
+  C: { num: ['0%', '48%'], vis: ['40%', '14%', '55%', '1.5deg'], sec: ['10%', '58%', '17%', '3deg'], txt: ['0%', '0%', '36%'] },
+};
+const BIT_LINES = ['hi! I’m Bit.', 'I help Nirjal debug.', 'boop!', 'he’s nice — email him!', 'hehe, that tickles', 'ship it!'];
+const SUGGEST = ['skills', 'projects', 'experience', 'contact'];
+const pad = (n) => String(n).padStart(2, '0');
+const mono = (s) => s.split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+function reply(q) {
+  const s = q.toLowerCase();
+  if (/skill|stack|tech|know|language/.test(s)) return 'Day to day he works in Node and React. Recent builds use Next.js, Tailwind CSS, ShadCN and Payload CMS.';
+  if (/project|built|portfolio|work on/.test(s)) return 'Seven so far: ' + PROJECTS.map(p => p.name).join(', ') + '.';
+  if (/contact|email|reach|hire|linkedin|github/.test(s)) return 'Email is quickest — the link is in the intro. He’s also on GitHub and LinkedIn.';
+  if (/experience|job|career|work/.test(s)) return 'He builds full-stack web apps end to end. Ask about a specific project and I’ll walk you through it.';
+  if (/^(hi|hello|hey)\b/.test(s)) return 'Hello! I am Nirjal Prajapati’s resume. Ask me about his experience, skills, projects, or how to contact him.';
+  return 'I can help with Nirjal Prajapati’s experience, skills, projects, education, or how to contact him. What would you like to know?';
+}
+
+class Component extends DCLogic {
+  workRef = React.createRef(); archiveRef = React.createRef(); trackRef = React.createRef(); counterRef = React.createRef(); progressRef = React.createRef();
+  contactRef = React.createRef(); emailRef = React.createRef(); mascotRef = React.createRef();
+  bodyRef = React.createRef(); shadowRef = React.createRef(); sproutRef = React.createRef(); eyesRef = React.createRef();
+  pupilLRef = React.createRef(); pupilRRef = React.createRef(); happyRef = React.createRef(); mouthRef = React.createRef(); mouthORef = React.createRef();
+  armLRef = React.createRef(); armRRef = React.createRef(); cheekLRef = React.createRef(); cheekRRef = React.createRef();
+  logRef = React.createRef(); inputRef = React.createRef();
+  bit = { x: null, y: 0, vy: 0, vx: 0, sq: 0, ground: true, nextBlink: 0, blinkAt: -1, happyUntil: 0, lastMove: 0, asleep: false, line: 0 };
+  ptr = { x: innerWidth / 2, y: innerHeight / 2 };
+  state = { theme: this.props.theme || 'dark', project: null, console: false, now: false, hover: null, seen: [], ah: null, q: '', tag: 'All', showAll: false, narrow: innerWidth < 820,
+    bubble: '', hearts: [], curtain: null, draft: '', typing: false,
+    messages: [{ who: 'bot', text: 'Hi! I’m Nirjal Prajapati’s resume. Ask me about his skills, experience or projects.' }] };
+
+  componentDidMount() {
+    this.reduced = (this.props.reducedMotion ?? false) || matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this._key = (e) => {
+      const tag = e.target && e.target.tagName;
+      if (e.key === 'Escape') { if (this.state.now) return this.setState({ now: false }); if (this.state.console) return this.setState({ console: false }); if (this.state.project != null) return this.back(); return; }
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === 'g' || e.key === 'G') { e.preventDefault(); this.setState(s => ({ console: !s.console })); }
+      if (this.state.project != null && !this.state.console) { if (e.key === 'ArrowRight') this.step(1); if (e.key === 'ArrowLeft') this.step(-1); }
+    };
+    this._move = (e) => { this.ptr.x = e.clientX; this.ptr.y = e.clientY; this.bit.lastMove = performance.now(); };
+    this._resize = () => { const n = innerWidth < 820; if (n !== this.state.narrow) this.setState({ narrow: n }); };
+    addEventListener('keydown', this._key); addEventListener('pointermove', this._move, { passive: true }); addEventListener('resize', this._resize);
+    this.bit.lastMove = performance.now();
+    this.syncHtml(); this._raf = requestAnimationFrame(this.loop);
+  }
+  componentWillUnmount() {
+    removeEventListener('keydown', this._key); removeEventListener('pointermove', this._move); removeEventListener('resize', this._resize);
+    cancelAnimationFrame(this._raf); clearTimeout(this._t); clearTimeout(this._bt); clearTimeout(this._ct);
+  }
+  componentDidUpdate(pp, ps) {
+    pp = pp || this._pp || this.props; ps = ps || this._ps || this.state; this._pp = this.props; this._ps = this.state;
+    if (pp.theme !== this.props.theme) this.setState({ theme: this.props.theme || 'dark' });
+    if (pp.reducedMotion !== this.props.reducedMotion) this.reduced = (this.props.reducedMotion ?? false) || matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (ps.theme !== this.state.theme) this.syncHtml();
+    if (!ps.console && this.state.console) setTimeout(() => this.inputRef.current && this.inputRef.current.focus(), 60);
+    if (ps.messages !== this.state.messages || ps.typing !== this.state.typing) { const el = this.logRef.current; if (el) el.scrollTop = el.scrollHeight; }
+  }
+  syncHtml() { document.documentElement.style.background = this.state.theme === 'light' ? '#e9fafe' : '#04090c'; }
+
+  loop = (t) => {
+    this.updateWork();
+    this.updateBit(t);
+    this._raf = requestAnimationFrame(this.loop);
+  };
+  updateWork() {
+    const sec = this.workRef.current, track = this.trackRef.current;
+    if (!sec || !track) return;
+    const vw = innerWidth, vh = innerHeight, narrow = this.state.narrow;
+    if (!narrow) {
+      const need = Math.max(vh, track.scrollWidth - vw + vh);
+      if (Math.abs(sec.offsetHeight - need) > 2) sec.style.height = need + 'px';
+      const r = sec.getBoundingClientRect(), total = Math.max(1, sec.offsetHeight - vh);
+      const p = Math.min(1, Math.max(0, -r.top / total));
+      track.style.transform = `translate3d(${-p * Math.max(0, track.scrollWidth - vw)}px,0,0)`;
+      if (this.progressRef.current) this.progressRef.current.style.transform = `scaleX(${p})`;
+    } else {
+      if (sec.style.height) sec.style.height = '';
+      track.style.transform = '';
+      const max = track.scrollWidth - track.clientWidth;
+      if (this.progressRef.current) this.progressRef.current.style.transform = `scaleX(${max > 0 ? track.scrollLeft / max : 0})`;
+    }
+    const scenes = track.querySelectorAll('[data-scene]');
+    let best = -1, bestD = 1e9, newSeen = null;
+    scenes.forEach((el, i) => {
+      const r = el.getBoundingClientRect();
+      const c = (r.left + r.width / 2 - vw / 2) / vw;
+      if (Math.abs(c) < bestD && r.top < vh && r.bottom > 0) { bestD = Math.abs(c); best = i; }
+      if (!this.reduced) el.querySelectorAll('[data-par]').forEach(n => { n.style.transform = `translate3d(${(c * -260 * parseFloat(n.dataset.par)).toFixed(1)}px,0,0)`; });
+      if (!this.state.seen[i] && r.left < vw * 0.86 && r.top < vh * 0.9) { newSeen = newSeen || this.state.seen.slice(); newSeen[i] = true; }
+    });
+    if (newSeen) this.setState({ seen: newSeen });
+    const label = (best >= 0 && bestD < 0.5 ? pad(best + 1) : '00') + ' / ' + pad(this.list.filter(p => p.featured).length);
+    if (this.counterRef.current && this.counterRef.current.textContent !== label) this.counterRef.current.textContent = label;
+  }
+
+  say(text, ms = 1800) {
+    if (this.state.bubble !== text) this.setState({ bubble: text });
+    clearTimeout(this._bt); if (ms) this._bt = setTimeout(() => this.setState({ bubble: '' }), ms);
+  }
+  updateBit(t) {
+    const wrap = this.mascotRef.current, sec = this.contactRef.current;
+    if (!wrap || !sec) return;
+    const sr = sec.getBoundingClientRect();
+    if (sr.bottom < 0 || sr.top > innerHeight) return;
+    const b = this.bit, floor = wrap.parentElement, fw = floor.clientWidth, size = wrap.offsetWidth, fr = floor.getBoundingClientRect();
+    if (b.x == null) { b.x = fw * 0.78; b.nextBlink = t + 1500; }
+    const idle = t - b.lastMove;
+    if (!b.asleep && idle > 9000 && !this.hoverBit) { b.asleep = true; this.say('z z z', 0); }
+    if (b.asleep && idle < 200) { b.asleep = false; this.say('oh! hi!', 1400); }
+
+    let tx = b.x;
+    if (this.lure && this.emailRef.current) { const er = this.emailRef.current.getBoundingClientRect(); tx = er.right - fr.left + size * 0.7; }
+    else if (this.cursor && !b.asleep) tx = this.ptr.x - fr.left;
+    tx = Math.max(size / 2, Math.min(fw - size / 2, tx));
+    const dx = tx - b.x, motion = !this.reduced;
+    if (motion) {
+      if (b.ground && Math.abs(dx) > size * 0.3 && !b.asleep && !this.hoverBit) { b.vy = -5.2; b.vx = Math.sign(dx) * Math.min(4.2, Math.abs(dx) * 0.04 + 1.6); b.ground = false; }
+      if (!b.ground) { b.x += b.vx; b.y += b.vy; b.vy += 0.42; if (b.y >= 0) { b.y = 0; b.ground = true; b.sq = Math.min(0.22, 0.08 + Math.abs(b.vy) * 0.02); b.vy = 0; } }
+      b.sq *= 0.86;
+    }
+    wrap.style.transform = `translate3d(${(b.x - size / 2).toFixed(1)}px,${b.y.toFixed(1)}px,0)`;
+
+    const breath = motion ? Math.sin(t * (b.asleep ? 0.0018 : 0.0034)) * 0.022 : 0;
+    const stretch = !b.ground ? Math.min(0.12, -b.vy * 0.02) : 0;
+    const sx = 1 + b.sq * 0.9 - stretch * 0.5 - breath * 0.5, sy = 1 - b.sq + stretch + breath;
+    const tilt = !b.ground ? b.vx * 2.2 : 0;
+    this.attr(this.bodyRef, `translate(60 110) rotate(${tilt.toFixed(2)}) scale(${sx.toFixed(3)} ${sy.toFixed(3)}) translate(-60 -110)`);
+    if (this.shadowRef.current) { const k = Math.max(0.5, 1 + b.y / 70); this.shadowRef.current.setAttribute('rx', (30 * k).toFixed(1)); this.shadowRef.current.setAttribute('opacity', (0.22 * k).toFixed(2)); }
+    const sway = motion ? Math.sin(t * 0.003) * 7 - b.vx * 4 + (b.asleep ? 18 : 0) : 0;
+    this.attr(this.sproutRef, `rotate(${sway.toFixed(2)} 60 36)`);
+
+    const happy = this.hoverBit || t < b.happyUntil;
+    const excited = !!this.lure;
+    let armL = motion ? Math.sin(t * 0.004) * 6 : 0, armR = -armL;
+    if (!b.ground) { armL = 40; armR = -40; }
+    if (excited && motion) armR = -70 + Math.sin(t * 0.022) * 32;
+    if (happy && motion) { armL = 30 + Math.sin(t * 0.03) * 14; armR = -armL; }
+    this.attr(this.armLRef, `rotate(${armL.toFixed(1)} 23 72)`); this.attr(this.armRRef, `rotate(${armR.toFixed(1)} 97 72)`);
+
+    const br = wrap.getBoundingClientRect(), ex = br.left + br.width / 2, ey = br.top + br.height * 0.55;
+    let lx = this.ptr.x, ly = this.ptr.y;
+    if (excited && this.emailRef.current) { const er = this.emailRef.current.getBoundingClientRect(); lx = er.left + er.width / 2; ly = er.top + er.height / 2; }
+    const ang = Math.atan2(ly - ey, lx - ex), dist = Math.min(1, Math.hypot(lx - ex, ly - ey) / 200), px = Math.cos(ang) * 4.2 * dist, py = Math.sin(ang) * 3.6 * dist;
+    this.attr(this.pupilLRef, `translate(${px.toFixed(2)} ${py.toFixed(2)})`); this.attr(this.pupilRRef, `translate(${px.toFixed(2)} ${py.toFixed(2)})`);
+
+    if (t > b.nextBlink) { b.blinkAt = t; b.nextBlink = t + 2200 + Math.random() * 3200; }
+    let lid = 1; const bp = (t - b.blinkAt) / 150; if (bp >= 0 && bp < 1) lid = 1 - Math.sin(bp * Math.PI) * 0.92;
+    if (b.asleep) lid = 0.08;
+    if (excited) lid = 1.08;
+    this.attr(this.eyesRef, `translate(60 66) scale(1 ${lid.toFixed(3)}) translate(-60 -66)`);
+    if (this.eyesRef.current) this.eyesRef.current.setAttribute('opacity', happy ? '0' : '1');
+    if (this.happyRef.current) this.happyRef.current.setAttribute('opacity', happy ? '1' : '0');
+    if (this.mouthRef.current) this.mouthRef.current.setAttribute('opacity', happy || excited ? '0' : '1');
+    if (this.mouthORef.current) this.mouthORef.current.setAttribute('opacity', happy || excited ? '1' : '0');
+    const ck = happy ? '.9' : excited ? '.75' : '.5';
+    if (this.cheekLRef.current) { this.cheekLRef.current.setAttribute('opacity', ck); this.cheekRRef.current.setAttribute('opacity', ck); }
+  }
+  get list() { return this.props.demoProjects ? [...PROJECTS, ...DEMO] : PROJECTS; }
+  attr(ref, v) { if (ref.current) ref.current.setAttribute('transform', v); }
+  poke() {
+    const b = this.bit, now = performance.now();
+    b.lastMove = now; b.asleep = false; b.happyUntil = now + 1300;
+    if (b.ground && !this.reduced) { b.vy = -8.5; b.vx = 0; b.ground = false; }
+    this.say(BIT_LINES[b.line++ % BIT_LINES.length], 1800);
+    const id = now;
+    const hearts = [0, 1, 2].map(k => ({ id: id + k, left: (30 + k * 20) + '%', dx: ((k - 1) * 26) + 'px', size: (14 + k * 3) + 'px', delay: (k * 0.08) + 's' }));
+    this.setState(s => ({ hearts: [...s.hearts, ...hearts].slice(-9) }));
+    clearTimeout(this._ht); this._ht = setTimeout(() => this.setState({ hearts: [] }), 1400);
+  }
+
+  openWithCurtain(i) {
+    if (this.reduced) return this.open(i);
+    this.setState({ curtain: this.list[i].name });
+    clearTimeout(this._ct);
+    this._ct = setTimeout(() => { this.open(i); this._ct = setTimeout(() => this.setState({ curtain: null }), 560); }, 440);
+  }
+  open(i) { if (this.state.project == null) this._y = scrollY; this.setState({ project: i, console: false, hover: null }); scrollTo(0, 0); }
+  back() { this.setState({ project: null }); requestAnimationFrame(() => requestAnimationFrame(() => scrollTo(0, this._y || 0))); }
+  step(d) { const n = this.list.length; this.setState(s => ({ project: ((s.project ?? 0) + d + n) % n })); scrollTo(0, 0); }
+  jump(ref) {
+    const go = () => { const el = ref.current; if (el) scrollTo({ top: el.getBoundingClientRect().top + scrollY - 10, behavior: this.reduced ? 'auto' : 'smooth' }); };
+    if (this.state.project != null) { this.setState({ project: null }); setTimeout(go, 60); } else go();
+  }
+  send(text) {
+    const t = (text ?? this.state.draft).trim(); if (!t || this.state.typing) return;
+    this.setState(s => ({ messages: [...s.messages, { who: 'user', text: t }], draft: '', typing: true }));
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState(s => ({ typing: false, messages: [...s.messages, { who: 'bot', text: reply(t) }] })), 650);
+  }
+
+  archStage(p, i, tint) {
+    const h = React.createElement;
+    const inner = p.image
+      ? h('img', { src: p.image, alt: p.name, style: { width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', display: 'block', animation: 'zoomOut 1s cubic-bezier(.2,.8,.2,1) both' } })
+      : h('div', { style: { width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: tint(p.hue), position: 'relative' } },
+          h('span', { style: { fontSize: 'clamp(64px,7vw,120px)', letterSpacing: '-.06em', color: 'var(--fg)' } }, mono(p.name)),
+          h('span', { style: { position: 'absolute', left: 16, bottom: 14, fontFamily: "'Space Mono',monospace", fontSize: 11, color: 'var(--fg2)' } }, '[ screenshot ]'));
+    return h('div', { key: i, style: { position: 'absolute', inset: 0, animation: this.reduced ? 'none' : 'wipe .6s cubic-bezier(.7,0,.2,1) both' } }, inner);
+  }
+  archiveVals(list, feat, tint, pd, narrow) {
+    const { q, tag, showAll, ah } = this.state;
+    const tagSet = ['All', 'Featured', ...Array.from(new Set(list.flatMap(p => p.stack || [])))];
+    const all = list.map((p, idx) => ({ p, idx }));
+    const match = all.filter(({ p }) => (tag === 'All' || (tag === 'Featured' ? p.featured : (p.stack || []).includes(tag))) && (!q || p.name.toLowerCase().includes(q.toLowerCase())));
+    const filtering = tag !== 'All' || !!q;
+    const vis = showAll || filtering ? match : match.slice(0, PAGE);
+    const hi = ah ?? (vis[0] ? vis[0].idx : 0), ap = list[hi] || list[0];
+    return {
+      archiveRef: this.archiveRef, q, onQ: (e) => this.setState({ q: e.target.value }),
+      tags: tagSet.map(label => ({ label, on: tag === label, pick: () => this.setState({ tag: label, ah: null }),
+        bg: tag === label ? 'var(--fg)' : 'transparent', color: tag === label ? 'var(--ink)' : 'var(--fg2)', border: tag === label ? 'var(--fg)' : 'var(--line)' })),
+      rows: vis.map(({ p, idx }, k) => ({ num: pad(idx + 1), name: p.name,
+        meta: (p.featured ? '★ ' : '') + (p.stack ? p.stack.slice(0, 2).join(' · ') : '—'),
+        color: hi === idx && ah != null ? 'var(--accent)' : 'var(--fg)', indent: hi === idx && ah != null ? '10px' : '0px', arrow: hi === idx && ah != null ? 'rotate(45deg)' : 'none',
+        delay: (Math.min(k, 12) * 0.04).toFixed(2) + 's',
+        enter: () => this.state.ah !== idx && this.setState({ ah: idx }), open: pd(() => this.openWithCurtain(idx)) })),
+      noRows: match.length === 0, shownCount: pad(vis.length),
+      canExpand: !filtering && match.length > PAGE, expandLabel: showAll ? '[ show less ↑ ]' : '[ show all ' + match.length + ' ↓ ]',
+      toggleAll: () => { const was = this.state.showAll; this.setState({ showAll: !was }); if (was) this.jump(this.archiveRef); },
+      archLeave: () => this.setState({ ah: null }),
+      archStage: this.archStage(ap, hi, tint), prevDisp: narrow ? 'none' : 'flex',
+      ap: { num: pad(hi + 1), badge: ap.featured ? '★ featured' : '', meta: ap.stack ? ap.stack.join(' · ') : '', summary: ap.summary || '[ Write-up coming soon ]' },
+      fCount: feat.length, fTotal: pad(feat.length), moreCount: list.length - feat.length,
+      goArchive: pd(() => this.jump(this.archiveRef)),
+    };
+  }
+  renderVals() {
+    const pd = (fn) => (e) => { if (e && e.preventDefault) e.preventDefault(); fn(); };
+    const n = this.list.length, P = this.state.project, isDark = this.state.theme !== 'light', narrow = this.state.narrow;
+    const reduced = this.reduced ?? ((this.props.reducedMotion ?? false) || matchMedia('(prefers-reduced-motion: reduce)').matches);
+    const tint = (h) => isDark ? `linear-gradient(135deg,oklch(0.42 0.08 ${h}),oklch(0.17 0.035 ${h}) 78%)` : `linear-gradient(135deg,oklch(0.86 0.07 ${h}),oklch(0.97 0.02 ${h}) 78%)`;
+    const list = this.list, feat = list.map((p, idx) => ({ ...p, idx })).filter(p => p.featured);
+    const scenes = feat.map((p, i) => {
+      const L = LAYOUT['ABC'[i % 3]], seen = reduced || !!this.state.seen[i], on = this.state.hover === i;
+      const pos = (v, d) => narrow ? 'auto' : v;
+      return {
+        num: pad(i + 1), name: p.name, image: p.image, hasImage: !!p.image, noImage: !p.image, mono: mono(p.name), tint: tint(p.hue),
+        url: slug(p.name) + '.com', file: slug(p.name) + '.md',
+        summary: p.summary || '[ Write-up coming soon ]',
+        chips: (p.stack || ['write-up soon']).map((label, k) => ({ label, delay: (-k * 0.7 - i * 0.3).toFixed(2) + 's' })),
+        points: p.points || [], rows: on && p.points ? '1fr' : '0fr',
+        numL: L.num[0], numT: L.num[1],
+        visL: pos(L.vis[0]), visT: pos(L.vis[1]), visW: narrow ? '100%' : L.vis[2], visR: narrow ? '0deg' : L.vis[3], visS: on ? '1.025' : '1',
+        clip: seen ? 'inset(0 0 0 0 round 6px)' : 'inset(0 100% 0 0 round 6px)', imgS: seen ? (on ? '1.06' : '1') : '1.25',
+        secL: L.sec[0], secT: L.sec[1], secW: L.sec[2], secR: on ? '0deg' : L.sec[3], secOp: seen ? '1' : '0', secY: seen ? (on ? '-10px' : '0px') : '40px',
+        txtL: pos(L.txt[0]), txtT: pos(L.txt[1]), txtW: narrow ? '100%' : L.txt[2], txtOp: seen ? '1' : '0', txtY: seen ? '0px' : '30px',
+        titleColor: on ? 'var(--accent)' : 'var(--fg)', arrow: on ? 'rotate(45deg) translate(2px,-2px)' : 'none',
+        enter: () => this.state.hover !== i && this.setState({ hover: i }), leave: () => this.setState({ hover: null }),
+        open: () => this.openWithCurtain(p.idx),
+      };
+    });
+    const cur = P != null ? this.list[P] : null;
+    return {
+      theme: isDark ? 'dark' : 'light', isDark, isLight: !isDark, grain: this.props.grain ?? true,
+      avatarSrc: isDark ? 'assets/avatar-dark.png' : 'assets/avatar-light.png',
+      isHome: P == null, isProject: P != null, total: pad(n), scenes, ...this.archiveVals(list, feat, tint, pd, narrow),
+      stickyPos: narrow ? 'relative' : 'sticky', stickyH: narrow ? 'auto' : '100vh', trackOverflow: narrow ? 'auto' : 'visible', trackSnap: narrow ? 'x mandatory' : 'none',
+      sceneH: narrow ? 'auto' : 'clamp(480px,calc(100vh - 150px),820px)', absPos: narrow ? 'relative' : 'absolute',
+      numDisp: narrow ? 'none' : 'block', secDisp: narrow ? 'none' : 'block',
+      scrollHint: narrow ? 'swipe →' : 'keep scrolling ↓ — the work moves →',
+      project: cur ? { name: cur.name, num: pad(P + 1), points: cur.points || [], stack: cur.stack || [], hasPoints: !!cur.points, noPoints: !cur.points,
+        image: cur.image, hasImage: !!cur.image, noImage: !cur.image, mono: mono(cur.name), tint: tint(cur.hue) } : {},
+      prevName: cur ? this.list[(P - 1 + n) % n].name : '', nextName: cur ? this.list[(P + 1) % n].name : '',
+      prevProject: pd(() => this.step(-1)), nextProject: pd(() => this.step(1)), goBack: () => this.back(),
+      curtainOn: !!this.state.curtain, curtainText: this.state.curtain || '',
+      goHome: pd(() => { this.setState({ project: null }); scrollTo({ top: 0, behavior: 'smooth' }); }),
+      goWork: pd(() => this.jump(this.workRef)), goContact: pd(() => this.jump(this.contactRef)),
+      nowOpen: this.state.now, toggleNow: () => this.setState(s => ({ now: !s.now })), closeNow: () => this.setState({ now: false }),
+      toggleTheme: () => this.setState(s => ({ theme: s.theme === 'light' ? 'dark' : 'light' })),
+      consoleOpen: this.state.console, toggleConsole: () => this.setState(s => ({ console: !s.console })), closeConsole: () => this.setState({ console: false }),
+      messages: this.state.messages.map(m => ({ text: m.text, isBot: m.who === 'bot', isUser: m.who === 'user' })),
+      typing: this.state.typing, suggestions: SUGGEST.map(label => ({ label, send: () => this.send(label) })),
+      draft: this.state.draft, onDraft: (e) => this.setState({ draft: e.target.value }),
+      onInputKey: (e) => { if (e.key === 'Enter') { e.preventDefault(); this.send(); } },
+      bubbleOn: !!this.state.bubble, bubble: this.state.bubble, hearts: this.state.hearts,
+      pokeBit: () => this.poke(),
+      bitHoverOn: () => { this.hoverBit = true; this.bit.lastMove = performance.now(); if (!this.state.bubble) this.say('hehe', 1200); },
+      bitHoverOff: () => { this.hoverBit = false; },
+      lureOn: () => { this.lure = true; this.say('psst… click it!', 0); }, lureOff: () => { this.lure = false; this.say('', 1); },
+      onContactMove: () => { this.cursor = true; }, onContactLeave: () => { this.cursor = false; },
+      workRef: this.workRef, trackRef: this.trackRef, counterRef: this.counterRef, progressRef: this.progressRef,
+      contactRef: this.contactRef, emailRef: this.emailRef, mascotRef: this.mascotRef,
+      bodyRef: this.bodyRef, shadowRef: this.shadowRef, sproutRef: this.sproutRef, eyesRef: this.eyesRef,
+      pupilLRef: this.pupilLRef, pupilRRef: this.pupilRRef, happyRef: this.happyRef, mouthRef: this.mouthRef, mouthORef: this.mouthORef,
+      armLRef: this.armLRef, armRRef: this.armRRef, cheekLRef: this.cheekLRef, cheekRRef: this.cheekRRef,
+      logRef: this.logRef, inputRef: this.inputRef,
+    };
+  }
+}
+</script>
+</body>
+</html>

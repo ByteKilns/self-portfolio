@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#04090c}
+body{-webkit-font-smoothing:antialiased}
+a{color:inherit}a:hover{color:var(--accent)}
+:root{--fg:#e7ecee;--fg2:#b3bfc3;--fg3:#7f8d92;--line:rgba(231,236,238,.13);--win:rgba(6,14,17,.55);--accent:#5fd0c2;--sun:#f4c21b;--card:linear-gradient(135deg,#0f4644,#071519 70%);--grain-op:.14;--grain-blend:screen;
+--page:radial-gradient(60% 50% at 100% 0%,rgba(10,66,66,.8),transparent 72%),radial-gradient(55% 60% at 100% 100%,rgba(42,96,96,.7),transparent 70%),radial-gradient(45% 45% at 0% 100%,rgba(20,16,36,.9),transparent 70%),#04090c;
+--grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+[data-theme="light"]{--fg:#1f2b35;--fg2:#3a4955;--fg3:#566672;--line:rgba(31,43,53,.15);--win:rgba(240,251,254,.55);--accent:#0b7a74;--card:linear-gradient(135deg,#a9e9f5,#eafbfe 75%);--grain-op:.2;--grain-blend:multiply;
+--page:radial-gradient(55% 45% at 100% 0%,rgba(196,243,253,1),transparent 72%),radial-gradient(45% 45% at 0% 100%,rgba(247,253,255,.95),transparent 70%),#e9fafe}
+input::placeholder{color:var(--fg3)}
+::selection{background:var(--accent);color:#04090c}
+@keyframes lineIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes swap{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+<div data-theme="{{ theme }}" onClick="{{ focusPrompt }}" style="min-height:100vh;background:var(--page);background-attachment:fixed;color:var(--fg);font-family:'Space Grotesk',system-ui,sans-serif;position:relative">
+  <div style="max-width:1600px;margin:0 auto;padding:0 clamp(20px,6vw,112px) 80px;box-sizing:border-box">
+
+    <header style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px 32px;padding-top:clamp(28px,7vh,72px);font-size:clamp(17px,1.4vw,22px)">
+      <nav style="display:flex;align-items:center;gap:clamp(28px,7vw,120px);padding-left:clamp(0px,2.5vw,40px)">
+        <a href="#" onClick="{{ navHome }}" style="text-decoration:none;color:var(--fg)" style-hover="color:var(--accent)">Home</a>
+        <a href="#" onClick="{{ navNow }}" style="text-decoration:none;color:var(--fg)" style-hover="color:var(--accent)">Currently Working On</a>
+      </nav>
+      <div style="display:flex;align-items:center;gap:clamp(24px,3vw,48px)">
+        <button onClick="{{ navTheme }}" aria-label="Toggle theme" style="background:none;border:0;padding:4px;cursor:pointer;display:flex;color:var(--fg)">
+          <sc-if value="{{ isDark }}" hint-placeholder-val="{{ true }}"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" style="stroke:var(--sun)"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></sc-if>
+          <sc-if value="{{ isLight }}" hint-placeholder-val="{{ false }}"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg></sc-if>
+        </button>
+        <button onClick="{{ navConsole }}" style="background:none;border:0;padding:0;font:inherit;color:var(--fg);cursor:pointer" style-hover="color:var(--accent)">[G] Console</button>
+      </div>
+    </header>
+
+    <main style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:clamp(32px,4vw,72px);margin-top:clamp(36px,7vh,80px)">
+
+      <section aria-label="Console" style="flex:1 1 640px;min-width:0;border:1px solid var(--line);border-radius:6px;background:var(--win);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 22px;border-bottom:1px solid var(--line);font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">
+          <span>~/nirjal — session 01</span>
+          <span>{{ statusText }}</span>
+        </div>
+        <div style="padding:clamp(22px,3vw,40px) clamp(20px,3vw,40px) 28px;display:flex;flex-direction:column;gap:22px;font-size:clamp(17px,1.35vw,21px);line-height:1.6">
+          <sc-for list="{{ entries }}" as="e" hint-placeholder-count="0">
+            <div style="animation:lineIn .35s ease both">
+              <sc-if value="{{ e.isCmd }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:12px;font-family:'Space Mono',monospace;font-size:clamp(13px,1vw,15px);color:var(--fg3)"><span style="color:var(--accent)">?</span><span>{{ e.text }}</span></div>
+              </sc-if>
+              <sc-if value="{{ e.isWhoami }}" hint-placeholder-val="{{ false }}">
+                <h1 style="margin:0 0 18px;font-weight:400;font-size:clamp(24px,2vw,30px)">Full Stack Developer</h1>
+                <p style="margin:0 0 10px">Building robust digital experiences with passion and precision.</p>
+                <p style="margin:0 0 18px;text-wrap:pretty">— I’m [ Nirjal Prajapati ], a full-stack developer dedicated to crafting seamless, high-performing web applications that make an impact.</p>
+                <div style="display:flex;align-items:center;flex-wrap:wrap;gap:20px">
+                  <span>Let’s connect—feel free to reach out via <a href="mailto:hello@example.com" style="color:var(--fg);text-underline-offset:4px;text-decoration-thickness:1.5px" style-hover="color:var(--accent)">email</a></span>
+                  <a href="#" aria-label="GitHub" style="color:var(--fg);display:flex" style-hover="color:var(--accent)"><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.200.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"></path></svg></a>
+                  <a href="#" aria-label="LinkedIn" style="color:var(--fg);display:flex" style-hover="color:var(--accent)"><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.450c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"></path></svg></a>
+                </div>
+              </sc-if>
+              <sc-if value="{{ e.isProjects }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;border-bottom:1px solid var(--line)">
+                  <sc-for list="{{ projects }}" as="p" hint-placeholder-count="7">
+                    <a href="#" onClick="{{ p.open }}" onMouseEnter="{{ p.enter }}" onMouseLeave="{{ p.leave }}" style="display:grid;grid-template-columns:48px minmax(0,1fr) auto;align-items:baseline;gap:12px;padding:11px 0;border-top:1px solid var(--line);text-decoration:none;color:var(--fg);transition:padding .3s ease" style-hover="color:var(--accent);padding-left:10px">
+                      <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">{{ p.num }}</span>
+                      <span style="text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:6px">{{ p.name }}</span>
+                      <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">{{ p.kind }}</span>
+                    </a>
+                  </sc-for>
+                </div>
+                <div style="margin-top:12px;font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">hover to preview · click, or type <span style="color:var(--fg2)">open 1</span></div>
+              </sc-if>
+              <sc-if value="{{ e.isProject }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;margin-bottom:14px">
+                  <h2 style="margin:0;font-weight:400;font-size:clamp(22px,1.8vw,28px)">{{ e.p.name }}</h2>
+                  <span style="color:var(--fg2)">[ Link not available currently ]</span>
+                </div>
+                <sc-if value="{{ e.p.hasPoints }}" hint-placeholder-val="{{ true }}">
+                  <sc-for list="{{ e.p.points }}" as="pt" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:24px minmax(0,1fr)"><span style="color:var(--fg3)">—</span><span>{{ pt }}</span></div></sc-for>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px;color:var(--fg2)"><sc-for list="{{ e.p.stack }}" as="t" hint-placeholder-count="4"><span>[ {{ t }} ]</span></sc-for></div>
+                </sc-if>
+                <sc-if value="{{ e.p.noPoints }}" hint-placeholder-val="{{ false }}"><p style="margin:0;color:var(--fg2)">[ Write-up coming soon ]</p></sc-if>
+                <div style="display:flex;gap:22px;margin-top:16px;font-family:'Space Mono',monospace;font-size:12px">
+                  <a href="#" onClick="{{ e.p.prev }}" style="color:var(--fg2)" style-hover="color:var(--accent)">← prev</a>
+                  <a href="#" onClick="{{ e.p.next }}" style="color:var(--fg2)" style-hover="color:var(--accent)">next →</a>
+                  <a href="#" onClick="{{ listProjects }}" style="color:var(--fg2)" style-hover="color:var(--accent)">ls projects</a>
+                </div>
+              </sc-if>
+              <sc-if value="{{ e.isNow }}" hint-placeholder-val="{{ false }}">
+                <p style="margin:0 0 8px">What am I currently doing?</p>
+                <div style="display:grid;grid-template-columns:24px minmax(0,1fr);color:var(--fg2)"><span>—</span><span>I’m quietly tangling with <strong style="font-weight:600;color:var(--fg)">Node</strong> and <strong style="font-weight:600;color:var(--fg)">React</strong> insides. Solving it like a sly detective. Just a low-key techie!</span></div>
+                <div style="display:grid;grid-template-columns:24px minmax(0,1fr);color:var(--fg2);margin-top:6px"><span>—</span><span>I’m currently reading <strong style="font-weight:600;color:var(--fg)">To Kill a Mockingbird</strong>—so far, no birds have been harmed, but I’m keeping an eye on Atticus just in case.</span></div>
+              </sc-if>
+              <sc-if value="{{ e.isHelp }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 28px">
+                  <sc-for list="{{ helpRows }}" as="h" hint-placeholder-count="8">
+                    <a href="#" onClick="{{ h.run }}" style="font-family:'Space Mono',monospace;font-size:clamp(13px,1vw,15px);color:var(--accent);text-decoration:none" style-hover="text-decoration:underline">{{ h.cmd }}</a>
+                    <span style="color:var(--fg2)">{{ h.desc }}</span>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ e.isText }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;grid-template-columns:24px minmax(0,1fr)"><span style="color:var(--fg3)">-</span><span style="text-wrap:pretty">{{ e.text }}</span></div>
+              </sc-if>
+            </div>
+          </sc-for>
+
+          <sc-if value="{{ typing }}" hint-placeholder-val="{{ false }}"><div style="color:var(--fg3);letter-spacing:.2em">···</div></sc-if>
+
+          <label style="display:flex;align-items:center;gap:12px;padding-top:18px;border-top:1px solid var(--line);font-family:'Space Mono',monospace;font-size:clamp(14px,1.1vw,16px)">
+            <span style="color:var(--accent)">?</span>
+            <input ref="{{ inputRef }}" value="{{ draft }}" onChange="{{ onDraft }}" onKeyDown="{{ onKey }}" placeholder="type help — or just ask a question" aria-label="Console input" spellcheck="false" autocomplete="off" style="flex:1;min-width:0;background:transparent;border:0;outline:none;padding:4px 0;font:inherit;color:var(--fg);caret-color:var(--accent)">
+          </label>
+          <div style="display:flex;flex-wrap:wrap;gap:6px 18px;font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">
+            <sc-for list="{{ quick }}" as="q" hint-placeholder-count="5"><button onClick="{{ q.run }}" style="background:none;border:0;padding:2px 0;cursor:pointer;font:inherit;color:var(--fg2)" style-hover="color:var(--accent)">[ {{ q.cmd }} ]</button></sc-for>
+          </div>
+        </div>
+      </section>
+
+      <aside aria-label="Preview" style="flex:0 1 400px;min-width:260px;position:sticky;top:40px;display:flex;flex-direction:column;gap:14px">
+        <sc-if value="{{ showAvatar }}" hint-placeholder-val="{{ true }}">
+          <div style="animation:swap .3s ease both;display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px 0">
+            <img src="{{ avatarSrc }}" alt="Illustration of Nirjal at a laptop" style="width:clamp(200px,18vw,285px);height:auto;display:block;-webkit-mask-image:radial-gradient(closest-side,#000 80%,transparent 100%);mask-image:radial-gradient(closest-side,#000 80%,transparent 100%)">
+            <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">nirjal@portfolio · online</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showPreview }}" hint-placeholder-val="{{ false }}">
+          <div style="animation:swap .25s ease both;display:flex;flex-direction:column;gap:12px">
+            <sc-if value="{{ preview.hasImage }}" hint-placeholder-val="{{ true }}"><img src="{{ preview.image }}" alt="{{ preview.name }}" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block;border-radius:6px;border:1px solid var(--line)"></sc-if>
+            <sc-if value="{{ preview.noImage }}" hint-placeholder-val="{{ false }}"><div style="width:100%;aspect-ratio:4/3;border-radius:6px;border:1px solid var(--line);background:var(--card);display:flex;align-items:flex-end;justify-content:flex-end;padding:18px;box-sizing:border-box;font-size:96px;line-height:.8;letter-spacing:-.05em">{{ preview.num }}</div></sc-if>
+            <div style="display:flex;justify-content:space-between;gap:12px;font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)"><span>[ {{ preview.name }} ]</span><span>{{ preview.kind }}</span></div>
+          </div>
+        </sc-if>
+      </aside>
+    </main>
+  </div>
+  <sc-if value="{{ grain }}" hint-placeholder-val="{{ true }}">
+    <div aria-hidden="true" style="position:fixed;inset:0;z-index:100;pointer-events:none;background-image:var(--grain);opacity:var(--grain-op);mix-blend-mode:var(--grain-blend)"></div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;default&quot;:&quot;dark&quot;,&quot;tsType&quot;:&quot;'dark' | 'light'&quot;},&quot;boot&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;grain&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const PROJECTS = [
+  { name: 'Aastha Saving and Cooperative Limited', kind: 'web · cms', image: 'assets/project-aastha.png',
+    points: ['Portfolio site for a savings and credit cooperative', 'Features notices, news, and a gallery', 'Provides updates on interest rates', 'Built with Next.js, Tailwind CSS, ShadCN, and Payload CMS'],
+    stack: ['Next.js', 'Tailwind CSS', 'ShadCN', 'Payload CMS'] },
+  { name: 'Deshna IT', kind: 'web' }, { name: 'IBM Nepal', kind: 'web' }, { name: 'Nepal Police Digital Diary', kind: 'app' },
+  { name: 'Niva Craftworks', kind: 'web' }, { name: 'Everest Ledger', kind: 'app' }, { name: 'Husky App', kind: 'app' },
+];
+const HELP = [
+  ['whoami', 'who is Nirjal'], ['ls projects', 'list all work'], ['open <n>', 'open a project, e.g. open 1'],
+  ['now', 'what I’m currently doing'], ['contact', 'how to reach me'], ['theme', 'toggle light / dark'], ['clear', 'clear the screen'],
+];
+const QUICK = ['help', 'whoami', 'ls projects', 'now', 'contact'];
+const pad = (n) => String(n).padStart(2, '0');
+function reply(q) {
+  const s = q.toLowerCase();
+  if (/skill|stack|tech|language/.test(s)) return 'Day to day: Node and React. Recent builds use Next.js, Tailwind CSS, ShadCN and Payload CMS.';
+  if (/^(hi|hello|hey)\b/.test(s)) return 'Hello! I’m Nirjal’s portfolio assistant. Type help to see what I can show you.';
+  if (/experience|job|career/.test(s)) return 'He builds full-stack web apps end to end. Try ls projects to see the work.';
+  return 'I can help with Nirjal’s experience, skills, projects or how to contact him. Type help for commands.';
+}
+
+class Component extends DCLogic {
+  inputRef = React.createRef();
+  state = { theme: this.props.theme || 'dark', entries: [], draft: '', typing: false, hover: null, focus: null, hist: [], hi: -1, booting: false };
+  uid = 0;
+
+  componentDidMount() {
+    this._key = (e) => {
+      const tag = e.target && e.target.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === 'g' || e.key === 'G' || e.key === '/') { e.preventDefault(); this.focus(); }
+    };
+    addEventListener('keydown', this._key);
+    this.syncHtml();
+    if (this.props.boot ?? true) this.typeOut(['whoami', 'ls projects']);
+    else this.push([{ t: 'cmd', text: 'whoami' }, { t: 'whoami' }, { t: 'cmd', text: 'ls projects' }, { t: 'projects' }]);
+  }
+  componentWillUnmount() { removeEventListener('keydown', this._key); clearTimeout(this._tt); clearTimeout(this._rt); }
+  componentDidUpdate(pp, ps) {
+    pp = pp || this._pp || this.props; ps = ps || this._ps || this.state; this._pp = this.props; this._ps = this.state;
+    if (pp.theme !== this.props.theme) this.setState({ theme: this.props.theme || 'dark' });
+    if (ps.theme !== this.state.theme) this.syncHtml();
+    if (ps.entries.length < this.state.entries.length && this.state.entries.length > 4) {
+      const el = this.inputRef.current; if (el) { const y = el.getBoundingClientRect().bottom + scrollY - innerHeight + 120; if (y > scrollY) scrollTo({ top: y, behavior: 'smooth' }); }
+    }
+  }
+  syncHtml() { document.documentElement.style.background = this.state.theme === 'light' ? '#e9fafe' : '#04090c'; }
+  focus() { const el = this.inputRef.current; if (el) el.focus({ preventScroll: true }); }
+  push(items) { this.setState(s => ({ entries: [...s.entries, ...items.map(x => ({ ...x, id: ++this.uid }))] })); }
+
+  typeOut(cmds) {
+    if (!cmds.length) return this.setState({ booting: false });
+    this.setState({ booting: true });
+    const cmd = cmds[0]; let i = 0;
+    const step = () => {
+      i++; this.setState({ draft: cmd.slice(0, i) });
+      if (i < cmd.length) this._tt = setTimeout(step, 55 + Math.random() * 50);
+      else this._tt = setTimeout(() => { this.setState({ draft: '' }); this.run(cmd, true); this._tt = setTimeout(() => this.typeOut(cmds.slice(1)), 650); }, 260);
+    };
+    this._tt = setTimeout(step, 400);
+  }
+
+  run(raw, silentHist) {
+    const cmd = raw.trim(); if (!cmd) return;
+    const s = cmd.toLowerCase();
+    if (!silentHist) this.setState(st => ({ hist: [cmd, ...st.hist].slice(0, 30), hi: -1 }));
+    if (s === 'clear' || s === 'cls') return this.setState({ entries: [], focus: null });
+    if (s === 'theme') { this.setState(st => ({ theme: st.theme === 'light' ? 'dark' : 'light' })); return this.push([{ t: 'cmd', text: cmd }, { t: 'text', text: 'theme switched.' }]); }
+    const head = { t: 'cmd', text: cmd };
+    if (s === 'help' || s === '?') return this.push([head, { t: 'help' }]);
+    if (s === 'whoami' || s === 'home' || s === 'about') return this.push([head, { t: 'whoami' }]);
+    if (/^(ls|ls projects|projects|work)$/.test(s)) return this.push([head, { t: 'projects' }]);
+    if (s === 'now' || s.startsWith('currently')) return this.push([head, { t: 'now' }]);
+    if (/^(contact|email)$/.test(s)) return this.push([head, { t: 'text', text: 'Email is quickest — hello@example.com. Also on GitHub and LinkedIn (links under whoami).' }]);
+    const m = s.match(/^(open|cd|cat)\s+(.+)$/);
+    if (m) {
+      const n = parseInt(m[2], 10);
+      let idx = !isNaN(n) ? n - 1 : PROJECTS.findIndex(p => p.name.toLowerCase().includes(m[2]));
+      if (idx >= 0 && idx < PROJECTS.length) { this.setState({ focus: idx }); return this.push([head, { t: 'project', i: idx }]); }
+      return this.push([head, { t: 'text', text: `no project matches “${m[2]}”. try ls projects.` }]);
+    }
+    this.push([head]); this.setState({ typing: true });
+    clearTimeout(this._rt);
+    this._rt = setTimeout(() => { this.setState({ typing: false }); this.push([{ t: 'text', text: reply(cmd) }]); }, 600);
+  }
+  openProject(i) { this.setState({ focus: i }); this.push([{ t: 'cmd', text: 'open ' + (i + 1) }, { t: 'project', i }]); }
+
+  renderVals() {
+    const pd = (fn) => (e) => { if (e) { e.preventDefault && e.preventDefault(); e.stopPropagation && e.stopPropagation(); } fn(); };
+    const n = PROJECTS.length;
+    const card = (i) => { const p = PROJECTS[i]; return { name: p.name, num: pad(i + 1), kind: p.kind, image: p.image, hasImage: !!p.image, noImage: !p.image }; };
+    const entries = this.state.entries.map(e => {
+      const p = e.t === 'project' ? PROJECTS[e.i] : null;
+      return {
+        id: e.id, text: e.text, isCmd: e.t === 'cmd', isWhoami: e.t === 'whoami', isProjects: e.t === 'projects', isProject: e.t === 'project',
+        isNow: e.t === 'now', isHelp: e.t === 'help', isText: e.t === 'text',
+        p: p ? { name: p.name, points: p.points || [], stack: p.stack || [], hasPoints: !!p.points, noPoints: !p.points,
+          prev: pd(() => this.openProject((e.i - 1 + n) % n)), next: pd(() => this.openProject((e.i + 1) % n)) } : {},
+      };
+    });
+    const shown = this.state.hover ?? this.state.focus;
+    const isDark = this.state.theme !== 'light';
+    return {
+      theme: isDark ? 'dark' : 'light', isDark, isLight: !isDark, grain: this.props.grain ?? true,
+      avatarSrc: isDark ? 'assets/avatar-dark.png' : 'assets/avatar-light.png',
+      entries, typing: this.state.typing,
+      statusText: this.state.booting ? 'booting…' : (shown != null ? 'viewing ' + pad(shown + 1) + ' / ' + pad(n) : 'ready'),
+      projects: PROJECTS.map((p, i) => ({ num: pad(i + 1), name: p.name, kind: p.kind,
+        open: pd(() => this.openProject(i)), enter: () => this.setState({ hover: i }), leave: () => this.setState({ hover: null }) })),
+      helpRows: HELP.map(([cmd, desc]) => ({ cmd, desc, run: pd(() => this.run(cmd.replace(' <n>', ' 1'))) })),
+      quick: QUICK.map(cmd => ({ cmd, run: pd(() => this.run(cmd)) })),
+      listProjects: pd(() => this.run('ls projects')),
+      showAvatar: shown == null, showPreview: shown != null, preview: shown != null ? card(shown) : {},
+      draft: this.state.draft,
+      onDraft: (e) => { if (!this.state.booting) this.setState({ draft: e.target.value }); },
+      onKey: (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); if (this.state.booting) return; const v = this.state.draft; this.setState({ draft: '' }); this.run(v); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); const hi = Math.min(this.state.hi + 1, this.state.hist.length - 1); if (hi >= 0) this.setState({ hi, draft: this.state.hist[hi] }); }
+        else if (e.key === 'ArrowDown') { e.preventDefault(); const hi = this.state.hi - 1; this.setState({ hi: Math.max(hi, -1), draft: hi >= 0 ? this.state.hist[hi] : '' }); }
+        else if (e.key === 'Tab') { e.preventDefault(); const d = this.state.draft.toLowerCase(); const hit = ['help', 'whoami', 'ls projects', 'open ', 'now', 'contact', 'theme', 'clear'].find(c => c.startsWith(d) && d); if (hit) this.setState({ draft: hit }); }
+        else if (e.key === 'Escape') { this.setState({ draft: '' }); e.target.blur(); }
+      },
+      inputRef: this.inputRef,
+      focusPrompt: (e) => { const t = e.target; if (t.closest && t.closest('a,button,input')) return; if (String(getSelection())) return; this.focus(); },
+      navHome: pd(() => this.run('whoami')), navNow: pd(() => this.run('now')),
+      navConsole: pd(() => this.focus()),
+      navTheme: pd(() => this.setState(s => ({ theme: s.theme === 'light' ? 'dark' : 'light' }))),
+    };
+  }
+}
+</script>
+</body>
+</html>

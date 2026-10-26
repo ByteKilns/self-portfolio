@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Bit·CMS — portfolio manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#0b5f5a}
+body{-webkit-font-smoothing:antialiased}
+a{color:#0b5f5a}a:hover{color:#1b1f22}
+input::placeholder,textarea::placeholder{color:#8f887a}
+::selection{background:#0b7a74;color:#fffdf5}
+@keyframes blink{50%{opacity:0}}
+</style>
+</helmet>
+<div style="min-height:100vh;box-sizing:border-box;padding:clamp(10px,2.5vw,32px);background:#0b5f5a;background-image:radial-gradient(rgba(0,0,0,.22) 1px,transparent 1.3px);background-size:4px 4px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;color:#1b1f22">
+  <sc-if value="{{ locked }}" hint-placeholder-val="{{ true }}">
+    <div style="min-height:calc(100vh - 2 * clamp(10px,2.5vw,32px));display:flex;align-items:center;justify-content:center">
+      <form onSubmit="{{ onLogin }}" style="width:min(420px,100%);background:#d9d3c5;border:2px solid;border-color:#fffef8 #3b372f #3b372f #fffef8;box-shadow:6px 6px 0 rgba(0,0,0,.35);display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;gap:10px;padding:5px 8px 5px 12px;background:#1d2b33;color:#f4efe2">
+          <span style="font-family:VT323,monospace;font-size:22px;line-height:1;white-space:nowrap">BIT·CMS — {{ loginTitle }}</span>
+          <span aria-hidden="true" style="flex:1;height:10px;min-width:20px;background:repeating-linear-gradient(0deg,#f4efe2 0 1px,transparent 1px 3px);opacity:.35"></span>
+        </div>
+        <div style="display:flex;gap:16px;align-items:center;padding:20px 20px 6px">
+          <svg width="64" height="64" viewBox="0 0 120 120" aria-hidden="true" style="flex:none"><ellipse cx="60" cy="112" rx="30" ry="5" fill="#000" opacity=".18"></ellipse><rect x="20" y="34" width="80" height="74" rx="37" fill="#34b2a4"></rect><path d="M60 36 Q58 24 61 15" stroke="#5fbf6e" stroke-width="4" fill="none" stroke-linecap="round"></path><ellipse cx="53" cy="17" rx="8" ry="4.5" fill="#9ee07a" transform="rotate(-28 53 17)"></ellipse><ellipse cx="68" cy="13" rx="8.5" ry="4.8" fill="#9ee07a" transform="rotate(24 68 13)"></ellipse><ellipse cx="46" cy="66" rx="10" ry="11.5" fill="#fff"></ellipse><ellipse cx="74" cy="66" rx="10" ry="11.5" fill="#fff"></ellipse><circle cx="47" cy="68" r="5.8" fill="#10262a"></circle><circle cx="75" cy="68" r="5.8" fill="#10262a"></circle><path d="M55 84 Q60 89 65 84" fill="none" stroke="#10262a" stroke-width="2.6" stroke-linecap="round"></path></svg>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <span style="font-family:VT323,monospace;font-size:26px;line-height:1">{{ loginHead }}</span>
+            <span style="font-size:12px;line-height:1.5;color:#4a463d;text-wrap:pretty">{{ loginSub }}</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;padding:14px 20px 18px">
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d">Username
+            <input value="{{ lu }}" onChange="{{ onLu }}" autocomplete="username" autofocus="" style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;color:#1b1f22;outline:none;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d">Password
+            <input type="password" value="{{ lp }}" onChange="{{ onLp }}" autocomplete="{{ pwAuto }}" style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;color:#1b1f22;outline:none;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f">
+          </label>
+          <sc-if value="{{ isSetup }}" hint-placeholder-val="{{ false }}">
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d">Confirm password
+              <input type="password" value="{{ lp2 }}" onChange="{{ onLp2 }}" autocomplete="new-password" style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;color:#1b1f22;outline:none;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f">
+            </label>
+          </sc-if>
+          <sc-if value="{{ hasLoginErr }}" hint-placeholder-val="{{ false }}"><div role="alert" style="padding:6px 9px;font-size:12px;color:#fffdf5;background:#8a2a1c">{{ loginErr }}</div></sc-if>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:4px">
+            <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#4a463d;cursor:pointer"><input type="checkbox" checked="{{ remember }}" onChange="{{ onRemember }}" style="width:15px;height:15px;accent-color:#0b7a74">Stay signed in</label>
+            <button type="submit" style="padding:7px 18px;font:inherit;font-size:13px;font-weight:600;color:#fffdf5;cursor:pointer;background:#0b7a74;border:2px solid;border-color:#7fd9cf #053d3a #053d3a #7fd9cf" style-active="border-color:#053d3a #7fd9cf #7fd9cf #053d3a">{{ loginBtn }}</button>
+          </div>
+        </div>
+        <div style="padding:5px 10px;border-top:2px solid #9d9686;font-size:11px;color:#4a463d">Bit: {{ loginTip }}</div>
+      </form>
+    </div>
+  </sc-if>
+  <sc-if value="{{ authed }}" hint-placeholder-val="{{ false }}">
+  <div style="max-width:1320px;margin:0 auto;background:#d9d3c5;border:2px solid;border-color:#fffef8 #3b372f #3b372f #fffef8;box-shadow:6px 6px 0 rgba(0,0,0,.35);display:flex;flex-direction:column">
+
+    <div style="display:flex;align-items:center;gap:12px;padding:5px 8px 5px 12px;background:#1d2b33;color:#f4efe2">
+      <svg width="20" height="20" viewBox="0 0 120 120" aria-hidden="true"><rect x="20" y="34" width="80" height="74" rx="37" fill="#5fd0c2"></rect><path d="M60 36 Q58 24 61 15" stroke="#9ee07a" stroke-width="6" fill="none"></path><circle cx="46" cy="68" r="8" fill="#1d2b33"></circle><circle cx="74" cy="68" r="8" fill="#1d2b33"></circle></svg>
+      <span style="font-family:VT323,monospace;font-size:24px;line-height:1;white-space:nowrap">BIT·CMS</span>
+      <span style="font-size:12px;color:#a9b5b9;white-space:nowrap">portfolio.db</span>
+      <span aria-hidden="true" style="flex:1;height:10px;min-width:20px;background:repeating-linear-gradient(0deg,#f4efe2 0 1px,transparent 1px 3px);opacity:.35"></span>
+      <span style="display:flex;align-items:center;gap:8px;font-size:12px;white-space:nowrap"><span style="width:8px;height:8px;background:{{ dotColor }}"></span>{{ saveLabel }}</span>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px;border-bottom:2px solid #9d9686">
+      <button onClick="{{ addProject }}" style="padding:6px 12px;font:inherit;font-size:13px;color:#1b1f22;cursor:pointer;background:#d9d3c5;border:2px solid;border-color:#fffef8 #77705f #77705f #fffef8" style-active="border-color:#77705f #fffef8 #fffef8 #77705f">+ New</button>
+      <button onClick="{{ dupProject }}" style="padding:6px 12px;font:inherit;font-size:13px;color:#1b1f22;cursor:pointer;background:#d9d3c5;border:2px solid;border-color:#fffef8 #77705f #77705f #fffef8" style-active="border-color:#77705f #fffef8 #fffef8 #77705f">Duplicate</button>
+      <button onClick="{{ delProject }}" style="padding:6px 12px;font:inherit;font-size:13px;color:#8a2a1c;cursor:pointer;background:#d9d3c5;border:2px solid;border-color:#fffef8 #77705f #77705f #fffef8" style-active="border-color:#77705f #fffef8 #fffef8 #77705f">Delete</button>
+      <span style="width:2px;height:26px;margin:0 4px;border-left:1px solid #77705f;border-right:1px solid #fffef8"></span>
+      <button onClick="{{ moveUp }}" aria-label="Move up" style="padding:6px 10px;font:inherit;font-size:13px;color:#1b1f22;cursor:pointer;background:#d9d3c5;border:2px solid;border-color:#fffef8 #77705f #77705f #fffef8" style-active="border-color:#77705f #fffef8 #fffef8 #77705f">▲</button>
+      <button onClick="{{ moveDown }}" aria-label="Move down" style="padding:6px 10px;font:inherit;font-size:13px;color:#1b1f22;cursor:pointer;background:#d9d3c5;border:2px solid;border-color:#fffef8 #77705f #77705f #fffef8" style-active="border-color:#77705f #fffef8 #fffef8 #77705f">▼</button>
+      <span style="width:2px;height:26px;margin:0 4px;border-left:1px solid #77705f;border-right:1px solid #fffef8"></span>
+      <button onClick="{{ save }}" style="padding:6px 14px;font:inherit;font-size:13px;font-weight:600;color:#fffdf5;cursor:pointer;background:#0b7a74;border:2px solid;border-color:#7fd9cf #053d3a #053d3a #7fd9cf" style-active="border-color:#053d3a #7fd9cf #7fd9cf #053d3a">Save <span style="font-weight:400;opacity:.8">ctrl+s</span></button>
+      <button onClick="{{ exportJson }}" style="padding:6px 12px;font:inherit;font-size:13px;color:#1b1f22;cursor:pointer;background:#d9d3c5;border:2px solid;border-color:#fffef8 #77705f #77705f #fffef8" style-active="border-color:#77705f #fffef8 #fffef8 #77705f">Export</button>
+      <label style="padding:6px 12px;font-size:13px;cursor:pointer;background:#d9d3c5;border:2px solid;border-color:#fffef8 #77705f #77705f #fffef8">Import<input type="file" accept=".json,application/json" onChange="{{ importJson }}" style="display:none"></label>
+      <button onClick="{{ resetAll }}" style="padding:6px 12px;font:inherit;font-size:13px;color:#1b1f22;cursor:pointer;background:#d9d3c5;border:2px solid;border-color:#fffef8 #77705f #77705f #fffef8" style-active="border-color:#77705f #fffef8 #fffef8 #77705f">Reset</button>
+      <a href="Portfolio v9.dc.html" target="_blank" rel="noopener" style="margin-left:auto;padding:6px 12px;font-size:13px;color:#1b1f22;text-decoration:none;background:#d9d3c5;border:2px solid;border-color:#fffef8 #77705f #77705f #fffef8" style-hover="color:#0b5f5a">Open site ↗</a>
+      <button onClick="{{ logout }}" style="padding:6px 12px;font:inherit;font-size:13px;color:#1b1f22;cursor:pointer;background:#d9d3c5;border:2px solid;border-color:#fffef8 #77705f #77705f #fffef8" style-active="border-color:#77705f #fffef8 #fffef8 #77705f">Log out</button>
+    </div>
+
+    <div style="display:flex;gap:2px;padding:10px 8px 0;border-bottom:2px solid #fffef8">
+      <button onClick="{{ tabProjects }}" style="padding:7px 16px 6px;margin-bottom:-2px;font-family:VT323,monospace;font-size:21px;line-height:1;color:#1b1f22;cursor:pointer;background:{{ tabBgP }};border:2px solid;border-bottom:0;border-color:#fffef8 #77705f #77705f #fffef8">Projects [{{ count }}]</button>
+      <button onClick="{{ tabSite }}" style="padding:7px 16px 6px;margin-bottom:-2px;font-family:VT323,monospace;font-size:21px;line-height:1;color:#1b1f22;cursor:pointer;background:{{ tabBgS }};border:2px solid;border-bottom:0;border-color:#fffef8 #77705f #77705f #fffef8">Site settings</button>
+    </div>
+
+    <sc-if value="{{ isProjects }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-wrap:wrap;gap:14px;padding:14px;align-items:flex-start">
+
+        <div style="flex:1 1 280px;max-width:400px;min-width:0;display:flex;flex-direction:column;gap:8px">
+          <input value="{{ q }}" onChange="{{ onQ }}" placeholder="filter projects…" aria-label="Filter projects" style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;color:#1b1f22;outline:none;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f">
+          <div style="background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f;max-height:min(68vh,640px);overflow-y:auto">
+            <div style="display:grid;grid-template-columns:30px 18px minmax(0,1fr) auto;gap:8px;padding:5px 8px;background:#e9e4d7;border-bottom:1px solid #b9b2a2;font-size:11px;color:#5b564b;position:sticky;top:0">
+              <span>#</span><span>★</span><span>name</span><span>status</span>
+            </div>
+            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="7">
+              <button onClick="{{ r.pick }}" style="display:grid;grid-template-columns:30px 18px minmax(0,1fr) auto;gap:8px;align-items:center;width:100%;padding:7px 8px;border:0;border-bottom:1px dotted #cfc8b8;font:inherit;font-size:13px;text-align:left;cursor:pointer;background:{{ r.bg }};color:{{ r.fg }}">
+                <span style="opacity:.7">{{ r.num }}</span>
+                <span style="color:{{ r.star }}">{{ r.starTxt }}</span>
+                <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
+                <span style="font-size:11px;padding:1px 6px;border:1px solid currentColor;white-space:nowrap">{{ r.status }}</span>
+              </button>
+            </sc-for>
+            <sc-if value="{{ noRows }}" hint-placeholder-val="{{ false }}"><div style="padding:18px 10px;font-size:13px;color:#5b564b">nothing matches.</div></sc-if>
+          </div>
+          <div style="font-size:12px;color:#4a463d">{{ listNote }}</div>
+        </div>
+
+        <sc-if value="{{ hasCur }}" hint-placeholder-val="{{ true }}">
+          <div style="flex:999 1 460px;min-width:0;display:flex;flex-direction:column;gap:14px">
+
+            <fieldset style="margin:0;padding:12px 14px 14px;border:2px groove #f3eee2;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px 14px">
+              <legend style="padding:0 6px;font-family:VT323,monospace;font-size:22px;line-height:1">Identity</legend>
+              <label style="grid-column:1/-1;display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d">Project name
+                <input value="{{ cur.name }}" onChange="{{ on.name }}" style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:15px;color:#1b1f22;outline:none;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f">
+              </label>
+              <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d">Live URL
+                <input value="{{ cur.url }}" onChange="{{ on.url }}" placeholder="https://…" style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;color:#1b1f22;outline:none;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f">
+              </label>
+              <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d">Year
+                <input value="{{ cur.year }}" onChange="{{ on.year }}" placeholder="2026" style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;color:#1b1f22;outline:none;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f">
+              </label>
+              <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d">Role
+                <input value="{{ cur.role }}" onChange="{{ on.role }}" placeholder="Full-stack, solo" style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;color:#1b1f22;outline:none;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f">
+              </label>
+              <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d">Client
+                <input value="{{ cur.client }}" onChange="{{ on.client }}" placeholder="optional" style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;color:#1b1f22;outline:none;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f">
+              </label>
+            </fieldset>
+
+            <fieldset style="margin:0;padding:12px 14px 14px;border:2px groove #f3eee2;display:flex;flex-direction:column;gap:12px">
+              <legend style="padding:0 6px;font-family:VT323,monospace;font-size:22px;line-height:1">Story</legend>
+              <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d"><span style="display:flex;justify-content:space-between;gap:8px"><span>Summary — one or two lines for cards</span><span style="color:{{ sumColor }}">{{ sumLen }}/180</span></span>
+                <textarea value="{{ cur.summary }}" onChange="{{ on.summary }}" rows="2" style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;line-height:1.5;color:#1b1f22;outline:none;resize:vertical;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f"></textarea>
+              </label>
+              <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d">Highlights — one per line
+                <textarea value="{{ pointsText }}" onChange="{{ on.points }}" rows="4" placeholder="What it does&#10;What you built&#10;What it changed" style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;line-height:1.5;color:#1b1f22;outline:none;resize:vertical;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f"></textarea>
+              </label>
+              <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:#4a463d">Tech stack — enter to add
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:6px;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f">
+                  <sc-for list="{{ chips }}" as="c" hint-placeholder-count="3">
+                    <span style="display:inline-flex;align-items:center;gap:6px;padding:2px 4px 2px 8px;background:#1d2b33;color:#f4efe2;font-size:13px;white-space:nowrap">{{ c.label }}<button onClick="{{ c.remove }}" aria-label="Remove" style="padding:0 4px;border:0;background:none;color:#5fd0c2;font:inherit;cursor:pointer">×</button></span>
+                  </sc-for>
+                  <input value="{{ stackDraft }}" onChange="{{ onStackDraft }}" onKeyDown="{{ onStackKey }}" placeholder="React…" aria-label="Add technology" style="flex:1;min-width:100px;padding:3px 4px;border:0;outline:none;background:transparent;font:inherit;font-size:14px;color:#1b1f22">
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset style="margin:0;padding:12px 14px 14px;border:2px groove #f3eee2;display:flex;flex-wrap:wrap;gap:14px">
+              <legend style="padding:0 6px;font-family:VT323,monospace;font-size:22px;line-height:1">Media</legend>
+              <div style="flex:0 1 240px;aspect-ratio:16/10;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f;position:relative;overflow:hidden">
+                <sc-if value="{{ hasImage }}" hint-placeholder-val="{{ false }}"><img src="{{ cur.image }}" alt="" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block"></sc-if>
+                <sc-if value="{{ noImage }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:{{ tint }};color:#e7ecee;font-family:'Space Grotesk',sans-serif;font-size:44px;letter-spacing:-.05em">{{ mono }}</div></sc-if>
+              </div>
+              <div style="flex:1 1 220px;display:flex;flex-direction:column;gap:10px;font-size:12px;color:#4a463d">
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  <label style="padding:6px 12px;font-size:13px;color:#1b1f22;cursor:pointer;background:#d9d3c5;border:2px solid;border-color:#fffef8 #77705f #77705f #fffef8">Upload screenshot…<input type="file" accept="image/*" onChange="{{ pickImage }}" style="display:none"></label>
+                  <sc-if value="{{ hasImage }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearImage }}" style="padding:6px 12px;font:inherit;font-size:13px;color:#8a2a1c;cursor:pointer;background:#d9d3c5;border:2px solid;border-color:#fffef8 #77705f #77705f #fffef8" style-active="border-color:#77705f #fffef8 #fffef8 #77705f">Remove</button></sc-if>
+                </div>
+                <label style="display:flex;flex-direction:column;gap:4px">…or image path
+                  <input value="{{ imagePath }}" onChange="{{ on.image }}" placeholder="assets/project.png" style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:13px;color:#1b1f22;outline:none;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f">
+                </label>
+                <label style="display:flex;flex-direction:column;gap:4px">Placeholder tint — used until there’s a screenshot
+                  <input type="range" min="0" max="360" value="{{ cur.hue }}" onChange="{{ on.hue }}" style="width:100%;accent-color:#0b7a74">
+                </label>
+                <span>uploads are shrunk to 1600px wide JPEG.</span>
+              </div>
+            </fieldset>
+
+            <fieldset style="margin:0;padding:12px 14px 14px;border:2px groove #f3eee2;display:flex;flex-wrap:wrap;gap:10px 28px;align-items:center">
+              <legend style="padding:0 6px;font-family:VT323,monospace;font-size:22px;line-height:1">Display</legend>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" checked="{{ cur.featured }}" onChange="{{ on.featured }}" style="width:16px;height:16px;accent-color:#0b7a74">Featured on the stage <span style="font-size:12px;color:{{ featColor }}">({{ featCount }}/4)</span></label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" checked="{{ cur.draft }}" onChange="{{ on.draft }}" style="width:16px;height:16px;accent-color:#0b7a74">Draft — hidden from site</label>
+            </fieldset>
+
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-family:VT323,monospace;font-size:22px;line-height:1">Preview</span>
+              <div style="display:flex;flex-wrap:wrap;gap:20px;padding:20px;background:#04090c;color:#e7ecee;font-family:'Space Grotesk',sans-serif;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f">
+                <div style="flex:0 1 260px;border-radius:6px;overflow:hidden;border:1px solid rgba(231,236,238,.14)">
+                  <div style="display:flex;gap:5px;align-items:center;padding:7px 10px;background:rgba(6,15,18,.9);border-bottom:1px solid rgba(231,236,238,.14)"><span style="width:6px;height:6px;border-radius:50%;background:#7f8d92"></span><span style="width:6px;height:6px;border-radius:50%;background:#7f8d92"></span><span style="width:6px;height:6px;border-radius:50%;background:#7f8d92"></span><span style="margin-left:6px;font-family:'Space Mono',monospace;font-size:10px;color:#7f8d92;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ hostLabel }}</span></div>
+                  <div style="aspect-ratio:16/10;position:relative">
+                    <sc-if value="{{ hasImage }}" hint-placeholder-val="{{ false }}"><img src="{{ cur.image }}" alt="" style="width:100%;height:100%;object-fit:cover;object-position:top;display:block"></sc-if>
+                    <sc-if value="{{ noImage }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:{{ tint }};font-size:48px;letter-spacing:-.05em">{{ mono }}</div></sc-if>
+                  </div>
+                </div>
+                <div style="flex:1 1 220px;display:flex;flex-direction:column;gap:10px;min-width:0">
+                  <span style="font-family:'Space Mono',monospace;font-size:11px;color:#7f8d92">{{ previewTag }}</span>
+                  <span style="font-size:26px;line-height:1.05;letter-spacing:-.03em;text-wrap:balance">{{ cur.name }}</span>
+                  <span style="font-size:14px;line-height:1.55;color:#b3bfc3;text-wrap:pretty">{{ previewSummary }}</span>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ chips }}" as="c" hint-placeholder-count="2"><span style="padding:3px 9px;border:1px solid rgba(231,236,238,.14);border-radius:999px;font-family:'Space Mono',monospace;font-size:10px;color:#b3bfc3;white-space:nowrap">{{ c.label }}</span></sc-for></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noCur }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:999 1 460px;padding:48px 20px;text-align:center;border:2px groove #f3eee2;font-size:14px;color:#4a463d">No project selected. Hit <strong>+ New</strong> to start one.</div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isSite }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:14px;display:flex;flex-direction:column;gap:14px;max-width:820px">
+        <fieldset style="margin:0;padding:12px 14px 14px;border:2px groove #f3eee2;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px 14px">
+          <legend style="padding:0 6px;font-family:VT323,monospace;font-size:22px;line-height:1">Contact</legend>
+          <label style="grid-column:1/-1;display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d">Email
+            <input value="{{ site.email }}" onChange="{{ onSite.email }}" style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;color:#1b1f22;outline:none;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d">GitHub URL
+            <input value="{{ site.github }}" onChange="{{ onSite.github }}" placeholder="https://github.com/…" style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;color:#1b1f22;outline:none;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d">LinkedIn URL
+            <input value="{{ site.linkedin }}" onChange="{{ onSite.linkedin }}" placeholder="https://linkedin.com/in/…" style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;color:#1b1f22;outline:none;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f">
+          </label>
+        </fieldset>
+        <fieldset style="margin:0;padding:12px 14px 14px;border:2px groove #f3eee2;display:flex;flex-direction:column;gap:12px">
+          <legend style="padding:0 6px;font-family:VT323,monospace;font-size:22px;line-height:1">Intro</legend>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d">Tagline under “Full Stack Developer”
+            <input value="{{ site.tagline }}" onChange="{{ onSite.tagline }}" style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;color:#1b1f22;outline:none;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#4a463d">Currently working on — one per line, wrap words in **double stars** to bold them
+            <textarea value="{{ nowText }}" onChange="{{ onSite.now }}" rows="5" style="width:100%;box-sizing:border-box;padding:7px 9px;font:inherit;font-size:14px;line-height:1.5;color:#1b1f22;outline:none;resize:vertical;background:#fffdf5;border:2px solid;border-color:#77705f #fffef8 #fffef8 #77705f"></textarea>
+          </label>
+        </fieldset>
+      </div>
+    </sc-if>
+
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:6px 8px;border-top:2px solid #9d9686;font-size:12px">
+      <span style="padding:3px 8px;border:1px solid;border-color:#77705f #fffef8 #fffef8 #77705f;white-space:nowrap">{{ statCount }}</span>
+      <span style="padding:3px 8px;border:1px solid;border-color:#77705f #fffef8 #fffef8 #77705f;white-space:nowrap">{{ statFeat }}</span>
+      <span style="flex:1;min-width:200px;display:flex;align-items:center;gap:8px;padding:3px 8px;border:1px solid;border-color:#77705f #fffef8 #fffef8 #77705f;color:{{ tipColor }}">
+        <svg width="16" height="16" viewBox="0 0 120 120" aria-hidden="true" style="flex:none"><rect x="20" y="34" width="80" height="74" rx="37" fill="#34b2a4"></rect><path d="M60 36 Q58 24 61 15" stroke="#5fbf6e" stroke-width="7" fill="none"></path><circle cx="46" cy="68" r="9" fill="#1b1f22"></circle><circle cx="74" cy="68" r="9" fill="#1b1f22"></circle></svg>
+        <span>Bit: {{ tip }}</span><span style="animation:blink 1s steps(1) infinite">_</span>
+      </span>
+      <span style="padding:3px 8px;border:1px solid;border-color:#77705f #fffef8 #fffef8 #77705f;white-space:nowrap">{{ savedLabel }}</span>
+    </div>
+  </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const STORE = 'nirjal.cms.v1';
+const AUTH = 'nirjal.cms.auth', SESSION = 'nirjal.cms.session';
+const sha = async (s) => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))).map(b => b.toString(16).padStart(2, '0')).join('');
+const uid = () => Math.random().toString(36).slice(2, 9);
+const DEFAULT_SITE = { email: 'hello@example.com', github: '', linkedin: '', tagline: 'Building robust digital experiences with passion and precision.',
+  now: ['I’m quietly tangling with **Node** and **React** insides. Solving it like a sly detective. Just a low-key techie!', 'I’m currently reading **To Kill a Mockingbird**—so far, no birds have been harmed, but I’m keeping an eye on Atticus just in case.'] };
+const P = (o) => ({ id: uid(), summary: '', points: [], stack: [], url: '', year: '', role: '', client: '', image: '', hue: 185, featured: false, draft: false, ...o });
+const DEFAULT_PROJECTS = () => [
+  P({ name: 'Aastha Saving and Cooperative Limited', image: 'assets/project-aastha.png', hue: 185, featured: true,
+    summary: 'A home for a savings & credit cooperative — notices, news, gallery and live interest rates.',
+    points: ['Portfolio site for a savings and credit cooperative', 'Features notices, news, and a gallery', 'Provides updates on interest rates', 'Built with Next.js, Tailwind CSS, ShadCN, and Payload CMS'],
+    stack: ['Next.js', 'Tailwind CSS', 'ShadCN', 'Payload CMS'] }),
+  P({ name: 'Deshna IT', hue: 205, featured: true }), P({ name: 'IBM Nepal', hue: 230, featured: true }), P({ name: 'Nepal Police Digital Diary', hue: 165 }),
+  P({ name: 'Niva Craftworks', hue: 190 }), P({ name: 'Everest Ledger', hue: 250 }), P({ name: 'Husky App', hue: 175 }),
+];
+const mono = (s) => (s || '?').trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+const pad = (n) => String(n).padStart(2, '0');
+const host = (u) => { try { return new URL(u).host.replace(/^www\./, ''); } catch (e) { return ''; } };
+const slug = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const clean = (p) => ({ ...p, name: (p.name || '').trim(), points: (p.points || []).map(s => s.trim()).filter(Boolean) });
+
+class Component extends DCLogic {
+  state = (() => {
+    let d = null; try { d = JSON.parse(localStorage.getItem(STORE)); } catch (e) {}
+    const projects = d && Array.isArray(d.projects) ? d.projects.map(p => P({ ...p, id: p.id || uid() })) : DEFAULT_PROJECTS();
+    let auth = null; try { auth = JSON.parse(localStorage.getItem(AUTH)); } catch (e) {}
+    const authed = !!auth && (sessionStorage.getItem(SESSION) === auth.hash || localStorage.getItem(SESSION) === auth.hash);
+    return { auth, authed, lu: '', lp: '', lp2: '', loginErr: '', remember: false, projects, site: { ...DEFAULT_SITE, ...((d && d.site) || {}) }, sel: 0, tab: 'projects', q: '', dirty: false, savedAt: d && d.savedAt, stackDraft: '', msg: null };
+  })();
+
+  componentDidMount() {
+    this._key = (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); this.save(); } };
+    this._unload = (e) => { if (this.state.dirty) { e.preventDefault(); e.returnValue = ''; } };
+    addEventListener('keydown', this._key); addEventListener('beforeunload', this._unload);
+  }
+  componentWillUnmount() { removeEventListener('keydown', this._key); removeEventListener('beforeunload', this._unload); clearTimeout(this._mt); }
+
+  async login(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const { auth, lu, lp, lp2, remember } = this.state, u = lu.trim().toLowerCase();
+    if (!u || !lp) return this.setState({ loginErr: 'enter a username and password.' });
+    if (!auth) {
+      if (lp.length < 6) return this.setState({ loginErr: 'use at least 6 characters.' });
+      if (lp !== lp2) return this.setState({ loginErr: 'passwords don’t match.' });
+      const next = { user: u, hash: await sha(u + ':' + lp) }; localStorage.setItem(AUTH, JSON.stringify(next));
+      return this.enter(next, remember);
+    }
+    const h = await sha(u + ':' + lp);
+    if (u !== auth.user || h !== auth.hash) return this.setState({ loginErr: 'wrong username or password.', lp: '' });
+    this.enter(auth, remember);
+  }
+  enter(auth, remember) { (remember ? localStorage : sessionStorage).setItem(SESSION, auth.hash); this.setState({ auth, authed: true, lp: '', lp2: '', loginErr: '' }); this.flash('welcome back, ' + auth.user + '.'); }
+  logout() {
+    if (this.state.dirty && !confirm('You have unsaved changes. Log out anyway?')) return;
+    sessionStorage.removeItem(SESSION); localStorage.removeItem(SESSION); this.setState({ authed: false, dirty: false, lu: this.state.auth ? this.state.auth.user : '' });
+  }
+  flash(text, kind = 'ok') { this.setState({ msg: { text, kind } }); clearTimeout(this._mt); this._mt = setTimeout(() => this.setState({ msg: null }), 3200); }
+  update(k, v) { this.setState(s => ({ dirty: true, projects: s.projects.map((p, i) => i === s.sel ? { ...p, [k]: v } : p) })); }
+  setSite(k, v) { this.setState(s => ({ dirty: true, site: { ...s.site, [k]: v } })); }
+  save() {
+    const data = { v: 1, site: { ...this.state.site, now: (this.state.site.now || []).map(s => s.trim()).filter(Boolean) }, projects: this.state.projects.map(clean), savedAt: Date.now() };
+    try { localStorage.setItem(STORE, JSON.stringify(data)); this.setState({ dirty: false, savedAt: data.savedAt }); this.flash('saved. the site picks it up on reload/focus.'); }
+    catch (e) { this.flash('storage is full — use smaller screenshots or image paths.', 'err'); }
+  }
+  add() { const p = P({ name: 'Untitled project', draft: true, year: String(new Date().getFullYear()) }); this.setState(s => ({ projects: [...s.projects, p], sel: s.projects.length, q: '', dirty: true, tab: 'projects' })); this.flash('new draft added — it stays hidden until you untick draft.'); }
+  dup() { const c = this.cur; if (!c) return; const p = { ...c, id: uid(), name: c.name + ' (copy)', featured: false, draft: true }; this.setState(s => ({ projects: [...s.projects.slice(0, s.sel + 1), p, ...s.projects.slice(s.sel + 1)], sel: s.sel + 1, dirty: true })); }
+  del() { const c = this.cur; if (!c || !confirm('Delete “' + c.name + '”? This can’t be undone after you save.')) return; this.setState(s => ({ projects: s.projects.filter((_, i) => i !== s.sel), sel: Math.max(0, s.sel - 1), dirty: true })); }
+  move(d) { this.setState(s => { const j = s.sel + d; if (j < 0 || j >= s.projects.length) return null; const a = s.projects.slice(); [a[s.sel], a[j]] = [a[j], a[s.sel]]; return { projects: a, sel: j, dirty: true }; }); }
+  exportJson() {
+    const data = { v: 1, site: this.state.site, projects: this.state.projects.map(clean) };
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })); a.download = 'portfolio-content.json'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+  importJson(e) {
+    const f = e.target.files && e.target.files[0]; e.target.value = ''; if (!f) return;
+    f.text().then(t => { const d = JSON.parse(t); if (!Array.isArray(d.projects)) throw 0; this.setState({ projects: d.projects.map(p => P({ ...p, id: p.id || uid() })), site: { ...DEFAULT_SITE, ...(d.site || {}) }, sel: 0, dirty: true }); this.flash('imported ' + d.projects.length + ' projects — save to publish.'); })
+      .catch(() => this.flash('that file isn’t a portfolio export.', 'err'));
+  }
+  reset() { if (!confirm('Reset everything to the original content?')) return; localStorage.removeItem(STORE); this.setState({ projects: DEFAULT_PROJECTS(), site: { ...DEFAULT_SITE }, sel: 0, dirty: false, savedAt: null }); this.flash('reset to defaults.'); }
+  pickImage(e) {
+    const f = e.target.files && e.target.files[0]; e.target.value = ''; if (!f) return;
+    const url = URL.createObjectURL(f), img = new Image();
+    img.onload = () => { const k = Math.min(1, 1600 / img.width), c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); this.update('image', c.toDataURL('image/jpeg', 0.82)); URL.revokeObjectURL(url); };
+    img.onerror = () => this.flash('couldn’t read that image.', 'err');
+    img.src = url;
+  }
+  addChip(v) { const t = v.trim().replace(/,$/, ''); const c = this.cur; if (!t || !c) return; if (!(c.stack || []).includes(t)) this.update('stack', [...(c.stack || []), t]); this.setState({ stackDraft: '' }); }
+  get cur() { return this.state.projects[this.state.sel] || null; }
+
+  renderVals() {
+    const { projects, sel, q, tab, site, dirty, savedAt, msg } = this.state, cur = this.cur;
+    const featCount = projects.filter(p => p.featured && !p.draft).length, live = projects.filter(p => !p.draft).length;
+    const val = (fn) => (e) => fn(e.target.type === 'checkbox' ? e.target.checked : e.target.value);
+    const rows = projects.map((p, i) => ({ p, i })).filter(({ p }) => !q || (p.name || '').toLowerCase().includes(q.toLowerCase())).map(({ p, i }) => {
+      const on = i === sel;
+      return { num: pad(i + 1), name: p.name || 'untitled', starTxt: p.featured ? '★' : '·', star: on ? '#f4c21b' : p.featured ? '#b07d00' : '#a39c8c',
+        status: p.draft ? 'draft' : 'live', bg: on ? '#0b5f5a' : 'transparent', fg: on ? '#fffdf5' : '#1b1f22', pick: () => this.setState({ sel: i, stackDraft: '' }) };
+    });
+    let tip = 'all good. hit save when you’re happy.', tipColor = '#1b1f22';
+    if (msg) { tip = msg.text; tipColor = msg.kind === 'err' ? '#8a2a1c' : '#0b5f5a'; }
+    else if (featCount > 4) { tip = 'psst — more than 4 featured makes the stage drag. 3–4 is the sweet spot.'; tipColor = '#8a5a00'; }
+    else if (featCount === 0) { tip = 'nothing featured yet — the stage will be empty.'; tipColor = '#8a5a00'; }
+    else if (cur && !cur.image) tip = 'add a screenshot — the tint is just a stand-in.';
+    else if (cur && !cur.summary) tip = 'a one-line summary helps the cards.';
+    else if (dirty) tip = 'unsaved changes — ctrl+s.';
+    const isDataImg = cur && /^data:/.test(cur.image || '');
+    const sumLen = cur ? (cur.summary || '').length : 0;
+    const setup = !this.state.auth;
+    return {
+      locked: !this.state.authed, authed: this.state.authed, isSetup: setup,
+      loginTitle: setup ? 'first run' : 'sign in', loginHead: setup ? 'Create your login' : 'Welcome back',
+      loginSub: setup ? 'Pick a username and password. You’ll use them to open the CMS from now on.' : 'Sign in to manage projects and site content.',
+      loginBtn: setup ? 'Create & enter' : 'Log in', pwAuto: setup ? 'new-password' : 'current-password',
+      loginTip: setup ? 'at least 6 characters. I’ll remember it.' : 'press enter to log in.',
+      lu: this.state.lu, lp: this.state.lp, lp2: this.state.lp2, remember: this.state.remember,
+      onLu: (e) => this.setState({ lu: e.target.value, loginErr: '' }), onLp: (e) => this.setState({ lp: e.target.value, loginErr: '' }), onLp2: (e) => this.setState({ lp2: e.target.value, loginErr: '' }),
+      onRemember: (e) => this.setState({ remember: e.target.checked }), onLogin: (e) => this.login(e),
+      hasLoginErr: !!this.state.loginErr, loginErr: this.state.loginErr, logout: () => this.logout(),
+      dotColor: dirty ? '#f4c21b' : '#5fd0c2', saveLabel: dirty ? 'unsaved' : 'saved',
+      savedLabel: savedAt ? 'saved ' + new Date(savedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'not saved yet',
+      statCount: live + ' live · ' + (projects.length - live) + ' draft', statFeat: '★ ' + featCount + ' featured', tip, tipColor,
+      count: projects.length, isProjects: tab === 'projects', isSite: tab === 'site',
+      tabBgP: tab === 'projects' ? '#d9d3c5' : '#c5beae', tabBgS: tab === 'site' ? '#d9d3c5' : '#c5beae',
+      tabProjects: () => this.setState({ tab: 'projects' }), tabSite: () => this.setState({ tab: 'site' }),
+      addProject: () => this.add(), dupProject: () => this.dup(), delProject: () => this.del(), moveUp: () => this.move(-1), moveDown: () => this.move(1),
+      save: () => this.save(), exportJson: () => this.exportJson(), importJson: (e) => this.importJson(e), resetAll: () => this.reset(),
+      q, onQ: (e) => this.setState({ q: e.target.value }), rows, noRows: rows.length === 0,
+      listNote: 'order here = order on the site. ▲▼ to move.',
+      hasCur: !!cur, noCur: !cur, cur: cur || {},
+      on: {
+        name: val(v => this.update('name', v)), url: val(v => this.update('url', v)), year: val(v => this.update('year', v)), role: val(v => this.update('role', v)), client: val(v => this.update('client', v)),
+        summary: val(v => this.update('summary', v)), points: val(v => this.update('points', v.split('\n'))), image: val(v => this.update('image', v)),
+        hue: val(v => this.update('hue', +v)), featured: val(v => this.update('featured', v)), draft: val(v => this.update('draft', v)),
+      },
+      pointsText: cur ? (cur.points || []).join('\n') : '',
+      sumLen, sumColor: sumLen > 180 ? '#8a2a1c' : '#4a463d',
+      chips: cur ? (cur.stack || []).map(label => ({ label, remove: () => this.update('stack', cur.stack.filter(x => x !== label)) })) : [],
+      stackDraft: this.state.stackDraft, onStackDraft: (e) => { const v = e.target.value; if (v.endsWith(',')) this.addChip(v); else this.setState({ stackDraft: v }); },
+      onStackKey: (e) => { if (e.key === 'Enter') { e.preventDefault(); this.addChip(this.state.stackDraft); } else if (e.key === 'Backspace' && !this.state.stackDraft && cur && cur.stack && cur.stack.length) this.update('stack', cur.stack.slice(0, -1)); },
+      hasImage: !!(cur && cur.image), noImage: !(cur && cur.image), imagePath: isDataImg ? '' : (cur && cur.image) || '',
+      pickImage: (e) => this.pickImage(e), clearImage: () => this.update('image', ''),
+      tint: `linear-gradient(135deg,oklch(0.42 0.08 ${cur ? cur.hue : 185}),oklch(0.17 0.035 ${cur ? cur.hue : 185}) 78%)`, mono: mono(cur && cur.name),
+      featCount, featColor: featCount > 4 ? '#8a2a1c' : '#4a463d',
+      hostLabel: cur ? host(cur.url) || slug(cur.name) + '.com' : '',
+      previewTag: cur ? (cur.featured ? '[ featured ]' : '[ index ]') + (cur.year ? ' · ' + cur.year : '') + (cur.draft ? ' · draft' : '') : '',
+      previewSummary: cur && cur.summary ? cur.summary : '[ Write-up coming soon ]',
+      site, nowText: (site.now || []).join('\n'),
+      onSite: { email: val(v => this.setSite('email', v)), github: val(v => this.setSite('github', v)), linkedin: val(v => this.setSite('linkedin', v)), tagline: val(v => this.setSite('tagline', v)), now: val(v => this.setSite('now', v.split('\n'))) },
+    };
+  }
+}
+</script>
+</body>
+</html>

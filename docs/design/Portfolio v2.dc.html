@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#04090c}
+body{-webkit-font-smoothing:antialiased}
+a{color:inherit}a:hover{color:var(--accent)}
+:root{--bg:#04090c;--fg:#e7ecee;--fg2:#b3bfc3;--fg3:#7f8d92;--line:rgba(231,236,238,.14);--surface:rgba(5,13,16,.82);--accent:#5fd0c2;--sun:#f4c21b;--glow:rgba(40,150,140,.28);--card:linear-gradient(135deg,#0f4644 0%,#071519 70%);--shadow:0 40px 90px -30px rgba(0,0,0,.8);--grain-op:.14;--grain-blend:screen;
+--page:radial-gradient(60% 50% at 100% 0%,rgba(10,66,66,.8),transparent 72%),radial-gradient(55% 60% at 100% 100%,rgba(42,96,96,.6),transparent 70%),radial-gradient(45% 45% at 0% 100%,rgba(20,16,36,.9),transparent 70%),#04090c;
+--grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+[data-theme="light"]{--bg:#e9fafe;--fg:#16222b;--fg2:#34444f;--fg3:#55656f;--line:rgba(22,34,43,.16);--surface:rgba(233,250,254,.86);--accent:#0b7a74;--glow:rgba(120,215,235,.5);--card:linear-gradient(135deg,#a9e9f5 0%,#eafbfe 75%);--shadow:0 40px 90px -36px rgba(18,70,84,.45);--grain-op:.2;--grain-blend:multiply;
+--page:radial-gradient(55% 45% at 100% 0%,rgba(196,243,253,1),transparent 72%),radial-gradient(45% 45% at 0% 100%,rgba(247,253,255,.95),transparent 70%),#e9fafe}
+input::placeholder{color:var(--fg3)}
+::selection{background:var(--accent);color:var(--bg)}
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-new(root){z-index:2}
+@keyframes letterUp{from{transform:translateY(105%)}to{transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes riseIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes popIn{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:none}}
+@keyframes wipeUp{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes marquee{to{transform:translateX(-50%)}}
+@keyframes float{50%{transform:translateY(-12px) rotate(-2deg)}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 var(--accent)}100%{box-shadow:0 0 0 12px transparent}}
+@keyframes blink{50%{opacity:.15}}
+</style>
+</helmet>
+<div data-theme="{{ theme }}" style="min-height:100vh;background:var(--page);background-attachment:fixed;color:var(--fg);font-family:'Space Grotesk',system-ui,sans-serif;position:relative;overflow-x:clip">
+
+  <div ref="{{ glowRef }}" aria-hidden="true" style="position:fixed;left:0;top:0;width:70vmax;height:70vmax;border-radius:50%;background:radial-gradient(closest-side,var(--glow),transparent);pointer-events:none;z-index:0;transform:translate3d(60vw,40vh,0) translate(-50%,-50%);will-change:transform"></div>
+  <div ref="{{ progressRef }}" aria-hidden="true" style="position:fixed;left:0;top:0;right:0;height:2px;z-index:70;background:linear-gradient(90deg,var(--accent),#8b7cf6);transform:scaleX(0);transform-origin:0 50%"></div>
+
+  <header style="position:fixed;top:0;left:0;right:0;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:22px clamp(20px,4vw,64px);mix-blend-mode:difference;color:#fff;font-size:15px">
+    <div style="display:flex;align-items:baseline;gap:18px">
+      <a href="#" onClick="{{ toTop }}" style="text-decoration:none;color:#fff;font-size:18px;font-weight:500">[ N—P ]</a>
+      <span style="font-family:'Space Mono',monospace;font-size:12px;opacity:.8">full-stack developer</span>
+    </div>
+    <div style="font-family:'Space Mono',monospace;font-size:12px;display:flex;gap:10px;align-items:center"><span style="opacity:.7">NPT</span><span ref="{{ clockRef }}">--:--:--</span></div>
+    <div style="display:flex;justify-content:flex-end;align-items:center;gap:clamp(14px,2.4vw,36px)">
+      <a href="#" onClick="{{ toWork }}" style="text-decoration:none;color:#fff">Work</a>
+      <a href="#" onClick="{{ toNow }}" style="text-decoration:none;color:#fff">Now</a>
+      <a href="#" onClick="{{ toContact }}" style="text-decoration:none;color:#fff">Contact</a>
+      <button onClick="{{ toggleTheme }}" aria-label="Toggle theme" style="background:none;border:0;padding:2px;cursor:pointer;display:flex;color:#fff">
+        <sc-if value="{{ isDark }}" hint-placeholder-val="{{ true }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" style="stroke:var(--sun)"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></sc-if>
+        <sc-if value="{{ isLight }}" hint-placeholder-val="{{ false }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg></sc-if>
+      </button>
+      <button onClick="{{ openConsole }}" style="background:none;border:0;padding:0;font:inherit;color:#fff;cursor:pointer">[G] Console</button>
+    </div>
+  </header>
+
+  <div style="position:relative;z-index:1">
+    <section data-screen-label="Hero" style="min-height:100vh;box-sizing:border-box;display:flex;flex-direction:column;justify-content:flex-end;padding:120px clamp(20px,4vw,64px) 5vh">
+      <div ref="{{ heroRef }}" style="will-change:transform">
+        <div style="display:flex;align-items:flex-end;gap:clamp(16px,3vw,48px);flex-wrap:wrap;font-size:clamp(56px,15.5vw,300px);line-height:.86;letter-spacing:-.045em;font-weight:300">
+          <span style="display:inline-block;overflow:hidden;padding-bottom:.12em;margin-bottom:-.12em">{{ nameFirst }}</span>
+          <img src="{{ avatarSrc }}" alt="Illustration of Nirjal at a laptop" style="height:.82em;width:auto;display:block;align-self:center;animation:float 6s ease-in-out infinite;-webkit-mask-image:radial-gradient(closest-side,#000 80%,transparent 100%);mask-image:radial-gradient(closest-side,#000 80%,transparent 100%)">
+          <p style="margin:0 0 .3em;flex:1 1 220px;max-width:300px;font-size:clamp(15px,1.2vw,19px);line-height:1.5;letter-spacing:0;font-weight:400;color:var(--fg2);animation:riseIn .8s .9s both;text-wrap:pretty">Building robust digital experiences with passion and precision.</p>
+        </div>
+        <div style="font-size:clamp(56px,15.5vw,300px);line-height:.86;letter-spacing:-.045em;font-weight:300;overflow:hidden;padding-bottom:.12em;margin-bottom:-.12em;white-space:nowrap">{{ nameLast }}</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-top:4vh;padding-top:18px;border-top:1px solid var(--line);font-size:clamp(16px,1.3vw,20px);animation:fadeIn 1s 1s both">
+        <span><span style="color:var(--fg3)">[ </span><span ref="{{ roleRef }}" style="color:var(--accent)">Full Stack Developer</span><span style="color:var(--fg3)"> ]</span></span>
+        <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">(scroll) ↓</span>
+      </div>
+    </section>
+
+    <section data-screen-label="About" style="padding:22vh clamp(20px,4vw,64px) 18vh">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3);margin-bottom:5vh">(01) About</div>
+      <p ref="{{ manifestoRef }}" style="margin:0;max-width:1400px;font-size:clamp(28px,4.6vw,80px);line-height:1.08;letter-spacing:-.03em;font-weight:400;text-wrap:pretty">{{ manifesto }}</p>
+      <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:center;margin-top:7vh;font-size:clamp(17px,1.4vw,22px)">
+        <span style="color:var(--fg2)">Let’s connect—feel free to reach out via</span>
+        <a href="mailto:hello@example.com" style="color:var(--fg);text-underline-offset:6px;text-decoration-thickness:1.5px" style-hover="color:var(--accent)">email</a>
+        <a href="#" aria-label="GitHub" style="color:var(--fg);display:flex" style-hover="color:var(--accent)"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"></path></svg></a>
+        <a href="#" aria-label="LinkedIn" style="color:var(--fg);display:flex" style-hover="color:var(--accent)"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.850 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"></path></svg></a>
+      </div>
+    </section>
+
+    <section data-screen-label="Stack" aria-label="Tech stack" style="padding:4vh 0 12vh;overflow:hidden;font-size:clamp(48px,9vw,170px);line-height:1.05;letter-spacing:-.04em;font-weight:500">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0;font-weight:400;color:var(--fg3);padding:0 clamp(20px,4vw,64px) 3vh">(02) Stack</div>
+      <div style="display:flex;width:max-content;animation:marquee 38s linear infinite">
+        <sc-for list="{{ marquee }}" as="t" hint-placeholder-count="12"><span style="padding-right:.5em;white-space:nowrap">{{ t }}<span style="color:var(--accent);font-weight:300;padding-left:.5em">/</span></span></sc-for>
+      </div>
+      <div style="display:flex;width:max-content;animation:marquee 46s linear infinite reverse">
+        <sc-for list="{{ marquee }}" as="t" hint-placeholder-count="12"><span style="padding-right:.5em;white-space:nowrap;color:transparent;-webkit-text-stroke:1.5px var(--fg)">[ {{ t }} ]</span></sc-for>
+      </div>
+    </section>
+
+    <section ref="{{ workRef }}" data-screen-label="Work" onMouseLeave="{{ leaveWork }}" style="padding:12vh clamp(20px,4vw,64px) 14vh">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5vh;gap:16px">
+        <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">(03) Selected work</span>
+        <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">{{ total }} projects — hover · click</span>
+      </div>
+      <div style="border-bottom:1px solid var(--line)">
+        <sc-for list="{{ work }}" as="item" hint-placeholder-count="7">
+          <a href="#" onClick="{{ item.open }}" onMouseEnter="{{ item.enter }}" style="display:grid;grid-template-columns:clamp(44px,6vw,110px) minmax(0,1fr) auto;align-items:center;gap:16px;padding:clamp(16px,2.2vw,34px) 0;border-top:1px solid var(--line);text-decoration:none;color:var(--fg);transition:padding .45s cubic-bezier(.2,.8,.2,1),color .3s" style-hover="padding-left:2.4vw;color:var(--accent)">
+            <span style="font-family:'Space Mono',monospace;font-size:13px;color:var(--fg3)">{{ item.num }}</span>
+            <span style="font-size:clamp(26px,5vw,88px);line-height:1;letter-spacing:-.035em;text-wrap:balance">{{ item.name }}</span>
+            <span style="display:flex;align-items:center;gap:18px;font-size:clamp(14px,1.1vw,17px);color:var(--fg2)"><span>{{ item.tag }}</span><span style="font-size:clamp(22px,2.4vw,38px);color:inherit">↗</span></span>
+          </a>
+        </sc-for>
+      </div>
+    </section>
+
+    <section ref="{{ nowRef }}" data-screen-label="Now" style="padding:10vh clamp(20px,4vw,64px) 16vh">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6vh;gap:16px;flex-wrap:wrap">
+        <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">(04) Currently working on</span>
+        <span style="display:flex;align-items:center;gap:12px;font-family:'Space Mono',monospace;font-size:12px;color:var(--fg2)"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 1.8s ease-out infinite"></span>status: low-key techie</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:clamp(40px,6vw,120px)">
+        <div>
+          <div style="font-family:'Space Mono',monospace;font-size:13px;color:var(--accent);margin-bottom:22px">[ building ]</div>
+          <p style="margin:0;font-size:clamp(26px,3.2vw,54px);line-height:1.1;letter-spacing:-.03em;text-wrap:pretty">Quietly tangling with <span style="font-weight:600">Node</span> and <span style="font-weight:600">React</span> insides — solving it like a sly detective.</p>
+        </div>
+        <div>
+          <div style="font-family:'Space Mono',monospace;font-size:13px;color:var(--accent);margin-bottom:22px">[ reading ]</div>
+          <p style="margin:0;font-size:clamp(26px,3.2vw,54px);line-height:1.1;letter-spacing:-.03em;text-wrap:pretty"><span style="font-weight:600">To Kill a Mockingbird</span> — no birds harmed so far, but keeping an eye on Atticus just in case.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer ref="{{ contactRef }}" data-screen-label="Contact" style="padding:12vh clamp(20px,4vw,64px) 120px;border-top:1px solid var(--line)">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3);margin-bottom:4vh">(05) Contact</div>
+      <a href="mailto:hello@example.com" style="display:block;text-decoration:none;font-size:clamp(64px,16vw,320px);line-height:.9;letter-spacing:-.05em;font-weight:500;color:transparent;-webkit-text-stroke:1.5px var(--fg);transition:color .5s,-webkit-text-stroke-color .5s" style-hover="color:var(--accent);-webkit-text-stroke-color:var(--accent)">Let’s talk↗</a>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;margin-top:8vh;font-size:15px;color:var(--fg2)">
+        <div style="display:flex;gap:28px;flex-wrap:wrap">
+          <a href="#" style="color:var(--fg2);text-underline-offset:5px" style-hover="color:var(--accent)">GitHub</a>
+          <a href="#" style="color:var(--fg2);text-underline-offset:5px" style-hover="color:var(--accent)">LinkedIn</a>
+          <a href="mailto:hello@example.com" style="color:var(--fg2);text-underline-offset:5px" style-hover="color:var(--accent)">Email</a>
+        </div>
+        <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)">© 2026 Nirjal Prajapati</span>
+        <a href="#" onClick="{{ toTop }}" style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg2);text-decoration:none" style-hover="color:var(--accent)">[ back to top ↑ ]</a>
+      </div>
+    </footer>
+  </div>
+
+  <div ref="{{ previewRef }}" aria-hidden="true" style="position:fixed;left:0;top:0;z-index:45;width:clamp(220px,24vw,400px);aspect-ratio:4/3;pointer-events:none;transform:translate3d(-999px,-999px,0);will-change:transform">
+    <sc-if value="{{ previewOn }}" hint-placeholder-val="{{ false }}">
+      <div style="width:100%;height:100%;border-radius:4px;overflow:hidden;box-shadow:var(--shadow);animation:popIn .3s cubic-bezier(.2,.8,.2,1) both;border:1px solid var(--line)">
+        <sc-if value="{{ preview.hasImage }}" hint-placeholder-val="{{ false }}"><img src="{{ preview.image }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></sc-if>
+        <sc-if value="{{ preview.noImage }}" hint-placeholder-val="{{ true }}">
+          <div style="width:100%;height:100%;background:var(--card);display:flex;flex-direction:column;justify-content:space-between;padding:18px 20px;box-sizing:border-box;color:var(--fg)">
+            <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg2)">[ {{ preview.name }} ]</span>
+            <span style="font-size:clamp(80px,9vw,150px);line-height:.8;letter-spacing:-.06em;font-weight:300;align-self:flex-end">{{ preview.num }}</span>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{ dockOn }}" hint-placeholder-val="{{ true }}">
+    <button onClick="{{ openConsole }}" style="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:48;display:flex;align-items:center;gap:14px;padding:12px 14px 12px 20px;background:var(--surface);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:999px;box-shadow:var(--shadow);font:inherit;font-size:15px;color:var(--fg2);cursor:pointer;animation:riseIn .6s 1.4s both" style-hover="color:var(--fg)">
+      <span style="color:var(--accent);font-size:17px">?</span>
+      <span>ask the console anything</span>
+      <span style="font-family:'Space Mono',monospace;font-size:12px;padding:3px 8px;border:1px solid var(--line);border-radius:4px;color:var(--fg)">G</span>
+    </button>
+  </sc-if>
+
+  <sc-if value="{{ isProject }}" hint-placeholder-val="{{ false }}">
+    <div role="dialog" aria-label="{{ project.name }}" data-screen-label="Project" style="position:fixed;inset:0;z-index:60;overflow-y:auto;background:var(--page);color:var(--fg);animation:wipeUp .8s cubic-bezier(.7,0,.2,1) both">
+      <div style="padding:26px clamp(20px,4vw,64px) 100px;max-width:1700px;margin:0 auto;box-sizing:border-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:'Space Mono',monospace;font-size:13px;color:var(--fg3)">
+          <span>projects / {{ project.num }} of {{ total }}</span>
+          <button onClick="{{ closeProject }}" style="background:none;border:0;padding:0;cursor:pointer;font:inherit;color:var(--fg2)" style-hover="color:var(--accent)">[ esc ] close</button>
+        </div>
+        <div style="position:relative;padding-top:10vh;animation:riseIn .7s .45s both">
+          <div aria-hidden="true" style="position:absolute;right:-1vw;top:2vh;font-size:clamp(140px,26vw,480px);line-height:.8;letter-spacing:-.07em;font-weight:300;color:transparent;-webkit-text-stroke:1px var(--line);pointer-events:none">{{ project.num }}</div>
+          <h1 style="position:relative;margin:0;max-width:14ch;font-weight:400;font-size:clamp(44px,7.4vw,136px);line-height:.92;letter-spacing:-.045em;text-wrap:balance">{{ project.name }}</h1>
+          <div style="position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px;margin:5vh 0 8vh;font-size:clamp(16px,1.2vw,19px);color:var(--fg2)">
+            <a href="#" aria-label="Source on GitHub" style="color:var(--fg);display:flex" style-hover="color:var(--accent)"><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.900 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"></path></svg></a>
+            <span>[ Link not available currently ]</span>
+            <sc-for list="{{ project.stack }}" as="t" hint-placeholder-count="4"><span style="color:var(--accent)">[ {{ t }} ]</span></sc-for>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(32px,5vw,96px);align-items:start;animation:riseIn .7s .6s both">
+          <div style="font-size:clamp(19px,1.6vw,26px);line-height:1.45;letter-spacing:-.01em">
+            <sc-if value="{{ project.hasPoints }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column">
+                <sc-for list="{{ project.points }}" as="pt" hint-placeholder-count="4">
+                  <div style="display:grid;grid-template-columns:52px minmax(0,1fr);padding:18px 0;border-top:1px solid var(--line)"><span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3);padding-top:.5em">—</span><span style="text-wrap:pretty">{{ pt }}</span></div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ project.noPoints }}" hint-placeholder-val="{{ false }}"><p style="margin:0;padding-top:18px;border-top:1px solid var(--line);color:var(--fg2)">[ Write-up coming soon ]</p></sc-if>
+          </div>
+          <figure style="margin:0">
+            <sc-if value="{{ project.hasImage }}" hint-placeholder-val="{{ true }}"><img src="{{ project.image }}" alt="{{ project.name }} screenshot" style="width:100%;aspect-ratio:8/5;object-fit:cover;display:block;border-radius:4px;border:1px solid var(--line)"></sc-if>
+            <sc-if value="{{ project.noImage }}" hint-placeholder-val="{{ false }}"><div style="width:100%;aspect-ratio:8/5;border-radius:4px;background:var(--card);display:flex;align-items:flex-end;justify-content:space-between;padding:22px;box-sizing:border-box"><span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg2)">[ screenshot ]</span><span style="font-size:clamp(90px,10vw,180px);line-height:.8;letter-spacing:-.06em;font-weight:300">{{ project.num }}</span></div></sc-if>
+          </figure>
+        </div>
+        <a href="#" onClick="{{ nextProject }}" style="display:block;margin-top:16vh;padding-top:28px;border-top:1px solid var(--line);text-decoration:none;color:var(--fg)" style-hover="color:var(--accent)">
+          <span style="display:block;font-family:'Space Mono',monospace;font-size:13px;color:var(--fg3);margin-bottom:18px">next project → (or press →)</span>
+          <span style="display:block;font-size:clamp(40px,7vw,128px);line-height:.95;letter-spacing:-.045em;text-wrap:balance">{{ nextName }}</span>
+        </a>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ consoleOpen }}" hint-placeholder-val="{{ false }}">
+    <div role="dialog" aria-label="Console" style="position:fixed;inset:0;z-index:80;background:var(--surface);backdrop-filter:blur(28px) saturate(1.2);-webkit-backdrop-filter:blur(28px) saturate(1.2);animation:fadeIn .25s ease both;display:flex;flex-direction:column">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:22px clamp(20px,4vw,64px);border-bottom:1px solid var(--line)">
+        <span style="font-size:15px">[G] Console <span style="font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3);padding-left:12px">cv assistant</span></span>
+        <button onClick="{{ closeConsole }}" style="background:none;border:0;padding:0;cursor:pointer;font-family:'Space Mono',monospace;font-size:13px;color:var(--fg2)" style-hover="color:var(--accent)">[ esc ]</button>
+      </div>
+      <div style="flex:1;min-height:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:0 clamp(32px,5vw,96px);padding:0 clamp(20px,4vw,64px);overflow-y:auto">
+        <div style="padding:6vh 0 3vh;display:flex;flex-direction:column;gap:5vh;animation:riseIn .5s .1s both">
+          <h2 style="margin:0;font-weight:300;font-size:clamp(52px,8vw,150px);line-height:.88;letter-spacing:-.05em">Ask<br>anything.</h2>
+          <div style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;font-size:clamp(18px,1.6vw,24px)">
+            <sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="4">
+              <button onClick="{{ s.send }}" style="background:none;border:0;padding:2px 0;cursor:pointer;font:inherit;color:var(--fg2);transition:padding .3s" style-hover="color:var(--accent);padding-left:12px">[ {{ s.label }} ]</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;min-height:0;padding:6vh 0 4vh">
+          <div ref="{{ logRef }}" style="flex:1;min-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:22px;font-size:clamp(17px,1.4vw,22px);line-height:1.55;padding-right:8px">
+            <sc-for list="{{ messages }}" as="m" hint-placeholder-count="1">
+              <sc-if value="{{ m.isBot }}" hint-placeholder-val="{{ true }}"><div style="display:grid;grid-template-columns:26px minmax(0,1fr);animation:riseIn .3s ease both"><span style="color:var(--fg3)">-</span><span style="text-wrap:pretty">{{ m.text }}</span></div></sc-if>
+              <sc-if value="{{ m.isUser }}" hint-placeholder-val="{{ false }}"><div style="display:grid;grid-template-columns:26px minmax(0,1fr)"><span style="color:var(--accent)">?</span><span style="color:var(--fg2)">{{ m.text }}</span></div></sc-if>
+            </sc-for>
+            <sc-if value="{{ typing }}" hint-placeholder-val="{{ false }}"><div style="display:grid;grid-template-columns:26px minmax(0,1fr)"><span style="color:var(--fg3)">-</span><span style="color:var(--fg3);letter-spacing:.2em;animation:blink 1s steps(2) infinite">···</span></div></sc-if>
+          </div>
+          <label style="display:grid;grid-template-columns:36px minmax(0,1fr);align-items:center;margin-top:24px;padding-top:20px;border-top:1px solid var(--line);font-size:clamp(24px,2.4vw,38px);letter-spacing:-.02em">
+            <span style="color:var(--accent)">?</span>
+            <input ref="{{ inputRef }}" value="{{ draft }}" onChange="{{ onDraft }}" onKeyDown="{{ onInputKey }}" placeholder="type a question…" aria-label="Ask the console" style="width:100%;background:transparent;border:0;outline:none;padding:6px 0;font:inherit;color:var(--fg);caret-color:var(--accent)">
+          </label>
+          <div style="display:flex;gap:18px;margin-top:12px;font-family:'Space Mono',monospace;font-size:12px;color:var(--fg3)"><span>↵ send</span><span>esc close</span><span>g toggle</span></div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ grain }}" hint-placeholder-val="{{ true }}">
+    <div aria-hidden="true" style="position:fixed;inset:0;z-index:100;pointer-events:none;background-image:var(--grain);opacity:var(--grain-op);mix-blend-mode:var(--grain-blend)"></div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;default&quot;:&quot;dark&quot;,&quot;tsType&quot;:&quot;'dark' | 'light'&quot;},&quot;cursorFx&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;grain&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;open&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;none&quot;,&quot;project&quot;,&quot;console&quot;],&quot;default&quot;:&quot;none&quot;,&quot;tsType&quot;:&quot;'none' | 'project' | 'console'&quot;}}">
+const PROJECTS = [
+  { name: 'Aastha Saving and Cooperative Limited', image: 'assets/project-aastha.png', tag: 'Next.js · Payload CMS',
+    points: ['Portfolio site for a savings and credit cooperative', 'Features notices, news, and a gallery', 'Provides updates on interest rates', 'Built with Next.js, Tailwind CSS, ShadCN, and Payload CMS'],
+    stack: ['Next.js', 'Tailwind CSS', 'ShadCN', 'Payload CMS'] },
+  { name: 'Niva Craftworks' }, { name: 'Deshna IT' }, { name: 'Everest Ledger' },
+  { name: 'IBM Nepal' }, { name: 'Husky App' }, { name: 'Nepal Police Digital Diary' },
+];
+const STACK = ['Node', 'React', 'Next.js', 'Tailwind CSS', 'ShadCN', 'Payload CMS'];
+const ROLES = ['Full Stack Developer', 'Node tinkerer', 'React detective', 'Low-key techie'];
+const SUGGEST = ['skills', 'projects', 'experience', 'contact'];
+const MANIFESTO = [['— I’m', 0], ['[ Nirjal Prajapati ],', 1], ['a full-stack developer dedicated to crafting seamless, high-performing web applications that make an impact.', 0]];
+const GLYPHS = '!<>-_\\/[]{}—=+*^?#';
+const pad = (n) => String(n).padStart(2, '0');
+function reply(q) {
+  const s = q.toLowerCase();
+  if (/skill|stack|tech|know|language/.test(s)) return 'Day to day he works in Node and React. Recent builds use Next.js, Tailwind CSS, ShadCN and Payload CMS.';
+  if (/project|built|portfolio|work on/.test(s)) return 'Seven so far: ' + PROJECTS.map(p => p.name).join(', ') + '. Close this and hover the work index to preview them.';
+  if (/contact|email|reach|hire|linkedin|github/.test(s)) return 'Email is quickest — or find him on GitHub and LinkedIn. All three are in the footer.';
+  if (/experience|job|career|work/.test(s)) return 'He builds full-stack web apps end to end. Ask about a specific project and I’ll walk you through it.';
+  if (/^(hi|hello|hey)\b/.test(s)) return 'Hello! I am Nirjal Prajapati’s portfolio assistant. How can I help you learn about his experience, skills, projects, or how to contact him?';
+  return 'I can help with information about Nirjal Prajapati’s experience, skills, projects, education, or how to contact him. What would you like to know?';
+}
+const fromOpen = (o) => ({ project: o === 'project' ? 0 : null, console: o === 'console' });
+
+class Component extends DCLogic {
+  glowRef = React.createRef(); progressRef = React.createRef(); heroRef = React.createRef();
+  clockRef = React.createRef(); roleRef = React.createRef(); manifestoRef = React.createRef();
+  previewRef = React.createRef(); workRef = React.createRef(); nowRef = React.createRef(); contactRef = React.createRef();
+  logRef = React.createRef(); inputRef = React.createRef();
+  mouse = { x: innerWidth * .6, y: innerHeight * .4 }; glow = { x: innerWidth * .6, y: innerHeight * .4 }; prev = { x: -999, y: -999 };
+  weights = [];
+  state = Object.assign({ theme: this.props.theme || 'dark', hover: null, draft: '', typing: false,
+    messages: [{ who: 'bot', text: 'Hi! I’m Nirjal Prajapati’s CV assistant. Ask me about his skills, experience or projects.' }] }, fromOpen(this.props.open || 'none'));
+
+  word(text, offset) {
+    return React.createElement('span', { style: { display: 'inline-block', whiteSpace: 'nowrap' } },
+      text.split('').map((ch, i) => React.createElement('span', { key: i, 'data-l': '', style: { display: 'inline-block', animation: `letterUp 1s cubic-bezier(.2,.8,.2,1) ${(offset + i) * 0.045 + 0.15}s both` } }, ch)));
+  }
+  nameFirst = this.word('Nirjal', 0);
+  nameLast = this.word('Prajapati', 6);
+  manifesto = React.createElement(React.Fragment, null, MANIFESTO.flatMap(([chunk, hi], ci) =>
+    (hi ? [chunk] : chunk.split(' ')).map((w, wi) => React.createElement('span', { key: ci + '-' + wi, 'data-w': '', style: { opacity: .16, transition: 'opacity .35s', color: hi ? 'var(--accent)' : undefined } }, w + ' '))));
+
+  componentDidMount() {
+    this.reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this._move = (e) => { this.mouse.x = e.clientX; this.mouse.y = e.clientY; };
+    this._scroll = () => this.onScroll();
+    this._key = (e) => {
+      const tag = e.target && e.target.tagName;
+      if (e.key === 'Escape') { if (this.state.console) return this.setState({ console: false }); if (this.state.project != null) return this.setState({ project: null }); return; }
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === 'g' || e.key === 'G') { e.preventDefault(); this.setState(s => ({ console: !s.console })); }
+      if (this.state.project != null && !this.state.console) { if (e.key === 'ArrowRight') this.step(1); if (e.key === 'ArrowLeft') this.step(-1); }
+    };
+    addEventListener('pointermove', this._move, { passive: true });
+    addEventListener('scroll', this._scroll, { passive: true });
+    addEventListener('keydown', this._key);
+    this.tick(); this._clock = setInterval(() => this.tick(), 1000);
+    this.roleI = 0; this._role = setInterval(() => this.scramble(), 2800);
+    this.onScroll(); this.syncHtml();
+    this._raf = requestAnimationFrame(this.loop);
+    if (this.state.console) this.focusInput();
+  }
+  componentWillUnmount() {
+    removeEventListener('pointermove', this._move); removeEventListener('scroll', this._scroll); removeEventListener('keydown', this._key);
+    clearInterval(this._clock); clearInterval(this._role); clearInterval(this._scr); clearTimeout(this._t); cancelAnimationFrame(this._raf);
+  }
+  componentDidUpdate(pp, ps) {
+    pp = pp || this._pp || this.props; ps = ps || this._ps || this.state; this._pp = this.props; this._ps = this.state;
+    if (pp.theme !== this.props.theme) this.setState({ theme: this.props.theme || 'dark' });
+    if (pp.open !== this.props.open) this.setState(fromOpen(this.props.open || 'none'));
+    if (!ps.console && this.state.console) this.focusInput();
+    if (ps.messages !== this.state.messages || ps.typing !== this.state.typing) { const el = this.logRef.current; if (el) el.scrollTop = el.scrollHeight; }
+    if (ps.theme !== this.state.theme) this.syncHtml();
+  }
+  syncHtml() { document.documentElement.style.background = this.state.theme === 'light' ? '#e9fafe' : '#04090c'; }
+  focusInput() { setTimeout(() => this.inputRef.current && this.inputRef.current.focus(), 80); }
+  tick() {
+    const d = new Date(Date.now() + 345 * 60000);
+    if (this.clockRef.current) this.clockRef.current.textContent = `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`;
+  }
+  scramble() {
+    const el = this.roleRef.current; if (!el || this.reduced) return;
+    this.roleI = (this.roleI + 1) % ROLES.length;
+    const target = ROLES[this.roleI]; let f = 0; const total = 18;
+    clearInterval(this._scr);
+    this._scr = setInterval(() => {
+      f++; const reveal = Math.floor((f / total) * target.length);
+      el.textContent = target.split('').map((c, i) => i < reveal || c === ' ' ? c : GLYPHS[(Math.random() * GLYPHS.length) | 0]).join('');
+      if (f >= total) { clearInterval(this._scr); el.textContent = target; }
+    }, 34);
+  }
+  onScroll() {
+    const y = scrollY, vh = innerHeight, max = document.documentElement.scrollHeight - vh;
+    if (this.progressRef.current) this.progressRef.current.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
+    if (this.heroRef.current && !this.reduced) { const k = Math.min(y / vh, 1); this.heroRef.current.style.transform = `translate3d(0,${y * -0.18}px,0)`; this.heroRef.current.style.opacity = String(1 - k * 0.7); }
+    const m = this.manifestoRef.current;
+    if (m) {
+      const r = m.getBoundingClientRect(); const p = Math.max(0, Math.min(1, (vh * 0.82 - r.top) / (r.height + vh * 0.25)));
+      const ws = m.querySelectorAll('[data-w]'); const lit = Math.round(p * ws.length);
+      ws.forEach((w, i) => { w.style.opacity = i < lit ? '1' : '.16'; });
+    }
+  }
+  loop = () => {
+    const fx = this.props.cursorFx ?? true;
+    const g = this.glow, m = this.mouse, pv = this.prev;
+    if (fx && !this.reduced) {
+      g.x += (m.x - g.x) * 0.06; g.y += (m.y - g.y) * 0.06;
+      if (this.glowRef.current) this.glowRef.current.style.transform = `translate3d(${g.x}px,${g.y}px,0) translate(-50%,-50%)`;
+      const h = this.heroRef.current;
+      if (h) {
+        const R = Math.max(innerWidth * 0.22, 220);
+        h.querySelectorAll('[data-l]').forEach((s, i) => {
+          const b = s.getBoundingClientRect(); const d = Math.hypot(b.left + b.width / 2 - m.x, b.top + b.height / 2 - m.y);
+          const t = 300 + 400 * Math.max(0, 1 - d / R); const c = this.weights[i] ?? 300; const n = c + (t - c) * 0.14;
+          this.weights[i] = n; s.style.fontWeight = String(Math.round(n));
+        });
+      }
+    }
+    if (this.previewRef.current && this.state.hover != null) {
+      if (pv.x < -900) { pv.x = m.x; pv.y = m.y; }
+      const dx = m.x - pv.x; pv.x += dx * 0.14; pv.y += (m.y - pv.y) * 0.14;
+      const rot = Math.max(-10, Math.min(10, dx * 0.06));
+      this.previewRef.current.style.transform = `translate3d(${pv.x + 28}px,${pv.y}px,0) translate(0,-50%) rotate(${rot}deg)`;
+    }
+    this._raf = requestAnimationFrame(this.loop);
+  };
+  step(d) { const n = PROJECTS.length; this.setState(s => ({ project: ((s.project ?? 0) + d + n) % n })); const el = document.querySelector('[data-screen-label="Project"]'); if (el) el.scrollTop = 0; }
+  scrollToRef(ref) { const el = ref.current; if (el) scrollTo({ top: el.getBoundingClientRect().top + scrollY - 40, behavior: 'smooth' }); }
+  send(text) {
+    const t = (text ?? this.state.draft).trim(); if (!t || this.state.typing) return;
+    this.setState(s => ({ messages: [...s.messages, { who: 'user', text: t }], draft: '', typing: true }));
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState(s => ({ typing: false, messages: [...s.messages, { who: 'bot', text: reply(t) }] })), 650);
+  }
+  toggleTheme = (e) => {
+    const next = this.state.theme === 'light' ? 'dark' : 'light';
+    if (!document.startViewTransition || this.reduced) return this.setState({ theme: next });
+    const x = e.clientX, y = e.clientY, r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    const t = document.startViewTransition(() => new Promise(res => this.setState({ theme: next }, res)));
+    t.ready.then(() => document.documentElement.animate({ clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] }, { duration: 750, easing: 'cubic-bezier(.7,0,.2,1)', pseudoElement: '::view-transition-new(root)' })).catch(() => {});
+  };
+
+  renderVals() {
+    const P = this.state.project, n = PROJECTS.length;
+    const pd = (fn) => (e) => { if (e && e.preventDefault) e.preventDefault(); fn(); };
+    const card = (p, i) => ({ name: p.name, num: pad(i + 1), image: p.image, hasImage: !!p.image, noImage: !p.image });
+    const work = PROJECTS.map((p, i) => ({ num: pad(i + 1), name: p.name, tag: p.tag || '',
+      open: pd(() => this.setState({ project: i, hover: null })),
+      enter: () => this.state.hover !== i && this.setState({ hover: i }) }));
+    const cur = P != null ? PROJECTS[P] : null;
+    const project = cur ? Object.assign(card(cur, P), { stack: cur.stack || [], points: cur.points || [],
+      hasPoints: !!(cur.points && cur.points.length), noPoints: !(cur.points && cur.points.length) }) : {};
+    const isDark = this.state.theme !== 'light';
+    return {
+      theme: isDark ? 'dark' : 'light', isDark, isLight: !isDark, grain: this.props.grain ?? true,
+      avatarSrc: isDark ? 'assets/avatar-dark.png' : 'assets/avatar-light.png',
+      nameFirst: this.nameFirst, nameLast: this.nameLast, manifesto: this.manifesto,
+      marquee: [...STACK, ...STACK],
+      work, total: pad(n),
+      previewOn: this.state.hover != null && P == null, preview: this.state.hover != null ? card(PROJECTS[this.state.hover], this.state.hover) : {},
+      leaveWork: () => { this.setState({ hover: null }); this.prev.x = -999; },
+      isProject: P != null, project, nextName: cur ? PROJECTS[(P + 1) % n].name : '',
+      nextProject: pd(() => this.step(1)), closeProject: () => this.setState({ project: null }),
+      toTop: pd(() => scrollTo({ top: 0, behavior: 'smooth' })),
+      toWork: pd(() => this.scrollToRef(this.workRef)), toNow: pd(() => this.scrollToRef(this.nowRef)), toContact: pd(() => this.scrollToRef(this.contactRef)),
+      toggleTheme: this.toggleTheme,
+      consoleOpen: this.state.console, dockOn: !this.state.console && P == null,
+      openConsole: () => this.setState({ console: true }), closeConsole: () => this.setState({ console: false }),
+      messages: this.state.messages.map(m => ({ text: m.text, isBot: m.who === 'bot', isUser: m.who === 'user' })),
+      typing: this.state.typing, suggestions: SUGGEST.map(label => ({ label, send: () => this.send(label) })),
+      draft: this.state.draft, onDraft: (e) => this.setState({ draft: e.target.value }),
+      onInputKey: (e) => { if (e.key === 'Enter') { e.preventDefault(); this.send(); } },
+      glowRef: this.glowRef, progressRef: this.progressRef, heroRef: this.heroRef, clockRef: this.clockRef, roleRef: this.roleRef,
+      manifestoRef: this.manifestoRef, previewRef: this.previewRef, workRef: this.workRef, nowRef: this.nowRef, contactRef: this.contactRef,
+      logRef: this.logRef, inputRef: this.inputRef,
+    };
+  }
+}
+</script>
+</body>
+</html>
